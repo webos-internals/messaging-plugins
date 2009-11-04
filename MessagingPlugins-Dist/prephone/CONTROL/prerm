@@ -1,0 +1,150 @@
+#!/bin/sh
+
+#Get WebOS Version
+/usr/bin/luna-send -n 1 palm://com.palm.preferences/systemProperties/Get {\"key\":\"com.palm.properties.version\"} 2>/var/tmp/webosver
+
+#Unload Messaging Application
+/usr/bin/luna-send -n 1 "palm://com.palm.applicationManager/close" "{\"processId\":\"1010\"}"
+
+#Kill LibpurpleAdapterExt if it's running
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
+
+#Update Database (call Java)
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Live
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin ICQ
+#sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Facebook
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin SIPE
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Jabber
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin IRC
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Sametime
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Groupwise
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Palm #Should be last!
+
+#Restore Files (only if they don't exist already)
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js ]; then
+		rm -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js
+		mv /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js
+	fi
+	else
+	 echo "/usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js
+	mv /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html
+	mv /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js
+	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
+	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js
+	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js backup not found"
+fi
+if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback ]; then
+	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js ]; then
+	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
+	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
+	fi
+else
+	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js backup not found"
+fi
+if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback ]; then
+	if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css ]; then
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css
+	mv /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css
+	fi
+else
+	echo "/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css backup not found"
+fi
+if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback ]; then
+	if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css ]; then
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css
+	mv /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css
+	fi
+else
+	echo "/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css backup not found"
+fi
+
+#Restore Palm Libraries
+if [ -f /usr/lib/libglib-2.0.so.0.1400.4.messback ]; then
+	if [ -f /usr/lib/libglib-2.0.so.0.1400.4 ]; then
+		rm /usr/lib/libglib-2.0.so.0.1400.4
+		mv /usr/lib/libglib-2.0.so.0.1400.4.messback /usr/lib/libglib-2.0.so.0.1400.4
+	fi
+fi
+if [ -f /usr/lib/libjson-glib-1.0.so.0.messback ]; then
+	if [ -f /usr/lib/libjson-glib-1.0.so.0 ]; then
+		rm /usr/lib/libjson-glib-1.0.so.0
+		mv /usr/lib/libjson-glib-1.0.so.0.messback /usr/lib/libjson-glib-1.0.so.0
+	fi
+fi
+if [ -f /usr/lib/libpurple.so.0.5.1.messback ]; then
+	if [ -f /usr/lib/libpurple.so.0.5.1 ]; then
+		rm /usr/lib/libpurple.so.0.5.1
+		mv /usr/lib/libpurple.so.0.5.1.messback /usr/lib/libpurple.so.0.5.1
+	fi
+fi
+if [ -d /usr/lib/purple-2.messback ]; then
+	if [ -d /usr/lib/purple-2 ]; then
+		rm /usr/lib/purple-2/ -r
+		mv /usr/lib/purple-2.messback /usr/lib/purple-2
+	fi
+fi
+
+#Remove installed files
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/facebook*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/icq*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/messenger*.png
+
+rm -f /usr/lib/libjson-glib-1.0.so.0
+
+#Cleanup Sym-Links (even when I copy a file to backup sometimes the symlink follows the backup?!?!)
+rm /usr/lib/libglib-2.0.so.0
+ln -s /usr/lib/libglib-2.0.so.0.1400.4 /usr/lib/libglib-2.0.so.0
+rm /usr/lib/libpurple.so
+rm /usr/lib/libpurple.so.0
+ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so
+ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so.0
+
+#Restart Luna (call Java)
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RestartLuna
+
+#Remove sym links, java file and install directory
+rm -f /var/usr/lib/luna/java/org.webosinternals.messaging.jar
+rm -f /usr/lib/luna/java/org.webosinternals.messaging.jar
+rm -f /usr/palm/applications/org.webosinternals.messaging/ -r
+rm -f /usr/lib/libjabber.so.0
+rm -f /usr/lib/liboscar.so.0
+rm -f /usr/lib/libymsg.so.0
+rm -f /var/tmp/webosver
+
+exit 0

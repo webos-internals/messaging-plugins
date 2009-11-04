@@ -1,0 +1,58 @@
+Compiler Setup
+=================
+Ubuntu 9.04, install all updates
+
+apt-get install cvs
+apt-get install automake1.9
+apt-get install build-essential
+apt-get install subversion
+
+svn co http://svn.nslu2-linux.org/svnroot/optware/trunk optware
+cd optware; make cs08q1armel-target
+cd cs08q1armel; make directories ipkg-utils toolchain
+
+apt-get install bison
+apt-get install flex
+apt-get install texinfo
+apt-get install automake
+apt-get install libtool
+apt-get install gawk
+cd ../; make i686g25-target
+cd i686g25; make directories ipkg-utils toolchain
+=================
+
+Pidgin
+=================
+apt-get install intltool
+apt-get install libxml2-dev
+apt-get install libmeanwhile-dev
+apt-get install network-manager-dev
+apt-get install libgnutls-dev
+
+Run the following for each environment (i686g25 and cs08q1armel)
+
+Pidgin
+=================
+make gnutls-stage
+make glib-stage
+make libxml2-stage
+make libmeanwhile
+cp builds/libmeanwhile-1.0.2/src/.libs/libmeanwhile.so staging/opt/lib
+make pidgin
+
+Libpurple-AdapterExt
+====================
+apt-get install libpurple-dev
+make libpurple-adapterext
+
+Copied in
+==================
+builds/pidgin-2.6.2
+builds/pidgin-facebookchat
+builds/libmeanwhile-1.0.2
+builds/pidgin-sipe
+
+make/pidgin.mk
+make/pidgin-facebookchat.mk
+make/libmeanwhile-1.0.2.mk
+make/pidgin-sipe.mk

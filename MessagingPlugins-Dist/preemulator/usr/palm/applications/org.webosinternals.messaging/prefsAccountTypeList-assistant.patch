@@ -1,0 +1,69 @@
+--- prefsAccountTypeList-assistant.js	Fri Aug 28 12:51:10 2009
++++ prefsAccountTypeList-assistant.js.new	Sat Oct 31 01:36:00 2009
+@@ -5,6 +5,7 @@
+         this.appController = Mojo.Controller.getAppController();
+         this.Messaging = this.appController.Messaging;      
+         this.params = params || {}
++        this.ServerParams = {}
+ 		this.handleAccountTypesListTap = this.handleAccountTypesListTap.bindAsEventListener(this);
+     },
+ 	
+@@ -18,7 +19,7 @@
+         this.controller.listen('accountTypes', Mojo.Event.listTap, this.handleAccountTypesListTap, false);     
+     },
+ 	
+-	handleAccountTypesListTap: function(e) {
++	handleAccountTypesListTap: function(e) {		    
+         MessagingUtils.simpleListClick(this.controller.get(e.originalEvent.target),"palm-button",function(targetRow){
+             var newParams = {
+ 	            accountTypeId: targetRow.getAttribute('accountTypeId'),
+@@ -26,7 +27,48 @@
+ 				serviceIcon: targetRow.getAttribute('serviceIcon')				
+ 			};
+ 			Object.extend(newParams,this.params);
+-
++			
++			this.ServerParams = {
++                server: '',
++                port: '',
++		        tls: 'false'	
++	        };
++			
++			if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "sametime") {
++		    //Custom server entries for sametime
++            this.ServerParams = {
++                server: '',
++                port: '1533',
++			    tls: 'false'	
++		    };
++		    }
++		    if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "jabber"){
++		        //Custom server entries for jabber
++                this.ServerParams = {
++                    server: '',
++                    port: '5222',
++			        tls: 'false'	
++		        };
++		    }
++		    if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "sipe") {
++		        //Custom server entries for sipe
++                this.ServerParams = {
++                    server: '',
++                    port: '5061',
++			        tls: 'false'	
++		        };
++		    }
++			 if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "gwim") {
++		        //Custom server entries for groupwise
++                this.ServerParams = {
++                    server: '',
++                    port: '1677',
++			        tls: 'false'	
++		        };
++		    }
++			
++			Object.extend(newParams,this.ServerParams);
++            
+             this.controller.stageController.pushScene('prefsSetupAccount', newParams);            
+           }.bind(this),false);    		
+ 	},

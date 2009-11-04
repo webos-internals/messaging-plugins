@@ -1,0 +1,40 @@
+--- prefsAccountSummary-assistant.js	Fri Aug 28 12:51:10 2009
++++ prefsAccountSummary-assistant.js.new	Sun Oct 25 03:37:38 2009
+@@ -6,6 +6,9 @@
+         this.Messaging = this.appController.Messaging;      
+         this.params = params || {}
+         this.requests = [];
++        this.server;
++        this.port;
++        this.tls;   
+ 		
+ 		this.handleAccountListTap = this.handleAccountListTap.bindAsEventListener(this);
+ 		this.handleAddAccountTap = this.handleAddAccountTap.bindAsEventListener(this);
+@@ -18,12 +21,12 @@
+ 	  this.controller.setupWidget('preferences-accounts', {itemTemplate:'prefsAccountSummary/accountsRow'}, this.preferencesAccountsModel);
+ 
+       this.preferencesSetup();
+-  		
++
+       // make the service call that will populate this list
+       this.requests.push(MessagingMojoService.getIMAccounts({
+ 	  	sceneController: this.controller,
+ 	  	onSuccess: this.renderAccountsList.bind(this)
+-	  }));      
++	  }));     
+     
+       MessagingMojoService.getOwnPhoneNumber(this.controller, (function(data) {
+         this.controller.get('phoneNumber').update(MessagingUtils.formatPhoneNumber(MessagingUtils.handleGetOwnPhoneNumber(data.phoneNumber)));
+@@ -256,9 +259,12 @@
+     editAccount: function(targetRow){
+       // iterate through hidden inputs
+       var inputHash = {};
++      var ServiceType;
++            
+       targetRow.select('input').each(function(input){
+         inputHash[input.name] = input.value;
+       });
++      
+ 	  var newParams = {editMode: true};
+ 	  Object.extend(newParams,this.params);
+       Object.extend(newParams,inputHash);

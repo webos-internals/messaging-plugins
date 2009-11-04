@@ -1,0 +1,444 @@
+libsipe_la-sipe-utils.lo .libs/libsipe_la-sipe-utils.o: sipe-utils.c \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/string.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/features.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/cdefs.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/wordsize.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gnu/stubs.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gnu/stubs-32.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/stddef.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/string.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/string2.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/endian.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/endian.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/types.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/typesizes.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/stdlib.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/ctype.h \
+  /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
+  /usr/include/glib-2.0/glib/gtypes.h \
+  /usr/lib/glib-2.0/include/glibconfig.h \
+  /usr/include/glib-2.0/glib/gmacros.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/limits.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/syslimits.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/limits.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix1_lim.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/local_lim.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/linux/limits.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix2_lim.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/float.h \
+  /usr/include/glib-2.0/glib/garray.h \
+  /usr/include/glib-2.0/glib/gasyncqueue.h \
+  /usr/include/glib-2.0/glib/gthread.h \
+  /usr/include/glib-2.0/glib/gerror.h /usr/include/glib-2.0/glib/gquark.h \
+  /usr/include/glib-2.0/glib/gutils.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/stdarg.h \
+  /usr/include/glib-2.0/glib/gatomic.h \
+  /usr/include/glib-2.0/glib/gbacktrace.h \
+  /usr/include/glib-2.0/glib/gbase64.h \
+  /usr/include/glib-2.0/glib/gbookmarkfile.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/time.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/time.h \
+  /usr/include/glib-2.0/glib/gcache.h /usr/include/glib-2.0/glib/glist.h \
+  /usr/include/glib-2.0/glib/gmem.h /usr/include/glib-2.0/glib/gslice.h \
+  /usr/include/glib-2.0/glib/gchecksum.h \
+  /usr/include/glib-2.0/glib/gcompletion.h \
+  /usr/include/glib-2.0/glib/gconvert.h \
+  /usr/include/glib-2.0/glib/gdataset.h \
+  /usr/include/glib-2.0/glib/gdate.h /usr/include/glib-2.0/glib/gdir.h \
+  /usr/include/glib-2.0/glib/gfileutils.h \
+  /usr/include/glib-2.0/glib/ghash.h /usr/include/glib-2.0/glib/ghook.h \
+  /usr/include/glib-2.0/glib/giochannel.h \
+  /usr/include/glib-2.0/glib/gmain.h /usr/include/glib-2.0/glib/gslist.h \
+  /usr/include/glib-2.0/glib/gstring.h \
+  /usr/include/glib-2.0/glib/gunicode.h \
+  /usr/include/glib-2.0/glib/gkeyfile.h \
+  /usr/include/glib-2.0/glib/gmappedfile.h \
+  /usr/include/glib-2.0/glib/gmarkup.h \
+  /usr/include/glib-2.0/glib/gmessages.h \
+  /usr/include/glib-2.0/glib/gnode.h /usr/include/glib-2.0/glib/goption.h \
+  /usr/include/glib-2.0/glib/gpattern.h \
+  /usr/include/glib-2.0/glib/gprimes.h \
+  /usr/include/glib-2.0/glib/gqsort.h /usr/include/glib-2.0/glib/gqueue.h \
+  /usr/include/glib-2.0/glib/grand.h /usr/include/glib-2.0/glib/grel.h \
+  /usr/include/glib-2.0/glib/gregex.h \
+  /usr/include/glib-2.0/glib/gscanner.h \
+  /usr/include/glib-2.0/glib/gsequence.h \
+  /usr/include/glib-2.0/glib/gshell.h /usr/include/glib-2.0/glib/gspawn.h \
+  /usr/include/glib-2.0/glib/gstrfuncs.h \
+  /usr/include/glib-2.0/glib/gtestutils.h \
+  /usr/include/glib-2.0/glib/gthreadpool.h \
+  /usr/include/glib-2.0/glib/gtimer.h /usr/include/glib-2.0/glib/gtree.h \
+  /usr/include/glib-2.0/glib/gurifuncs.h /usr/include/libpurple/debug.h \
+  /usr/include/libpurple/xmlnode.h sipe.h /usr/include/libpurple/cipher.h \
+  /usr/include/libpurple/circbuffer.h /usr/include/libpurple/dnsquery.h \
+  /usr/include/libpurple/eventloop.h /usr/include/libpurple/account.h \
+  /usr/include/glib-2.0/glib-object.h \
+  /usr/include/glib-2.0/gobject/gboxed.h \
+  /usr/include/glib-2.0/gobject/gtype.h \
+  /usr/include/glib-2.0/gobject/genums.h \
+  /usr/include/glib-2.0/gobject/gobject.h \
+  /usr/include/glib-2.0/gobject/gvalue.h \
+  /usr/include/glib-2.0/gobject/gparam.h \
+  /usr/include/glib-2.0/gobject/gclosure.h \
+  /usr/include/glib-2.0/gobject/gsignal.h \
+  /usr/include/glib-2.0/gobject/gmarshal.h \
+  /usr/include/glib-2.0/gobject/gparamspecs.h \
+  /usr/include/glib-2.0/gobject/gsourceclosure.h \
+  /usr/include/glib-2.0/gobject/gtypemodule.h \
+  /usr/include/glib-2.0/gobject/gtypeplugin.h \
+  /usr/include/glib-2.0/gobject/gvaluearray.h \
+  /usr/include/glib-2.0/gobject/gvaluetypes.h \
+  /usr/include/libpurple/connection.h /usr/include/libpurple/plugin.h \
+  /usr/include/glib-2.0/gmodule.h /usr/include/libpurple/signals.h \
+  /usr/include/libpurple/value.h /usr/include/libpurple/pluginpref.h \
+  /usr/include/libpurple/prefs.h /usr/include/libpurple/status.h \
+  /usr/include/libpurple/blist.h /usr/include/libpurple/buddyicon.h \
+  /usr/include/libpurple/imgstore.h /usr/include/libpurple/prpl.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/unistd.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix_opt.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/confname.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/getopt.h \
+  /usr/include/libpurple/conversation.h /usr/include/libpurple/log.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/stdio.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/libio.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/_G_config.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/wchar.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/wchar.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gconv.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/stdio_lim.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/sys_errlist.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/stdio.h \
+  /usr/include/libpurple/server.h /usr/include/libpurple/ft.h \
+  /usr/include/libpurple/notify.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/types.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/select.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/select.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/sigset.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/sysmacros.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/pthreadtypes.h \
+  /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/alloca.h \
+  /usr/include/libpurple/proxy.h /usr/include/libpurple/roomlist.h \
+  /usr/include/libpurple/whiteboard.h /usr/include/libpurple/util.h \
+  /usr/include/libpurple/xmlnode.h /usr/include/libpurple/sslconn.h \
+  /usr/include/libpurple/certificate.h /usr/include/libpurple/dnssrv.h \
+  /usr/include/libpurple/network.h /usr/include/libpurple/proxy.h \
+  /usr/include/libpurple/prpl.h /usr/include/libpurple/sslconn.h sipmsg.h \
+  sip-sec.h uuid.h sipe-utils.h
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/string.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/features.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/cdefs.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/wordsize.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gnu/stubs.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gnu/stubs-32.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/stddef.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/string.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/string2.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/endian.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/endian.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/types.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/typesizes.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/stdlib.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/ctype.h:
+
+/usr/include/glib-2.0/glib.h:
+
+/usr/include/glib-2.0/glib/galloca.h:
+
+/usr/include/glib-2.0/glib/gtypes.h:
+
+/usr/lib/glib-2.0/include/glibconfig.h:
+
+/usr/include/glib-2.0/glib/gmacros.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/limits.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/syslimits.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/limits.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix1_lim.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/local_lim.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/linux/limits.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix2_lim.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/float.h:
+
+/usr/include/glib-2.0/glib/garray.h:
+
+/usr/include/glib-2.0/glib/gasyncqueue.h:
+
+/usr/include/glib-2.0/glib/gthread.h:
+
+/usr/include/glib-2.0/glib/gerror.h:
+
+/usr/include/glib-2.0/glib/gquark.h:
+
+/usr/include/glib-2.0/glib/gutils.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/lib/gcc/i686-unknown-linux-gnu/4.2.1/include/stdarg.h:
+
+/usr/include/glib-2.0/glib/gatomic.h:
+
+/usr/include/glib-2.0/glib/gbacktrace.h:
+
+/usr/include/glib-2.0/glib/gbase64.h:
+
+/usr/include/glib-2.0/glib/gbookmarkfile.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/time.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/time.h:
+
+/usr/include/glib-2.0/glib/gcache.h:
+
+/usr/include/glib-2.0/glib/glist.h:
+
+/usr/include/glib-2.0/glib/gmem.h:
+
+/usr/include/glib-2.0/glib/gslice.h:
+
+/usr/include/glib-2.0/glib/gchecksum.h:
+
+/usr/include/glib-2.0/glib/gcompletion.h:
+
+/usr/include/glib-2.0/glib/gconvert.h:
+
+/usr/include/glib-2.0/glib/gdataset.h:
+
+/usr/include/glib-2.0/glib/gdate.h:
+
+/usr/include/glib-2.0/glib/gdir.h:
+
+/usr/include/glib-2.0/glib/gfileutils.h:
+
+/usr/include/glib-2.0/glib/ghash.h:
+
+/usr/include/glib-2.0/glib/ghook.h:
+
+/usr/include/glib-2.0/glib/giochannel.h:
+
+/usr/include/glib-2.0/glib/gmain.h:
+
+/usr/include/glib-2.0/glib/gslist.h:
+
+/usr/include/glib-2.0/glib/gstring.h:
+
+/usr/include/glib-2.0/glib/gunicode.h:
+
+/usr/include/glib-2.0/glib/gkeyfile.h:
+
+/usr/include/glib-2.0/glib/gmappedfile.h:
+
+/usr/include/glib-2.0/glib/gmarkup.h:
+
+/usr/include/glib-2.0/glib/gmessages.h:
+
+/usr/include/glib-2.0/glib/gnode.h:
+
+/usr/include/glib-2.0/glib/goption.h:
+
+/usr/include/glib-2.0/glib/gpattern.h:
+
+/usr/include/glib-2.0/glib/gprimes.h:
+
+/usr/include/glib-2.0/glib/gqsort.h:
+
+/usr/include/glib-2.0/glib/gqueue.h:
+
+/usr/include/glib-2.0/glib/grand.h:
+
+/usr/include/glib-2.0/glib/grel.h:
+
+/usr/include/glib-2.0/glib/gregex.h:
+
+/usr/include/glib-2.0/glib/gscanner.h:
+
+/usr/include/glib-2.0/glib/gsequence.h:
+
+/usr/include/glib-2.0/glib/gshell.h:
+
+/usr/include/glib-2.0/glib/gspawn.h:
+
+/usr/include/glib-2.0/glib/gstrfuncs.h:
+
+/usr/include/glib-2.0/glib/gtestutils.h:
+
+/usr/include/glib-2.0/glib/gthreadpool.h:
+
+/usr/include/glib-2.0/glib/gtimer.h:
+
+/usr/include/glib-2.0/glib/gtree.h:
+
+/usr/include/glib-2.0/glib/gurifuncs.h:
+
+/usr/include/libpurple/debug.h:
+
+/usr/include/libpurple/xmlnode.h:
+
+sipe.h:
+
+/usr/include/libpurple/cipher.h:
+
+/usr/include/libpurple/circbuffer.h:
+
+/usr/include/libpurple/dnsquery.h:
+
+/usr/include/libpurple/eventloop.h:
+
+/usr/include/libpurple/account.h:
+
+/usr/include/glib-2.0/glib-object.h:
+
+/usr/include/glib-2.0/gobject/gboxed.h:
+
+/usr/include/glib-2.0/gobject/gtype.h:
+
+/usr/include/glib-2.0/gobject/genums.h:
+
+/usr/include/glib-2.0/gobject/gobject.h:
+
+/usr/include/glib-2.0/gobject/gvalue.h:
+
+/usr/include/glib-2.0/gobject/gparam.h:
+
+/usr/include/glib-2.0/gobject/gclosure.h:
+
+/usr/include/glib-2.0/gobject/gsignal.h:
+
+/usr/include/glib-2.0/gobject/gmarshal.h:
+
+/usr/include/glib-2.0/gobject/gparamspecs.h:
+
+/usr/include/glib-2.0/gobject/gsourceclosure.h:
+
+/usr/include/glib-2.0/gobject/gtypemodule.h:
+
+/usr/include/glib-2.0/gobject/gtypeplugin.h:
+
+/usr/include/glib-2.0/gobject/gvaluearray.h:
+
+/usr/include/glib-2.0/gobject/gvaluetypes.h:
+
+/usr/include/libpurple/connection.h:
+
+/usr/include/libpurple/plugin.h:
+
+/usr/include/glib-2.0/gmodule.h:
+
+/usr/include/libpurple/signals.h:
+
+/usr/include/libpurple/value.h:
+
+/usr/include/libpurple/pluginpref.h:
+
+/usr/include/libpurple/prefs.h:
+
+/usr/include/libpurple/status.h:
+
+/usr/include/libpurple/blist.h:
+
+/usr/include/libpurple/buddyicon.h:
+
+/usr/include/libpurple/imgstore.h:
+
+/usr/include/libpurple/prpl.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/unistd.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/posix_opt.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/confname.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/getopt.h:
+
+/usr/include/libpurple/conversation.h:
+
+/usr/include/libpurple/log.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/stdio.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/libio.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/_G_config.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/wchar.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/wchar.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/gconv.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/stdio_lim.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/sys_errlist.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/stdio.h:
+
+/usr/include/libpurple/server.h:
+
+/usr/include/libpurple/ft.h:
+
+/usr/include/libpurple/notify.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/types.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/select.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/select.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/sigset.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/sys/sysmacros.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/bits/pthreadtypes.h:
+
+/root/optware/i686g25/toolchain/i686-unknown-linux-gnu/i686-unknown-linux-gnu//sys-root/usr/include/alloca.h:
+
+/usr/include/libpurple/proxy.h:
+
+/usr/include/libpurple/roomlist.h:
+
+/usr/include/libpurple/whiteboard.h:
+
+/usr/include/libpurple/util.h:
+
+/usr/include/libpurple/xmlnode.h:
+
+/usr/include/libpurple/sslconn.h:
+
+/usr/include/libpurple/certificate.h:
+
+/usr/include/libpurple/dnssrv.h:
+
+/usr/include/libpurple/network.h:
+
+/usr/include/libpurple/proxy.h:
+
+/usr/include/libpurple/prpl.h:
+
+/usr/include/libpurple/sslconn.h:
+
+sipmsg.h:
+
+sip-sec.h:
+
+uuid.h:
+
+sipe-utils.h:

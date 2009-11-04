@@ -1,0 +1,65 @@
+--- messaging-constants.js	Sun Nov  1 18:21:38 2009
++++ messaging-constants.js.new	Mon Nov  2 04:22:39 2009
+@@ -216,6 +216,62 @@
+ 	
+   this.transports = {
+     data: {
++	  'irc': {
++        className: 'irc',
++        smallIcon: 'images/transports/irc_transport_splitter.png',
++        largeIcon: 'images/transports/irc-logo.png',
++		displayName: $L('IRC'),
++		secondaryDisplayName: $L('IRC')
++      },
++	  'gwim': {
++        className: 'gwim',
++        smallIcon: 'images/transports/novell_transport_splitter.png',
++        largeIcon: 'images/transports/novell-logo.png',
++		displayName: $L('Novell Groupwise'),
++		secondaryDisplayName: $L('Groupwise')
++      },
++	  'sametime': {
++        className: 'sametime',
++        smallIcon: 'images/transports/sametime_transport_splitter.png',
++        largeIcon: 'images/transports/sametime-logo.png',
++		displayName: $L('Sametime'),
++		secondaryDisplayName: $L('Sametime')
++      },
++	  'sipe': {
++        className: 'sipe',
++        smallIcon: 'images/transports/sipe_transport_splitter.png',
++        largeIcon: 'images/transports/sipe-logo.png',
++		displayName: $L('Office Communicator'),
++		secondaryDisplayName: $L('SIPE')
++      },
++	  'jabber': {
++        className: 'jabber',
++        smallIcon: 'images/transports/jabber_transport_splitter.png',
++        largeIcon: 'images/transports/jabber-logo.png',
++		displayName: $L('Jabber'),
++		secondaryDisplayName: $L('Jabber')
++      },
++	  'facebook': {
++        className: 'facebook',
++        smallIcon: 'images/transports/facebook_transport_splitter.png',
++        largeIcon: 'images/transports/facebook-logo.png',
++		displayName: $L('Facebook Chat'),
++		secondaryDisplayName: $L('Facebook')
++      },
++	  'icq': {
++        className: 'icq',
++        smallIcon: 'images/transports/icq_transport_splitter.png',
++        largeIcon: 'images/transports/icq-logo.png',
++		displayName: $L('ICQ'),
++		secondaryDisplayName: $L('ICQ')
++      },
++      'live': {
++        className: 'live',
++        smallIcon: 'images/transports/messenger_transport_splitter.png',
++        largeIcon: 'images/transports/messenger-logo.png',
++		displayName: $L('Live Messenger'),
++		secondaryDisplayName: $L('Messenger')
++      },
+       'phone': {
+         className: 'sms',
+         smallIcon: 'images/transports/sms_transport_splitter.png',

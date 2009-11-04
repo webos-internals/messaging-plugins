@@ -1,0 +1,105 @@
+--- prefsSetupAccount-scene.html	Fri Aug 28 12:51:10 2009
++++ prefsSetupAccount-scene.html.new	Thu Oct 29 22:29:16 2009
+@@ -1,50 +1,52 @@
+-<div id="preferences-main">
+-	<div id="preferencesHeader" class="palm-page-header multi-line">
+-		<div class="palm-page-header-wrapper">
+-			<div class="icon account-image">
+-				<img id="accountTypeIcon" src="" width="40" height="40" />
+-			</div>
+-			<div id="prefHeaderText" class="title"></div>
+-		</div>
+-	</div>
+-	<form name="AccountSetupForm" id="AccountSetupForm">
+-		<div class='palm-group'>
+-			<div class="palm-group-title" x-mojo-loc=''>
+-				Username
+-			</div>
+-			<div class="palm-list">
+-				<div class='palm-row single'>
+-					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+-						<div class="title">
+-							<div id="username" x-mojo-element="TextField">
+-							</div>
+-						</div>
+-					</div>
+-				</div>
+-			</div>
+-		</div>
+-		<div class='palm-group'>
+-			<div class="palm-group-title" x-mojo-loc=''>
+-				Password
+-			</div>
+-			<div class="palm-list">
+-				<div class='palm-row single'>
+-					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+-						<div class="title">
+-							<div id="password" x-mojo-element="PasswordField">
+-							</div>
+-						</div>
+-					</div>
+-				</div>
+-			</div>
+-		</div>
+-	</form>
+-	<div class="palm-inline-error" style="display:none" id="StatusMessageWrapper">
+-		<div id="StatusMessage" class="error-message"></div>
+-	</div>
+-	<div x-mojo-element="Button" id="saveAccountButton">
+-	</div>
+-	<div x-mojo-element="Button" id="removeAccountButton" style="display:none;">
+-	</div>
+-	<div id="extraContent"></div>
+-</div>
++<div id="preferences-main">
++	<div id="preferencesHeader" class="palm-page-header multi-line">
++		<div class="palm-page-header-wrapper">
++			<div class="icon account-image">
++				<img id="accountTypeIcon" src="" width="40" height="40" />
++			</div>
++			<div id="prefHeaderText" class="title"></div>
++		</div>
++	</div>
++	<form name="AccountSetupForm" id="AccountSetupForm">
++		<div class='palm-group'>
++			<div class="palm-group-title" x-mojo-loc=''>
++				Username
++			</div>
++			<div class="palm-list">
++				<div class='palm-row single'>
++					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
++						<div class="title">
++							<div id="username" x-mojo-element="TextField">
++							</div>
++						</div>
++					</div>
++				</div>
++			</div>
++		</div>
++		<div id="LoginDetails"></div>
++		<div id="ServerDetails"></div>
++		<div class='palm-group'>
++			<div class="palm-group-title" x-mojo-loc=''>
++				Password
++			</div>
++			<div class="palm-list">
++				<div class='palm-row single'>
++					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
++						<div class="title">
++							<div id="password" x-mojo-element="PasswordField">
++							</div>
++						</div>
++					</div>
++				</div>
++			</div>
++		</div>
++	</form>
++	<div class="palm-inline-error" style="display:none" id="StatusMessageWrapper">
++		<div id="StatusMessage" class="error-message"></div>
++	</div>
++	<div x-mojo-element="Button" id="saveAccountButton">
++	</div>
++	<div x-mojo-element="Button" id="removeAccountButton" style="display:none;">
++	</div>
++	<div id="extraContent"></div>
++</div>

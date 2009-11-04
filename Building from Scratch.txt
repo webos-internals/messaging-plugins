@@ -1,0 +1,38 @@
+Compiling
+==========================
+
+libmeanwhile
+============
+add --disable-doxygen to make .mk file
+
+pidgin
+============
+copy libmeanwhile.so to /root/optware/i686g25/staging/opt/lib and /root/optware/cs08q1armel/staging/opt/lib
+edit blist.c in (void purple_blist_alias_contact(PurpleContact *contact, const char *alias)) comment out last line (gfree...)
+
+libpurpleadapter
+================
+set defines.h custom dir to /var/usr/palm/applications/org.webosinternals.messaging/libpurple
+
+Cross compile GLIB
+==================
+If you get error "configure: error: cannot run test program while cross compiling"
+open crosscompile.cache in /root/optware and add the following lines...
+glib_cv_stack_grows=no
+glib_cv_uscore=no
+ac_cv_func_posix_getgrgid_r=yes
+ac_cv_func_posix_getpwuid_r=yes
+
+SIPE for ARM
+================================
+export PKG_CONFIG_PATH=/root/optware/cs08q1armel/staging/opt/lib/pkgconfig/
+cp purple.pc staging/opt/lib/pkgconfig/
+cp builds/pidgin-2.6.2/libpurple/.libs/libpurple.so staging/opt/lib/
+cd builds/pidgin-sipe
+make distclean
+
+Libpurpleadapter for arm
+================================
+add "CC=/root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-gcc" to Makefile
+export PKG_CONFIG_PATH=/root/optware/cs08q1armel/staging/opt/lib/pkgconfig/
+rm builds/libpurple-adapterext-1.2.0/Src/Libpuepleadapterext.o

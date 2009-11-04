@@ -1,0 +1,15 @@
+--- listview-assistant.js	Fri Aug 28 12:51:10 2009
++++ listview-assistant.js.new	Sat Oct 31 01:32:05 2009
+@@ -1132,6 +1132,12 @@
+ 	  	this.setAvailabilityIndicator(selectedValue);
+ 	  }
+ 	
++	//Set custom server?
++	MessagingMojoService.loadserver(this.controller, 'sipe');
++	MessagingMojoService.loadserver(this.controller, 'jabber');
++	MessagingMojoService.loadserver(this.controller, 'sametime');
++	MessagingMojoService.loadserver(this.controller, 'gwim');
++
+ 	  MessagingMojoService.setPresence(this.controller, selectedValue, this.handleSetPresenceFailure.bind(this));
+   },
+ 	
