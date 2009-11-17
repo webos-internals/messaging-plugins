@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
         LogEntry("Messaging Plugins");
-        LogEntry("Version: 1.1.0");
+        LogEntry("Version: 1.2.0");
         LogEntry("By Greg Roll 2009");
         LogEntry("");
 
@@ -95,7 +95,7 @@ public class Main {
 
             if (PluginName.equalsIgnoreCase(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
                 return;
             }
 
@@ -103,7 +103,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Live"))
                 {
                 try {
-                    InstallLivePlugin();
+                    AddPluginToDataBase ("Live Messenger","live","{\"32x32\":\"images/accounts/messenger-32x32.png\",\"48x48\":\"images/accounts/messenger-48x48.png\"}","9901","9902");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Live Messenger Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -115,7 +115,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("ICQ"))
                 {
                 try {
-                    InstallICQPlugin();
+                    AddPluginToDataBase ("ICQ","icq","{\"32x32\":\"images/accounts/icq-32x32.png\",\"48x48\":\"images/accounts/icq-48x48.png\"}","9903","9904");
                 } catch (ActiveRecordException ex) {
                     LogEntry("ICQ Plugin Installation Error");
                     LogEntry (ex.toString());
@@ -127,7 +127,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Facebook"))
                 {
                 try {
-                    InstallFacebookPlugin();
+                    AddPluginToDataBase ("Facebook Chat","facebook","{\"32x32\":\"images/accounts/facebook-32x32.png\",\"48x48\":\"images/accounts/facebook-48x48.png\"}","9905","9906");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Facebook Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -139,7 +139,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Jabber"))
                 {
                 try {
-                    InstallJabberPlugin();
+                    AddPluginToDataBase ("Jabber","jabber","{\"32x32\":\"images/accounts/jabber-32x32.png\",\"48x48\":\"images/accounts/jabber-48x48.png\"}","9907","9908");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Jabber Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -151,7 +151,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("SIPE"))
                 {
                 try {
-                    InstallSIPEPlugin();
+                    AddPluginToDataBase ("Live Communicator","sipe","{\"32x32\":\"images/accounts/sipe-32x32.png\",\"48x48\":\"images/accounts/sipe-48x48.png\"}","9909","9910");
                 } catch (ActiveRecordException ex) {
                     LogEntry("SIPE Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -163,7 +163,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("IRC"))
                 {
                 try {
-                    InstallIRCPlugin();
+                    AddPluginToDataBase ("IRC","irc","{\"32x32\":\"images/accounts/irc-32x32.png\",\"48x48\":\"images/accounts/irc-48x48.png\"}","9911","9912");
                 } catch (ActiveRecordException ex) {
                     LogEntry("IRC Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -175,7 +175,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Sametime"))
                 {
                 try {
-                    InstallSametimePlugin();
+                    AddPluginToDataBase ("Sametime","sametime","{\"32x32\":\"images/accounts/sametime-32x32.png\",\"48x48\":\"images/accounts/sametime-48x48.png\"}","9913","9914");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Sametime Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -187,7 +187,19 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Groupwise"))
                 {
                 try {
-                    InstallGroupwisePlugin();
+                    AddPluginToDataBase ("Novell Groupwise","gwim","{\"32x32\":\"images/accounts/novell-32x32.png\",\"48x48\":\"images/accounts/novell-48x48.png\"}","9915","9916");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("Groupwise Plugin Installation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            //Should we install the QQ Plugin?
+            if (PluginName.equalsIgnoreCase("QQ"))
+                {
+                try {
+                    AddPluginToDataBase ("QQ","qqim","{\"32x32\":\"images/accounts/qq-32x32.png\",\"48x48\":\"images/accounts/qq-48x48.png\"}","9917","9918");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Groupwise Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -207,7 +219,7 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise and Facebook.");
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
             return;
         }
 
@@ -218,7 +230,7 @@ public class Main {
 
             if (PluginName.equals(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
                 return;
             }
 
@@ -226,7 +238,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Live"))
                 {
                 try {
-                    RemoveLivePlugin();
+                    RemovePluginFromDataBase ("Live Messenger");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Live Messenger Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -238,7 +250,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("ICQ"))
                 {
                 try {
-                    RemoveICQPlugin();
+                    RemovePluginFromDataBase ("ICQ");
                 } catch (ActiveRecordException ex) {
                     LogEntry("ICQ Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -250,7 +262,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Facebook"))
                 {
                 try {
-                    RemoveFacebookPlugin();
+                    RemovePluginFromDataBase ("Facebook Chat");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Facebook Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -274,7 +286,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Jabber"))
                 {
                 try {
-                    RemoveJabberPlugin();
+                    RemovePluginFromDataBase ("Jabber");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Jabber Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -286,7 +298,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("SIPE"))
                 {
                 try {
-                    RemoveSIPEPlugin();
+                    RemovePluginFromDataBase ("Live Communicator");
                 } catch (ActiveRecordException ex) {
                     LogEntry("SIPE Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -298,7 +310,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("IRC"))
                 {
                 try {
-                    RemoveIRCPlugin();
+                    RemovePluginFromDataBase ("IRC");
                 } catch (ActiveRecordException ex) {
                     LogEntry("IRC Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -310,7 +322,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Sametime"))
                 {
                 try {
-                    RemoveSametimePlugin();
+                    RemovePluginFromDataBase ("Sametime");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Sametime Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -322,7 +334,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Groupwise"))
                 {
                 try {
-                    RemoveGroupwisePlugin();
+                    RemovePluginFromDataBase ("Novell Groupwise");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Groupwise Plugin uninstallation Error");
                     LogEntry(ex.toString());
@@ -330,53 +342,99 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise and Facebook.");
+             //Should we uninstall the QQ Plugin?
+            if (PluginName.equalsIgnoreCase("QQ"))
+                {
+                try {
+                    RemovePluginFromDataBase ("QQ");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("Groupwise Plugin uninstallation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
             System.exit(1);
         }
 
-    private static void RemoveLivePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
+    private static void AddPluginToDataBase(String AccountDisplayName, String ClassID, String IconPaths, String ModNumber1, String ModNumber2) throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
     {
-            LogEntry("Uninstalling Messenger Plugin...");
+            LogEntry("Installing " + AccountDisplayName + " Plugin...");
+
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
+            //Get Installation ID
+            String InstallationID = GetID("com_palm_accounts_AccountType", AccountDisplayName);
+
+            if (!(InstallationID.equalsIgnoreCase("")))
+            {
+                LogEntry(AccountDisplayName + " Plugin already installed.");
+                return;
+            }
 
             //Update com_palm_account_AccountType
             String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
 
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Live Messenger");
+            //Get Last ID
+            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
 
             //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Live Messenger'").toString());
-            batch.execute();
+            try
+            {
+            for(int x = 0; x < numberOfTimes; x++)
+                {
+                        batch = Batch.create();
+                        batch.setDatabase(PalmDB);
+                        batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('" + AccountDisplayName + "','com.palm.messaging.accounts.IMAccount','" + ClassID + "','" + ClassID + "','luna://com.palm.messaging/createAccountAndLogin','','" + IconPaths + "','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','" + ModNumber1 + "','')").toString());
+                        batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Installation of " + AccountDisplayName + " Plugin (Part 1) appears successful. No need to try again");
+            }
 
             //Update com_palm_account_AccountTypeService
             tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
 
+            //Get Last ID
+            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
+
             //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                        batch = Batch.create();
+                        batch.setDatabase(PalmDB);
+                        batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','" + ModNumber2 + "','')").toString());
+                        batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Installation of " + AccountDisplayName + " Plugin (Part 2) appears successful. No need to try again");
+            }
 
             //Done
-            LogEntry("Messenger Plugin Uninstalled.");
+            LogEntry(AccountDisplayName + " Plugin Installed.");
     }
 
-    private static void RemoveICQPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
+    private static void RemovePluginFromDataBase(String AccountDisplayName) throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
     {
-            LogEntry("Uninstalling ICQ Plugin...");
+            LogEntry("Uninstalling " + AccountDisplayName + " Plugin...");
 
             //Update com_palm_account_AccountType
             String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
 
             //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "ICQ");
+            String RemovalID = GetID("com_palm_accounts_AccountType", AccountDisplayName);
 
             //Add new entry
             batch = Batch.create();
             batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='ICQ'").toString());
+            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='" + AccountDisplayName + "'").toString());
             batch.execute();
 
             //Update com_palm_account_AccountTypeService
@@ -389,181 +447,7 @@ public class Main {
             batch.execute();
 
             //Done
-            LogEntry("ICQ Plugin Uninstalled.");
-    }
-
-     private static void RemoveFacebookPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling Facebook Chat Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Facebook Chat");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Facebook Chat'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Facebook Chat Plugin Uninstalled.");
-    }
-
-     private static void RemoveSIPEPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling SIPE Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Live Communicator");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Live Communicator'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("SIPE Plugin Uninstalled.");
-    }
-
-     private static void RemoveIRCPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling IRC Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "IRC");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='IRC'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("IRC Plugin Uninstalled.");
-    }
-     
-     private static void RemoveSametimePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling Sametime Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Sametime");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Sametime'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Sametime Plugin Uninstalled.");
-    }
-
-     private static void RemoveJabberPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling Jabber Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Jabber");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Jabber'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Jabber Plugin Uninstalled.");
-    }
-
-private static void RemoveGroupwisePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Uninstalling Groupwise Plugin...");
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Removal ID
-            String RemovalID = GetID("com_palm_accounts_AccountType", "Novell Groupwise");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='Novell Groupwise'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Groupwise Plugin Uninstalled.");
+            LogEntry(AccountDisplayName + " Plugin Uninstalled.");
     }
 
      private static void DisablePalmPlugins() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
@@ -585,7 +469,7 @@ private static void RemoveGroupwisePlugin() throws ActiveRecordException, IOExce
             //Update palm entry
             batch = Batch.create();
             batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress=com.nokia.imtransport WHERE com_palm_accounts_AccountType_id='1099511627792'").toString());
+            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='com.nokia.imtransport' WHERE com_palm_accounts_AccountType_id='1099511627792'").toString());
             batch.execute();
 
             //Done
@@ -601,338 +485,6 @@ private static void RemoveGroupwisePlugin() throws ActiveRecordException, IOExce
 
             //Done
             LogEntry("Palm Plugins Configured.");
-    }
-
-    private static void InstallLivePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing Messenger Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Live Messenger");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("Live Messenger Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Live Messenger','com.palm.messaging.accounts.IMAccount','live','live','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/messenger-32x32.png\",\"48x48\":\"images/accounts/messenger-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9901','')").toString());
-
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9902','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Messenger Plugin Installed.");
-    }
-
-    private static void InstallFacebookPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing Facebook Chat Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Facebook Chat");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("Facebook Chat Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Facebook Chat','com.palm.messaging.accounts.IMAccount','facebook','facebook','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/facebook-32x32.png\",\"48x48\":\"images/accounts/facebook-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9905','')").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9906','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Facebook Chat Plugin Installed.");
-    }
-
-    private static void InstallICQPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing ICQ Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "ICQ");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("ICQ Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('ICQ','com.palm.messaging.accounts.IMAccount','icq','icq','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/icq-32x32.png\",\"48x48\":\"images/accounts/icq-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9903','')").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9904','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("ICQ Plugin Installed.");
-    }
-
-    private static void InstallSIPEPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing SIPE Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Live Communicator");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("SIPE Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Live Communicator','com.palm.messaging.accounts.IMAccount','sipe','sipe','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/sipe-32x32.png\",\"48x48\":\"images/accounts/sipe-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9909','')").toString());
-
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9910','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("SIPE Plugin Installed.");
-    }
-
-    private static void InstallIRCPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing IRC Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "IRC");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("IRC Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('IRC','com.palm.messaging.accounts.IMAccount','irc','irc','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/irc-32x32.png\",\"48x48\":\"images/accounts/irc-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9911','')").toString());
-
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9912','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("IRC Plugin Installed.");
-    }
-
-    private static void InstallSametimePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing Sametime Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Sametime");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("Sametime Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Sametime','com.palm.messaging.accounts.IMAccount','sametime','sametime','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/sametime-32x32.png\",\"48x48\":\"images/accounts/sametime-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9913','')").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9914','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Sametime Plugin Installed.");
-    }
-
-    private static void InstallJabberPlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing Jabber Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Jabber");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("Jabber Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Jabber','com.palm.messaging.accounts.IMAccount','jabber','jabber','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/jabber-32x32.png\",\"48x48\":\"images/accounts/jabber-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9907','')").toString());
-
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9908','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Jabber Plugin Installed.");
-    }
-
-    private static void InstallGroupwisePlugin() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
-    {
-            LogEntry("Installing Groupwise Plugin...");
-
-            //Get Installation ID
-            String InstallationID = GetID("com_palm_accounts_AccountType", "Novell Groupwise");
-
-            if (!(InstallationID.equalsIgnoreCase("")))
-            {
-                LogEntry("Groupwise Plugin already installed.");
-                return;
-            }
-
-            //Update com_palm_account_AccountType
-            String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
-
-            //Get Last ID
-            long LastIDTable1 = GetNext ("com_palm_accounts_AccountType", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (name,accountClass,domain,iconClass,lunaSetupServiceMethod,accountDeleteMethod,icons,isCrudAccount,isUserCreatable,dataIsReadOnly,acctTypeEnabled,hasSharedAuthToken,backupID,appID,id,_class_id,_mod_num,_flags) VALUES ('Novell Groupwise','com.palm.messaging.accounts.IMAccount','gwim','gwim','luna://com.palm.messaging/createAccountAndLogin','','{\"32x32\":\"images/accounts/novell-32x32.png\",\"48x48\":\"images/accounts/novell-48x48.png\"}','0','1','0','1','0','0','defaultAppId','" + LastIDTable1 + "','1','9915','')").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Get Last ID
-            long LastIDTable2 = GetNext ("com_palm_accounts_AccountTypeService", "id");
-
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("INSERT INTO ").append(tableName).append(" (com_palm_accounts_AccountType_id,interfaceName,dbusAddress,serviceType,isCrudService,backupID,id,_class_id,_mod_num,_flags) VALUES ('" + LastIDTable1 + "','','im.libpurpleext.greg','IM','0','0','" + LastIDTable2 + "','2','9916','')").toString());
-            batch.execute();
-
-            //Done
-            LogEntry("Groupwise Plugin Installed.");
     }
 
     private static void EnablePalmPlugins() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException

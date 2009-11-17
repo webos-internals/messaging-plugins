@@ -411,6 +411,15 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 		}
 	}
+	else if (strcmp(serviceName, "qqim") == 0)
+	{
+		char *resource = memchr(username, '/', strlen(username));
+		if (resource != NULL)
+		{
+			int charsToKeep = resource - username;
+			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
+		}
+	}
 	return javaFriendlyUsername->str;
 }
 
@@ -519,6 +528,11 @@ static char* getPrplProtocolIdFromServiceName(const char *serviceName)
 		// Special case for Groupwise where the java serviceName is "gwim" and the prpl protocol_id is "prpl-novell"
 		g_string_append(prplProtocolId, "novell");
 	}
+	else if (strcmp(serviceName, "qqim") == 0)
+	{
+		// Special case for QQ where the java serviceName is "qqim" and the prpl protocol_id is "prpl-qq"
+		g_string_append(prplProtocolId, "qq");
+	}
 	else
 	{
 		g_string_append(prplProtocolId, serviceName);
@@ -599,6 +613,11 @@ static char* getServiceNameFromPrplProtocolId(char *prplProtocolId)
 	{
 		// Special case for sametime where the java serviceName is "sametime" and the prpl protocol_id is "prpl-meanwhile"
 		serviceName = g_string_new("sametime");
+	}
+	else if (strcmp(serviceName->str, "qq") == 0)
+	{
+		// Special case for QQ where the java serviceName is "qqim" and the prpl protocol_id is "prpl-qq"
+		serviceName = g_string_new("qqim");
 	}
 	return serviceName->str;
 }
@@ -1507,25 +1526,113 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 		return;
 	}
 
-	char *usernameFromStripped = stripResourceFromGtalkUsername(usernameFrom);
-
-	LSError lserror;
-	LSErrorInit(&lserror);
-
-	struct json_object *payload = json_object_new_object();
-	json_object_object_add(payload, "serviceName", json_object_new_string(serviceName));
-	json_object_object_add(payload, "username", json_object_new_string(username));
-	json_object_object_add(payload, "usernameFrom", json_object_new_string(usernameFromStripped));
-	json_object_object_add(payload, "messageText", json_object_new_string((char*)message));
-
-	bool retVal = LSSubscriptionReply(serviceHandle, "/registerForIncomingMessages",
-			json_object_to_json_string(payload), &lserror);
-	if (!retVal)
+	//If IRC get the title of the chat window becuase group chat messages appear from the user
+	if (strcmp(serviceName, "irc") == 0)
 	{
-		LSErrorPrint(&lserror, stderr);
+		char *usernameFromStripped = stripResourceFromGtalkUsername(usernameFrom);
+
+		//Get Window Title
+		char *IRCWindow = (char *)calloc(strlen(purple_conversation_get_title(conv)), sizeof(char));
+		strcat(IRCWindow, purple_conversation_get_title(conv));
+
+		//If this is a group chat e.g. #webos-internals append users name to message
+		char *IRCMessage = NULL;
+		if (strstr(IRCWindow, "#") != NULL)
+		{
+			//Append the users name to the message
+			IRCMessage = (char *)calloc(strlen(usernameFromStripped) + strlen(" - ") + strlen(message), sizeof(char));
+			strcat(IRCMessage, usernameFromStripped);
+			strcat(IRCMessage, " - ");
+			strcat(IRCMessage, message);
+		}
+
+		LSError lserror;
+		LSErrorInit(&lserror);
+
+		struct json_object *payload = json_object_new_object();
+		json_object_object_add(payload, "serviceName", json_object_new_string(serviceName));
+		json_object_object_add(payload, "username", json_object_new_string(username));
+		json_object_object_add(payload, "usernameFrom", json_object_new_string(IRCWindow));
+
+		if (strstr(IRCWindow, "#") != NULL)
+		{
+			json_object_object_add(payload, "messageText", json_object_new_string((char *)IRCMessage));
+		}
+		else
+		{
+			json_object_object_add(payload, "messageText", json_object_new_string((char *)message));
+		}
+
+		bool retVal = LSSubscriptionReply(serviceHandle, "/registerForIncomingMessages",
+				json_object_to_json_string(payload), &lserror);
+		if (!retVal)
+		{
+			LSErrorPrint(&lserror, stderr);
+		}
+		LSErrorFree(&lserror);
+
+		if (usernameFromStripped)
+		{
+			free(usernameFromStripped);
+		}
+		if (IRCMessage)
+		{
+			free(IRCMessage);
+		}
+		if (IRCWindow)
+		{
+			free(IRCWindow);
+		}
+		if (!is_error(payload)) 
+		{
+			json_object_put(payload);
+		}
+	}
+	else
+	{
+		char *usernameFromStripped = NULL;
+		if (strcmp(serviceName, "sipe") == 0)
+		{
+			//If sipe remove sip: from the start of the username
+			GString *SIPEusernameFrom = g_string_new(usernameFrom);
+			g_string_erase(SIPEusernameFrom, 0, 4);
+
+			usernameFromStripped = stripResourceFromGtalkUsername(SIPEusernameFrom->str);
+		}
+		else
+		{
+			usernameFromStripped = stripResourceFromGtalkUsername(usernameFrom);
+		}
+
+		LSError lserror;
+		LSErrorInit(&lserror);
+
+		struct json_object *payload = json_object_new_object();
+		json_object_object_add(payload, "serviceName", json_object_new_string(serviceName));
+		json_object_object_add(payload, "username", json_object_new_string(username));
+		json_object_object_add(payload, "usernameFrom", json_object_new_string(usernameFromStripped));
+		json_object_object_add(payload, "messageText", json_object_new_string((char*)message));
+
+		bool retVal = LSSubscriptionReply(serviceHandle, "/registerForIncomingMessages",
+				json_object_to_json_string(payload), &lserror);
+
+		if (!retVal)
+		{
+			LSErrorPrint(&lserror, stderr);
+		}
+
+		LSErrorFree(&lserror);
+
+		if (usernameFromStripped)
+		{
+			free(usernameFromStripped);
+		}
+		if (!is_error(payload)) 
+		{
+			json_object_put(payload);
+		}
 	}
 
-	LSErrorFree(&lserror);
 	if (serviceName)
 	{
 		free(serviceName);
@@ -1533,14 +1640,6 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 	if (username)
 	{
 		free(username);
-	}
-	if (usernameFromStripped)
-	{
-		free(usernameFromStripped);
-	}
-	if (!is_error(payload)) 
-	{
-		json_object_put(payload);
 	}
 }
 
@@ -2495,6 +2594,7 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 	const char *username = "";
 	const char *usernameTo = "";
 	const char *messageText = "";
+	char *IRCusernameTo = "";
 
 	syslog(LOG_INFO, "%s called.", __FUNCTION__);
 
@@ -2561,9 +2661,59 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 		goto error;
 	}
 
-	PurpleConversation *purpleConversation =
-			purple_conversation_new(PURPLE_CONV_TYPE_IM, accountToSendFrom, usernameTo);
-	purple_conv_im_send(purple_conversation_get_im_data(purpleConversation), messageTextUnescaped);
+	if (strcmp(serviceName, "irc") == 0 && strstr(usernameTo, "/join ") != NULL)
+	{
+		PurpleChat *chat;
+		GHashTable *hash = NULL;
+		PurpleConnection *gc;
+		PurpleConversation *purpleConversation;
+
+		//Remove join from usernameTo
+		GString *IRCusernameTo = g_string_new(usernameTo);
+		g_string_erase(IRCusernameTo, 0, 6);
+
+		syslog(LOG_INFO, "Joining IRC channel: %s",IRCusernameTo->str);
+
+		gc = purple_account_get_connection(accountToSendFrom);
+
+		if (!(purpleConversation = purple_find_conversation_with_account(PURPLE_CONV_TYPE_CHAT, IRCusernameTo->str, accountToSendFrom))) {
+			purpleConversation = purple_conversation_new(PURPLE_CONV_TYPE_CHAT, accountToSendFrom, IRCusernameTo->str);
+			purple_conv_chat_left(PURPLE_CONV_CHAT(purpleConversation));
+		} else {
+			purple_conversation_present(purpleConversation);
+		}
+
+		chat = purple_blist_find_chat(accountToSendFrom, IRCusernameTo->str);
+		if (chat == NULL) {
+			PurplePluginProtocolInfo *info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_connection_get_prpl(gc));
+			if (info->chat_info_defaults != NULL)
+				hash = info->chat_info_defaults(gc, IRCusernameTo->str);
+		} else {
+			hash = purple_chat_get_components(chat);
+		}
+		serv_join_chat(gc, hash);
+		if (chat == NULL && hash != NULL)
+			g_hash_table_destroy(hash);
+	}
+	else
+	{
+		//If SIPE append sip: to username if required!
+		if (strcmp(serviceName, "sipe") == 0 && strcmp(usernameTo, "sip:") != 0)
+		{
+			char *SIPEUserName = NULL;
+			SIPEUserName = (char *)calloc(strlen("sip:") + strlen(usernameTo) + 1, sizeof(char));
+			strcat(SIPEUserName, "sip:");
+			strcat(SIPEUserName, usernameTo);
+
+			PurpleConversation *purpleConversation = purple_conversation_new(PURPLE_CONV_TYPE_IM, accountToSendFrom, SIPEUserName);
+			purple_conv_im_send(purple_conversation_get_im_data(purpleConversation), messageTextUnescaped);
+		}
+		else
+		{
+			PurpleConversation *purpleConversation = purple_conversation_new(PURPLE_CONV_TYPE_IM, accountToSendFrom, usernameTo);
+			purple_conv_im_send(purple_conversation_get_im_data(purpleConversation), messageTextUnescaped);
+		}
+	}
 
 	retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":true}", &lserror);
 	if (!retVal)

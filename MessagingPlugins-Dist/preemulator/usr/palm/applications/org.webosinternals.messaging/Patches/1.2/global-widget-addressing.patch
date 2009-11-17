@@ -1,0 +1,45 @@
+--- global-widget-addressing.css	Thu Nov  5 02:54:58 2009
++++ global-widget-addressing.css.new	Mon Nov  9 04:46:14 2009
+@@ -253,6 +253,42 @@
+ 	margin: 0px 4px 0px 16px;
+ }
+ 
++.addressing-widget .icon.qqim {                    
++  background: url(../images/accounts/qq-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.gwim {                    
++  background: url(../images/accounts/novell-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.irc {                    
++  background: url(../images/accounts/irc-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.sametime {                    
++  background: url(../images/accounts/sametime-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.live {                    
++  background: url(../images/accounts/messenger-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.icq {                    
++  background: url(../images/accounts/icq-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.facebook {                    
++  background: url(../images/accounts/facebook-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.jabber {                    
++  background: url(../images/accounts/jabber-32x32.png) center left no-repeat;
++}
++
++.addressing-widget .icon.sipe {                    
++  background: url(../images/accounts/sipe-32x32.png) center left no-repeat;
++}
++
+ .addressing-widget .icon.gmail {                                 
+   background: url(../images/accounts/googletalk-32x32.png) center left no-repeat;
+ }

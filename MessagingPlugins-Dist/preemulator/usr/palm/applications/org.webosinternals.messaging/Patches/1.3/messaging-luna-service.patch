@@ -1,0 +1,31 @@
+--- messaging-luna-service.js	Mon Oct  5 15:00:57 2009
++++ messaging-luna-service.new	Mon Nov 16 01:57:16 2009
+@@ -1002,5 +1002,27 @@
+ 		  method: 'setSMSCAddressAndEmailGateway',
+ 		  parameters: {smscAddr:address, emailGateway: gateway}
+ 	  });
++	},
++  /************************
++   * Methods for LibpurpleAdapter
++   ************************/
++	setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS,ServerLogin) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'setserver',
++	      parameters: {serviceName:serviceName, ServerName:ServerName, ServerPort:ServerPort, TLS:TLS, ServerLogin:ServerLogin}
++		});  
++	},
++	getserver: function(onSuccess, sceneController, serviceName) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'getserver',
++			parameters: {serviceName:serviceName},
++			onSuccess: onSuccess
++		});   	
++	},  
++	clearserver: function(sceneController,serviceName) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'clearserver',
++	      parameters: {serviceName:serviceName}
++		});  
+ 	}
+ };
+\ No newline at end of file

@@ -3,6 +3,13 @@
 #Get WebOS Version
 /usr/bin/luna-send -n 1 palm://com.palm.preferences/systemProperties/Get {\"key\":\"com.palm.properties.version\"} 2>/var/tmp/webosver
 
+if (cat /var/tmp/webosver | grep -i 1.2); then
+	WEBOSVER=1.2
+fi
+if (cat /var/tmp/webosver | grep -i 1.3); then
+	WEBOSVER=1.3
+fi
+
 #Unload Messaging Application
 /usr/bin/luna-send -n 1 "palm://com.palm.applicationManager/close" "{\"processId\":\"1010\"}"
 
@@ -18,80 +25,40 @@ sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh R
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin IRC
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Sametime
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Groupwise
-sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Palm #Should be last!
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin QQ
+if (echo $WEBOSVER | grep -i 1.2); then
+	sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh RemovePlugin Palm #Should be last!
+fi
 
-#Restore Files (only if they don't exist already)
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js ]; then
-		rm -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js
-		mv /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js
-	fi
-else
-	 echo "/usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js backup not found"
+#Restore Files (Unpatch)
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-constants.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-constants.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-luna-service.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-scene.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch
+/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch
+if (echo $WEBOSVER | grep -i 1.2); then
+	/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch
+	/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch
 fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js
-	mv /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js backup not found"
+if (echo $WEBOSVER | grep -i 1.3); then
+	/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/global-iconography.css -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch
+	/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/global-widget-addressing.css -R -d / < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch
 fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html
-	mv /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html backup not found"
+
+#Cleanup Patching Failures
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.orig
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.orig
+if (echo $WEBOSVER | grep -i 1.2); then
+	rm /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/*.orig
+	rm /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/*.rej
 fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js
-	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js backup not found"
-fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
-	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js backup not found"
-fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js
-	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js backup not found"
-fi
-if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback ]; then
-	if [ -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js ]; then
-	rm -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
-	mv /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
-	fi
-else
-	echo "/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js backup not found"
-fi
-if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback ]; then
-	if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css ]; then
-	rm -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css
-	mv /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css
-	fi
-else
-	echo "/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css backup not found"
-fi
-if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback ]; then
-	if [ -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css ]; then
-	rm -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css
-	mv /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css
-	fi
-else
-	echo "/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css backup not found"
+if (echo $WEBOSVER | grep -i 1.3); then
+	rm /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/*.orig
+	rm /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/*.rej
 fi
 
 #Restore Palm Libraries
@@ -142,10 +109,35 @@ fi
 rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/facebook*.png
 rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/icq*.png
 rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/messenger*.png
-
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/irc*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/jabber*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/novell*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/sametime*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/sipe*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/qq*.png
+if (echo $WEBOSVER | grep -i 1.2); then
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/icq*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/messenger*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/irc*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/jabber*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/novell*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/sametime*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/sipe*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/qq*.png
+fi
+if (echo $WEBOSVER | grep -i 1.3); then
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/icq*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/messenger*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/irc*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/jabber*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/novell*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/sametime*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/sipe*.png
+	rm -f /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/qq*.png
+fi
 rm -f /usr/lib/libjson-glib-1.0.so.0
 
-#Cleanup Sym-Links (even when I copy a file to backup sometimes the symlink follows the backup?!?!)
+#Cleanup Sym-Links
 rm /usr/lib/libglib-2.0.so.0
 ln -s /usr/lib/libglib-2.0.so.0.1400.4 /usr/lib/libglib-2.0.so.0
 rm /usr/lib/libpurple.so

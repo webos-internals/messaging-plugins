@@ -3,6 +3,13 @@
 #Get WebOS Version
 /usr/bin/luna-send -n 1 palm://com.palm.preferences/systemProperties/Get {\"key\":\"com.palm.properties.version\"} 2>/var/tmp/webosver
 
+if (cat /var/tmp/webosver | grep -i 1.2); then
+	WEBOSVER=1.2
+fi
+if (cat /var/tmp/webosver | grep -i 1.3); then
+	WEBOSVER=1.3
+fi
+
 #Unload Messaging Application
 /usr/bin/luna-send palm://com.palm.applicationManager/close "{\"processId\":\"1010\"}" 
 
@@ -12,33 +19,6 @@ kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
 #Backup Files (only if they don't exist already)
 if [ ! -f /var/luna/data/dbdata/PalmDatabase.db3.messback ]; then
 	cp /var/luna/data/dbdata/PalmDatabase.db3 /var/luna/data/dbdata/PalmDatabase.db3.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js.messback
-fi
-if [ ! -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback ]; then
-	cp /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js.messback
-fi
-if [ ! -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback ]; then
-	cp /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css.messback
-fi
-if [ ! -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback ]; then
-	cp /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css.messback
 fi
 
 #Backup Palm Libraries
@@ -62,15 +42,34 @@ cp /var/usr/palm/applications/org.webosinternals.messaging/usr/share/dbus-1/syst
 ln -s /var/usr/lib/luna/java/org.webosinternals.messaging.jar /usr/lib/luna/java/org.webosinternals.messaging.jar 
 
 #Patch messaging application
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js < /var/usr/palm/applications/org.webosinternals.messaging/messaging-constants.patch
-/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css < /var/usr/palm/applications/org.webosinternals.messaging/global-iconography.patch
-/var/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css < /var/usr/palm/applications/org.webosinternals.messaging/global-widget-addressing.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js < /var/usr/palm/applications/org.webosinternals.messaging/messaging-luna-service.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html < /var/usr/palm/applications/org.webosinternals.messaging/prefsSetupAccount-scene.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/listview-assistant.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/prefsAccountSummary-assistant.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/prefsAccountTypeList-assistant.patch
-/var/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/prefsSetupAccount-assistant.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-constants.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-luna-service.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-scene.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch
+/var/usr/bin/patch -N /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch
+if (echo $WEBOSVER | grep -i 1.2); then
+	/var/usr/bin/patch -N /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-iconography.css < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch
+	/var/usr/bin/patch -N /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global-widget-addressing.css < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch
+fi
+if (echo $WEBOSVER | grep -i 1.3); then
+	/var/usr/bin/patch -N /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/global-iconography.css < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch
+	/var/usr/bin/patch -N /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/global-widget-addressing.css < /var/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch
+fi
+
+#Cleanup Patching Failures
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.orig
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.orig
+if (echo $WEBOSVER | grep -i 1.2); then
+	rm /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/*.rej
+	rm /usr/palm/frameworks/mojo/submissions/200.18/stylesheets/*.orig
+fi
+if (echo $WEBOSVER | grep -i 1.3); then
+	rm /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/*.rej
+	rm /usr/palm/frameworks/mojo/submissions/200.47/stylesheets/*.orig
+fi
 
 #Update Database (call Java)
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin Live 
@@ -81,14 +80,22 @@ sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh I
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin IRC
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin Sametime
 sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin Groupwise
-sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin Palm   #Should be last!
+sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin QQ
+if (echo $WEBOSVER | grep -i 1.2); then
+	sh /var/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh InstallPlugin Palm #Should be last!
+fi
 
 #Copy files for installation
 cp /var/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/* /usr/lib/purple-2/
 cp /var/usr/palm/applications/org.webosinternals.messaging/usr/lib/* /usr/lib/
 cp /var/usr/palm/applications/org.webosinternals.messaging/usr/share/purple/ca-certs/* /usr/share/purple/ca-certs
 cp /var/usr/palm/applications/org.webosinternals.messaging/usr/palm/applications/com.palm.app.messaging/images/transports/* /usr/palm/applications/com.palm.app.messaging/images/transports/
-cp /var/usr/palm/applications/org.webosinternals.messaging/usr/palm/frameworks/mojo/submissions/200.18/images/accounts/* /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/
+if (cat /var/tmp/webosver | grep -i 1.2); then
+	cp /var/usr/palm/applications/org.webosinternals.messaging/usr/palm/frameworks/mojo/submissions/200.18/images/accounts/* /usr/palm/frameworks/mojo/submissions/200.18/images/accounts/
+fi
+if (cat /var/tmp/webosver | grep -i 1.3); then
+	cp /var/usr/palm/applications/org.webosinternals.messaging/usr/palm/frameworks/mojo/submissions/200.47/images/accounts/* /usr/palm/frameworks/mojo/submissions/200.47/images/accounts/
+fi
 cp /var/usr/palm/applications/org.webosinternals.messaging/usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/* /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/
 
 #Install LibpurpleAdapterExt
