@@ -292,6 +292,18 @@ static char* getPrplFriendlyUsername(const char *serviceName, const char *userna
 			return transportFriendlyUsername;
 		}
 	}
+	else if (strcmp(serviceName, "qqim") == 0)
+	{
+		if (strstr(username, "@qqim.com") != NULL)
+		{
+			transportFriendlyUsername = malloc(strlen(username) - strlen("@qqim.com") + 1);
+			char *usernameCopy= alloca(strlen(username) + 1);
+			strcpy(usernameCopy, username);
+			strtok(usernameCopy, "@");
+			strcpy(transportFriendlyUsername, usernameCopy);
+			return transportFriendlyUsername;
+		}
+	}
 
 	//Special Case for Office Communicator when DOMAIN\USER is set. Account name is USERNAME,DOMAIN\USER
 	if (strcmp(serviceName, "sipe") == 0 && strcmp(SIPEServerLogin, "") != 0)
@@ -411,14 +423,9 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 		}
 	}
-	else if (strcmp(serviceName, "qqim") == 0)
+	else if (strcmp(serviceName, "qqim") == 0 && strchr(username, '@') == NULL)
 	{
-		char *resource = memchr(username, '/', strlen(username));
-		if (resource != NULL)
-		{
-			int charsToKeep = resource - username;
-			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
-		}
+		g_string_append(javaFriendlyUsername, "@qqim.com");
 	}
 	return javaFriendlyUsername->str;
 }
@@ -563,7 +570,7 @@ static char* getServiceNameFromPrplProtocolId(char *prplProtocolId)
 	else if (strcmp(serviceName->str, "jabber") == 0)
 	{
 		//Check if JabberServer is set, if it is we are not using GTalk
-		if (JabberServer == NULL)
+		if (JabberServer == NULL || JabberServer == "")
 		{
 			// Special case for gtalk where the java serviceName is "gmail" and the prpl protocol_id is "prpl-jabber"
 			serviceName = g_string_new("gmail");

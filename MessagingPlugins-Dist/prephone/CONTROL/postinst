@@ -15,6 +15,8 @@ fi
 
 #Kill LibpurpleAdapterExt if it's running
 kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'` 
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
 
 #Backup Files (only if they don't exist already)
 if [ ! -f /var/luna/data/dbdata/PalmDatabase.db3.messback ]; then
