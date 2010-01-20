@@ -1,0 +1,58 @@
+--- messaging-luna-service.js	Wed Oct 21 17:25:19 2009
++++ messaging-luna-service.new	Mon Jan 18 05:11:05 2010
+@@ -7,6 +7,7 @@
+ 	displayIdentifier: 'palm://com.palm.display/control',
+ 	telephonyIdentifier: 'palm://com.palm.telephony',
+ 	systemManagerIdentifier: 'palm://com.palm.systemmanager',
++	MessagingPlugins: 'palm://im.libpurpleext.greg',
+ 	
+ 	launchMessaging: function(sceneController, params){
+ 		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
+@@ -1009,5 +1010,46 @@
+ 		  method: 'setSMSCAddressAndEmailGateway',
+ 		  parameters: {smscAddr:address, emailGateway: gateway}
+ 	  });
++	},
++  /************************
++   * Methods for LibpurpleAdapter
++   ************************/
++	setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS,ServerLogin, Proxy) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'setserver',
++	      parameters: {serviceName:serviceName, ServerName:ServerName, ServerPort:ServerPort, TLS:TLS, ServerLogin:ServerLogin, Proxy:Proxy}
++		});  
++	},
++	getserver: function(onSuccess, sceneController, serviceName) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'getserver',
++			parameters: {serviceName:serviceName},
++			onSuccess: onSuccess
++		});   	
++	},  
++	clearserver: function(sceneController,serviceName) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'clearserver',
++	      parameters: {serviceName:serviceName}
++		});  
++	},
++	getconnection: function(sceneController,callback) {
++	    return sceneController.serviceRequest('palm://com.palm.connectionmanager', {
++	      method: 'getstatus',
++		  onSuccess: callback,
++		  onFailure: callback,
++		});  
++	},
++	AccountLogOut: function(sceneController,accountId) {
++		return sceneController.serviceRequest(MessagingMojoService.identifier,{
++			method: 'logout',
++			parameters: {accountId: accountId},
++		});
++	},
++	EnableContactsReadWrite: function(sceneController,PluginName) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'EnableContactsReadWrite',
++	      parameters: {PluginName:PluginName}
++		});  
+ 	}
+ };
+\ No newline at end of file

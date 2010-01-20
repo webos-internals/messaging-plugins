@@ -93,12 +93,10 @@ static gchar *fb_gunzip(const guchar *gzip_data, ssize_t *len_ptr)
 
 	g_free(data_buffer);	
 
-	gchar *output_data = g_strdup(output_string->str);
-	*len_ptr = output_string->len;
+	if (len_ptr)
+		*len_ptr = output_string->len;
 
-	g_string_free(output_string, TRUE);
-
-	return output_data;
+	return g_string_free(output_string, FALSE);
 }
 #endif
 
@@ -560,7 +558,7 @@ void fb_post_or_get(FacebookAccount *fba, FacebookMethod method,
 	 *       the TTL returned by the DNS server.  We should expire things
 	 *       from the cache after some amount of time.
 	 */
-	if (!is_proxy)
+	if (!is_proxy && !(method & FB_METHOD_SSL))
 	{
 		/* Don't do this for proxy connections, since proxies do the DNS lookup */
 		gchar *host_ip;

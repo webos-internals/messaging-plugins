@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/data
+END
+gfire_manage.glade
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/data/gfire_manage.glade
+END
+gfire_processes.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/data/gfire_processes.xml
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/data/Makefile.in
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/data/Makefile.am
+END

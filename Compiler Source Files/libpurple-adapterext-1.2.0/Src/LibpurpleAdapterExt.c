@@ -42,7 +42,7 @@
 
 #define PURPLE_GLIB_READ_COND  (G_IO_IN | G_IO_HUP | G_IO_ERR)
 #define PURPLE_GLIB_WRITE_COND (G_IO_OUT | G_IO_HUP | G_IO_ERR | G_IO_NVAL)
-#define CONNECT_TIMEOUT_SECONDS 60
+#define CONNECT_TIMEOUT_SECONDS 180
 
 /**
  * The number of seconds we wait before disabling the server queue after the screen turns on
@@ -84,6 +84,7 @@ char *SIPEServer = "";
 char *SIPEServerPort = "";
 char *SIPEServerLogin = "";
 bool SIPEServerTLS = FALSE;
+bool SIPEServerProxy = FALSE;
 char *SametimeServer = "";
 char *SametimeServerPort = "";
 bool SametimeServerTLS = FALSE;
@@ -304,6 +305,18 @@ static char* getPrplFriendlyUsername(const char *serviceName, const char *userna
 			return transportFriendlyUsername;
 		}
 	}
+	else if (strcmp(serviceName, "xfire") == 0)
+	{
+		if (strstr(username, "@xfire.com") != NULL)
+		{
+			transportFriendlyUsername = malloc(strlen(username) - strlen("@xfire.com") + 1);
+			char *usernameCopy= alloca(strlen(username) + 1);
+			strcpy(usernameCopy, username);
+			strtok(usernameCopy, "@");
+			strcpy(transportFriendlyUsername, usernameCopy);
+			return transportFriendlyUsername;
+		}
+	}
 
 	//Special Case for Office Communicator when DOMAIN\USER is set. Account name is USERNAME,DOMAIN\USER
 	if (strcmp(serviceName, "sipe") == 0 && strcmp(SIPEServerLogin, "") != 0)
@@ -360,6 +373,10 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 	{
 		g_string_append(javaFriendlyUsername, "@icq.com");
 	}
+	else if (strcmp(serviceName, "xfire") == 0 && strchr(username, '@') == NULL)
+	{
+		g_string_append(javaFriendlyUsername, "@xfire.com");
+	}
 	else if (strcmp(serviceName, "gmail") == 0)
 	{
 		char *resource = memchr(username, '/', strlen(username));
@@ -387,14 +404,9 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 		}
 	}
-	else if (strcmp(serviceName, "sametime") == 0)
+	else if (strcmp(serviceName, "sametime") == 0 && strchr(username, '@') == NULL)
 	{
-		char *resource = memchr(username, '/', strlen(username));
-		if (resource != NULL)
-		{
-			int charsToKeep = resource - username;
-			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
-		}
+		g_string_append(javaFriendlyUsername, "@sametime.com");
 	}
 	else if (strcmp(serviceName, "jabber") == 0)
 	{
@@ -405,14 +417,9 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 		}
 	}
-	else if (strcmp(serviceName, "gwim") == 0)
+	else if (strcmp(serviceName, "gwim") == 0 && strchr(username, '@') == NULL)
 	{
-		char *resource = memchr(username, '/', strlen(username));
-		if (resource != NULL)
-		{
-			int charsToKeep = resource - username;
-			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
-		}
+		g_string_append(javaFriendlyUsername, "@gwim.com");
 	}
 	else if (strcmp(serviceName, "sipe") == 0)
 	{
@@ -507,12 +514,17 @@ static char* getPrplProtocolIdFromServiceName(const char *serviceName)
 	}
 	else if (strcmp(serviceName, "icq") == 0)
 	{
-		// Special case for gtalk where the java serviceName is "icq" and the prpl protocol_id is "prpl-icq"
+		// Special case for icq where the java serviceName is "icq" and the prpl protocol_id is "prpl-icq"
 		g_string_append(prplProtocolId, "icq");
+	}
+	else if (strcmp(serviceName, "xfire") == 0)
+	{
+		// Special case for xfire where the java serviceName is "xfire" and the prpl protocol_id is "prpl-xfire"
+		g_string_append(prplProtocolId, "xfire");
 	}
 	else if (strcmp(serviceName, "facebook") == 0)
 	{
-		// Special case for gtalk where the java serviceName is "facebook" and the prpl protocol_id is "prpl-bigbrownchunx-facebookim"
+		// Special case for facebook where the java serviceName is "facebook" and the prpl protocol_id is "prpl-bigbrownchunx-facebookim"
 		g_string_append(prplProtocolId, "bigbrownchunx-facebookim");
 	}
 	else if (strcmp(serviceName, "jabber") == 0)
@@ -551,12 +563,14 @@ static char* getPrplProtocolIdFromServiceName(const char *serviceName)
  * Given the prpl-specific protocol_id, it will return java-friendly serviceName (e.g. given "prpl-aim", it will return "aol")
  * Free the returned string when you're done with it 
  */
-static char* getServiceNameFromPrplProtocolId(char *prplProtocolId)
+static char* getServiceNameFromPrplProtocolId(PurpleAccount *prplaccount)
 {
+	char *prplProtocolId = prplaccount->protocol_id;
 	if (!prplProtocolId)
 	{
 		return "";
 	}
+
 	char *stringChopper = prplProtocolId;
 	stringChopper += strlen("prpl-");
 	GString *serviceName = g_string_new(stringChopper);
@@ -569,17 +583,42 @@ static char* getServiceNameFromPrplProtocolId(char *prplProtocolId)
 	}
 	else if (strcmp(serviceName->str, "jabber") == 0)
 	{
-		//Check if JabberServer is set, if it is we are not using GTalk
-		if (JabberServer == NULL || JabberServer == "")
+		const char *Alias = purple_account_get_alias (prplaccount);
+
+		if (Alias != NULL)
 		{
-			// Special case for gtalk where the java serviceName is "gmail" and the prpl protocol_id is "prpl-jabber"
-			serviceName = g_string_new("gmail");
+			//Check account alias. gtalk for Gtalk, jabber for Jabber
+			if (strcmp(Alias, "gtalk") == 0)
+			{
+				// Special case for gtalk where the java serviceName is "gmail" and the prpl protocol_id is "prpl-jabber"
+				serviceName = g_string_new("gmail");
+				printf("**************************** getServiceNameFromPrplProtocolId\n");
+				printf("*************************************************************\n");
+				printf("GTalk protocol returned.\n");
+				printf("*************************************************************\n");
+				printf("*************************************************************\n");
+			}
+			else
+			{
+				// Special case for jabber where the java serviceName is "jabber" and the prpl protocol_id is "prpl-jabber"
+				serviceName = g_string_new("jabber");
+				printf("**************************** getServiceNameFromPrplProtocolId\n");
+				printf("*************************************************************\n");
+				printf("Jabber protocol returned.\n");
+				printf("*************************************************************\n");
+				printf("*************************************************************\n");
+			}
 		}
 		else
 		{
-			// Special case for gtalk where the java serviceName is "jabber" and the prpl protocol_id is "prpl-jabber"
-			serviceName = g_string_new("jabber");
-		}		
+			//Account alias is blank for some reason. Guess gtalk
+			serviceName = g_string_new("gmail");
+			printf("**************************** getServiceNameFromPrplProtocolId\n");
+			printf("*************************************************************\n");
+			printf("Alias Blank. GTalk protocol returned.\n");
+			printf("*************************************************************\n");
+			printf("*************************************************************\n");
+		}
 	}
 	else if (strcmp(serviceName->str, "msn") == 0)
 	{
@@ -595,6 +634,11 @@ static char* getServiceNameFromPrplProtocolId(char *prplProtocolId)
 	{
 		// Special case for messenger where the java serviceName is "icq" and the prpl protocol_id is "prpl-icq"
 		serviceName = g_string_new("icq");
+	}
+	else if (strcmp(serviceName->str, "xfire") == 0)
+	{
+		// Special case for messenger where the java serviceName is "xfire" and the prpl protocol_id is "prpl-xfire"
+		serviceName = g_string_new("xfire");
 	}
 	else if (strcmp(serviceName->str, "bigbrownchunx-facebookim") == 0)
 	{
@@ -648,7 +692,7 @@ static char* getAccountKeyFromPurpleAccount(PurpleAccount *account)
 	{
 		return "";
 	}
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	char *username = getJavaFriendlyUsername(account->username, serviceName);
 	char *accountKey = getAccountKey(username, serviceName);
 
@@ -850,6 +894,46 @@ static gboolean queuePresenceUpdatesForAccountTimerCallback(gpointer data)
 	return FALSE;
 }
 
+static void ReadWriteContacts(const char *PluginName)
+{
+	//Set Filename
+	char *filename = "/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/org.webosinternals.messaging.jar";
+	char *DestDIR = "";
+	FILE *hFile;
+
+	printf("Checking for file %s\n",filename);
+	hFile = fopen(filename, "r");
+	if (hFile == NULL)
+	{
+		printf("File not found. Defaulting to /var/usr/palm/applications/org.webosinternals.messaging/org.webosinternals.messaging.jar");
+		DestDIR = "/var/usr/palm/applications/org.webosinternals.messaging/";
+	}
+	else
+	{
+		printf("File found. Defaulting to /media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/org.webosinternals.messaging.jar");
+		fclose(hFile);
+		DestDIR = "/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/";
+	}
+
+	//Set Command Line
+	char *CommandLine = alloca(strlen("javahy -bcp /usr/lib/luna/java/Utils.jar:/usr/lib/luna/java/accounts.jar:/usr/lib/luna/java/accountservices.jar:/usr/lib/luna/java/activerecord.jar:/usr/lib/luna/java/json.jar:/usr/lib/luna/java/sqlitejdbc-v053.jar:") + strlen(DestDIR) + strlen("org.webosinternals.messaging.jar org.webosinternals.messaging.Main ") + strlen(" EnableContactsReadWrite ") + strlen("\"") + strlen(PluginName) + strlen("\""));
+	strcpy(CommandLine, "javahy -bcp /usr/lib/luna/java/Utils.jar:/usr/lib/luna/java/accounts.jar:/usr/lib/luna/java/accountservices.jar:/usr/lib/luna/java/activerecord.jar:/usr/lib/luna/java/json.jar:/usr/lib/luna/java/sqlitejdbc-v053.jar:");
+	strcat(CommandLine, DestDIR);
+	strcat(CommandLine, "org.webosinternals.messaging.jar org.webosinternals.messaging.Main ");
+	strcat(CommandLine, " EnableContactsReadWrite ");
+	strcat(CommandLine, "\'");
+	strcat(CommandLine, PluginName);
+	strcat(CommandLine, "\'");
+
+	//Run Java to enable r/w on contacts
+	printf("\n");
+	printf("=================================\n");
+	printf("Running command: %s",CommandLine);
+	printf("=================================\n");
+	printf("\n");
+	system(CommandLine);
+}
+
 static void respondWithFullBuddyList(PurpleAccount *account, char *serviceName, char *myJavaFriendlyUsername)
 {
 	if (!account || !myJavaFriendlyUsername || !serviceName)
@@ -883,6 +967,13 @@ static void respondWithFullBuddyList(PurpleAccount *account, char *serviceName, 
 		group = purple_buddy_get_group(buddyToBeAdded);
 		const char *groupName = purple_group_get_name(group);
 
+		if (strcmp(serviceName, "live") == 0)
+		{
+			if (buddyToBeAdded->server_alias == NULL)
+			{
+				buddyToBeAdded->server_alias = "";
+			}
+		}
 		if (buddyToBeAdded->alias == NULL)
 		{
 			buddyToBeAdded->alias = "";
@@ -926,8 +1017,55 @@ static void respondWithFullBuddyList(PurpleAccount *account, char *serviceName, 
 		}
 
 		struct json_object *payload = json_object_new_object();
-		json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyToBeAdded->name));
-		json_object_object_add(payload, "displayName", json_object_new_string(buddyToBeAdded->alias));
+
+		//Special for Office Communicator. (Remove 'sip:' prefix)
+		if (strcmp(serviceName, "sipe") == 0)
+		{
+			if (strstr(buddyToBeAdded->name, "sip:") != NULL || strstr(buddyToBeAdded->alias, "sip:") != NULL)
+			{
+				if (strstr(buddyToBeAdded->alias, "sip:") != NULL)
+				{
+					GString *SIPBuddyAlias = g_string_new(buddyToBeAdded->alias);
+					g_string_erase(SIPBuddyAlias, 0, 4);
+					json_object_object_add(payload, "displayName", json_object_new_string(SIPBuddyAlias->str));
+				}
+				else
+				{
+					json_object_object_add(payload, "displayName", json_object_new_string(buddyToBeAdded->alias));
+				}
+				if (strstr(buddyToBeAdded->name, "sip:") != NULL)
+				{
+					GString *SIPBuddyName = g_string_new(buddyToBeAdded->name);
+					g_string_erase(SIPBuddyName, 0, 4);
+					json_object_object_add(payload, "buddyUsername", json_object_new_string(SIPBuddyName->str));
+				}
+				else
+				{
+					json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyToBeAdded->name));
+				}
+			}
+			else
+			{
+				json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyToBeAdded->name));
+				json_object_object_add(payload, "displayName", json_object_new_string(buddyToBeAdded->alias));
+			}
+		}
+		else
+		{
+				json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyToBeAdded->name));
+
+				//If Live Messenger set display alias
+				if (strcmp(serviceName, "live") == 0)
+				{
+					json_object_object_add(payload, "displayName", json_object_new_string(buddyToBeAdded->server_alias));
+				}
+				else
+				{
+					//Set Palm Default Alias (Must use this for Gtalk otherwise it will crash)
+					json_object_object_add(payload, "displayName", json_object_new_string(buddyToBeAdded->alias));
+				}
+		}
+
 		json_object_object_add(payload, "avatarLocation", json_object_new_string((buddyAvatarLocation) ? buddyAvatarLocation : ""));
 		json_object_object_add(payload, "customMessage", json_object_new_string((char*)customMessage));
 		json_object_object_add(payload, "availability", json_object_new_string(availabilityString));
@@ -954,6 +1092,7 @@ static void respondWithFullBuddyList(PurpleAccount *account, char *serviceName, 
 	{
 		LSErrorPrint(&lserror, stderr);
 	}
+
 	LSErrorFree(&lserror);
 	g_string_free(jsonResponse, TRUE);
 }
@@ -974,7 +1113,7 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 	LSErrorInit(&lserror);
 
 	PurpleAccount *account = purple_buddy_get_account(buddy);
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	const char *myUsername = purple_account_get_username(account);
 	char *myJavaFriendlyUsername = getJavaFriendlyUsername(myUsername, serviceName);
 	PurpleStatus *activeStatus = purple_presence_get_active_status(purple_buddy_get_presence(buddy));
@@ -1000,6 +1139,14 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 		buddy->name = "";
 	}
 	
+	if (strcmp(serviceName, "live") == 0)
+	{
+		if (buddy->server_alias == NULL)
+		{
+			buddy->server_alias = "";
+		}
+	}
+	else
 	if (buddy->alias == NULL)
 	{
 		buddy->alias = "";
@@ -1021,8 +1168,53 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 	struct json_object *payload = json_object_new_object();
 	json_object_object_add(payload, "serviceName", json_object_new_string(serviceName));
 	json_object_object_add(payload, "username", json_object_new_string(myJavaFriendlyUsername));
-	json_object_object_add(payload, "buddyUsername", json_object_new_string(buddy->name));
-	json_object_object_add(payload, "displayName", json_object_new_string(buddy->alias));
+
+	//Special for Office Communicator. (Remove 'sip:' prefix)
+	if (strcmp(serviceName, "sipe") == 0)
+	{
+		if (strstr(buddy->name, "sip:") != NULL || strstr(buddy->alias, "sip:") != NULL)
+		{
+			if (strstr(buddy->alias, "sip:") != NULL)
+			{
+				GString *SIPBuddyAlias = g_string_new(buddy->alias);
+				g_string_erase(SIPBuddyAlias, 0, 4);
+				json_object_object_add(payload, "displayName", json_object_new_string(SIPBuddyAlias->str));
+			}
+			else
+			{
+				json_object_object_add(payload, "displayName", json_object_new_string(buddy->alias));
+			}
+			if (strstr(buddy->name, "sip:") != NULL)
+			{
+				GString *SIPBuddyName = g_string_new(buddy->name);
+				g_string_erase(SIPBuddyName, 0, 4);
+				json_object_object_add(payload, "buddyUsername", json_object_new_string(SIPBuddyName->str));
+			}
+			else
+			{
+				json_object_object_add(payload, "buddyUsername", json_object_new_string(buddy->name));
+			}
+		}
+		else
+		{
+			json_object_object_add(payload, "buddyUsername", json_object_new_string(buddy->name));
+			json_object_object_add(payload, "displayName", json_object_new_string(buddy->alias));
+		}
+	}
+	else
+	{
+			json_object_object_add(payload, "buddyUsername", json_object_new_string(buddy->name));
+
+			if (strcmp(serviceName, "live") == 0)
+			{
+				json_object_object_add(payload, "displayName", json_object_new_string(buddy->server_alias));
+			}
+			else
+			{
+				json_object_object_add(payload, "displayName", json_object_new_string(buddy->alias));
+			}
+	}
+
 	json_object_object_add(payload, "avatarLocation", json_object_new_string((buddyAvatarLocation) ? buddyAvatarLocation : ""));
 	json_object_object_add(payload, "customMessage", json_object_new_string((char*)customMessage));
 	json_object_object_add(payload, "availability", json_object_new_string(availabilityString));
@@ -1077,7 +1269,7 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *old_status
 	LSErrorInit(&lserror);
 
 	PurpleAccount *account = purple_buddy_get_account(buddy);
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	char *username = getJavaFriendlyUsername(account->username, serviceName);
 
 	PurpleBuddyIcon *icon = purple_buddy_get_icon(buddy);
@@ -1103,7 +1295,26 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *old_status
 	struct json_object *payload = json_object_new_object();
 	json_object_object_add(payload, "serviceName", json_object_new_string(serviceName));
 	json_object_object_add(payload, "username", json_object_new_string(username));
-	json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyName));
+	
+	//Special for Office Communicator. (Remove 'sip:' prefix)
+	if (strcmp(serviceName, "sipe") == 0)
+	{
+		if (strstr(buddyName, "sip:") != NULL)
+		{
+			GString *SIPBuddyName = g_string_new(buddyName);
+			g_string_erase(SIPBuddyName, 0, 4);
+			json_object_object_add(payload, "buddyUsername", json_object_new_string(SIPBuddyName->str));
+		}
+		else
+		{
+			json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyName));
+		}
+	}
+	else
+	{
+		json_object_object_add(payload, "buddyUsername", json_object_new_string(buddyName));
+	}
+
 	json_object_object_add(payload, "avatarLocation", json_object_new_string((buddyAvatarLocation) ? buddyAvatarLocation : ""));
 	json_object_object_add(payload, "customMessage", json_object_new_string((char*)customMessage));
 	json_object_object_add(payload, "availability", json_object_new_string(availabilityString));
@@ -1142,12 +1353,6 @@ static void buddy_avatar_changed_cb(PurpleBuddy *buddy)
 {
 	PurpleStatus *activeStatus = purple_presence_get_active_status(purple_buddy_get_presence(buddy));
 	buddy_status_changed_cb(buddy, activeStatus, activeStatus, NULL);
-}
-
-static void blist_node_aliased(PurpleBlistNode *node, const char *old_alias)
-{
-	PurpleStatus *activeStatus = purple_presence_get_active_status(purple_buddy_get_presence((PurpleBuddy *)node));
-	buddy_status_changed_cb((PurpleBuddy *)node, activeStatus, activeStatus, NULL);
 }
 
 static bool displayEventHandler(LSHandle *sh , LSMessage *message, void *ctx)
@@ -1247,7 +1452,7 @@ static void account_logged_in(PurpleConnection *gc, gpointer unused)
 
 	syslog(LOG_INFO, "Account connected...");
 
-	char *serviceName = getServiceNameFromPrplProtocolId(loggedInAccount->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(loggedInAccount);
 	char *myJavaFriendlyUsername = getJavaFriendlyUsername(loggedInAccount->username, serviceName);
 
 	GString *jsonResponse = g_string_new("{\"serviceName\":\"");
@@ -1276,8 +1481,6 @@ static void account_logged_in(PurpleConnection *gc, gpointer unused)
 		purple_signal_connect(blist_handle, "buddy-signed-off", &handle, PURPLE_CALLBACK(buddy_signed_on_off_cb),
 				GINT_TO_POINTER(FALSE));
 		purple_signal_connect(blist_handle, "buddy-icon-changed", &handle, PURPLE_CALLBACK(buddy_avatar_changed_cb),
-				GINT_TO_POINTER(FALSE));
-		purple_signal_connect(blist_handle, "blist-node-aliased", &handle, PURPLE_CALLBACK(blist_node_aliased),
 				GINT_TO_POINTER(FALSE));
 		registeredForPresenceUpdateSignals = TRUE;
 	}
@@ -1346,7 +1549,7 @@ static void account_signed_off_cb(PurpleConnection *gc, void *data)
 	LSMessage *message = g_hash_table_lookup(logoutMessages, accountKey);
 	if (message != NULL)
 	{
-		char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+		char *serviceName = getServiceNameFromPrplProtocolId(account);
 		char *myJavaFriendlyUsername = getJavaFriendlyUsername(account->username, serviceName);
 
 		GString *jsonResponse = g_string_new("{\"serviceName\":\"");
@@ -1417,7 +1620,7 @@ static void account_login_failed(PurpleConnection *gc, PurpleConnectionError typ
 		}
 	}
 
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	char *myJavaFriendlyUsername = getJavaFriendlyUsername(account->username, serviceName);
 	char *javaFriendlyErrorCode = getJavaFriendlyErrorCode(type);
 	char *accountBoundToIpAddress = g_hash_table_lookup(ipAddressesBoundTo, accountKey);
@@ -1515,7 +1718,7 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 
 	PurpleAccount *account = purple_conversation_get_account(conv);
 
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	char *username = getJavaFriendlyUsername(account->username, serviceName);
 
 	if (strcmp(username, usernameFrom) == 0)
@@ -1676,7 +1879,7 @@ static gboolean connectTimeoutCallback(gpointer data)
 
 	purple_account_disconnect(account);
 
-	char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+	char *serviceName = getServiceNameFromPrplProtocolId(account);
 	char *username = getJavaFriendlyUsername(account->username, serviceName);
 	char *connectionType = g_hash_table_lookup(connectionTypeData, accountKey);
 	if (connectionType == NULL)
@@ -1785,12 +1988,13 @@ static void loadserver(const char *serviceName)
 	char *Server = "";
 	char *ServerPort = "";
 	char *ServerTLS = "";
+	char *ServerProxy = "";
 	char *ServerLogin = "";
 
 	//Set Filename
 	char *filename = NULL;
-	filename = (char *)calloc(strlen("/var/usr/palm/applications/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
-	strcat(filename, "/var/usr/palm/applications/org.webosinternals.messaging/");
+	filename = (char *)calloc(strlen("/var/preferences/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
+	strcat(filename, "/var/preferences/org.webosinternals.messaging/");
 	strcat(filename, serviceName);
 	strcat(filename, ".cfg");
 
@@ -1840,6 +2044,15 @@ static void loadserver(const char *serviceName)
 			}
 
 			printf("%s server login: %s\n",serviceName, ServerLogin);
+
+			ServerProxy = strtok(NULL,":");
+
+			if(ServerProxy == NULL)
+			{
+				ServerProxy = "";
+			}
+
+			printf("%s server proxy: %s\n",serviceName, ServerProxy);
 		}
 
 		printf("%s server address: %s\n",serviceName, Server);
@@ -1890,6 +2103,12 @@ static void loadserver(const char *serviceName)
 			if (strcmp(ServerTLS, "true") == 0)
 			{
 				SIPEServerTLS = TRUE;
+			}
+
+			//Set SIPE Server Proxy?
+			if (strcmp(ServerProxy, "true") == 0)
+			{
+				SIPEServerProxy = TRUE;
 			}
 
 			//Set SIPE Server Login
@@ -2216,14 +2435,21 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 				}
 			}
 
-			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && g_str_has_suffix(transportFriendlyUserName, "@gmail.com")
-					== FALSE)
+			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && g_str_has_suffix(transportFriendlyUserName, "@gmail.com") == FALSE && strcmp(serviceName, "gmail") == 0)
 			{
 				/*
 				 * Special case for gmail... don't try to connect to theraghavans.com if the username is nash@theraghavans.com
 				 * Always connect to gmail.
 				 */
 				purple_account_set_string(account, "connect_server", "talk.google.com");
+
+				//Set Account Alias to gtalk
+				purple_account_set_alias (account,"gtalk");
+			}
+			if (strcmp(serviceName, "gmail") == 0)
+			{
+				//Set Account Alias to gtalk
+				purple_account_set_alias (account,"gtalk");
 			}
 			if (strcmp(prplProtocolId, "prpl-msn") == 0 && g_str_has_suffix(transportFriendlyUserName, "@hotmail.com")
 					== FALSE)
@@ -2234,22 +2460,42 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 				 */
 				purple_account_set_string(account, "connect_server", "messenger.hotmail.com");
 			}
-			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && JabberServer != NULL)
+
+			//Load custom server details
+			if (strcmp(serviceName, "jabber") == 0)
+			{
+				loadserver ("jabber");
+			}
+			if (strcmp(serviceName, "sipe") == 0)
+			{
+				loadserver ("sipe");
+			}
+			if (strcmp(serviceName, "sametime") == 0)
+			{
+				loadserver ("sametime");
+			}
+			if (strcmp(serviceName, "gwim") == 0)
+			{
+				loadserver ("gwim");
+			}
+
+			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && JabberServer != NULL && strcmp(serviceName, "jabber") == 0)
 			{
 				/*
 				 * Special case for jabber... connect to user defined jabber server
 				 */
-				loadserver ("jabber");
 				purple_account_set_string(account, "connect_server", JabberServer);
 				purple_account_set_int(account, "port", atoi(JabberServerPort));
 				purple_account_set_bool(account, "require_tls", JabberServerTLS);
+
+				//Set Account Alias to Jabber
+				purple_account_set_alias (account,"jabber");
 			}
 			if (strcmp(prplProtocolId, "prpl-sipe") == 0 && SIPEServer != NULL)
 			{
 				/*
 				 * Special case for sipe... connect to user defined sipe server
 				 */
-				loadserver ("sipe");
 
 				//Set ServerName
 				if(strcmp(SIPEServer, "") != 0) 
@@ -2260,12 +2506,34 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 					strcat(SIPEFullServerName, ":");
 					strcat(SIPEFullServerName, SIPEServerPort);
 					purple_account_set_string(account, "server", SIPEFullServerName);
-					purple_account_set_bool(account, "require_tls", SIPEServerTLS);
 
 					if (SIPEFullServerName)
 					{
 						free(SIPEFullServerName);
 					}
+				}
+
+				//Require TLS?
+				purple_account_set_bool(account, "require_tls", SIPEServerTLS);
+				if (SIPEServerTLS)
+				{
+					purple_account_set_string(account, "transport", "tls");
+				}
+				else
+				{
+					purple_account_set_string(account, "transport", "auto");
+				}
+
+				//Proxy?
+				if (SIPEServerProxy)
+				{
+					//Leave Default
+				}
+				else
+				{
+					//Disable Proxy
+					static PurpleProxyInfo info = {0, NULL, 0, NULL, NULL};
+					purple_proxy_info_set_type(&info, PURPLE_PROXY_NONE);
 				}
 			}
 			if (strcmp(prplProtocolId, "prpl-meanwhile") == 0 && SametimeServer != NULL)
@@ -2273,7 +2541,6 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 				/*
 				 * Special case for sametime... connect to user defined sametime server
 				 */
-				loadserver ("sametime");
 
 				purple_account_set_string(account, "server", SametimeServer);
 				purple_account_set_int(account, "port", atoi(SametimeServerPort));
@@ -2284,13 +2551,27 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 				/*
 				 * Special case for Group Wise... connect to user defined Group Wise server
 				 */
-				loadserver ("gwim");
 
 				purple_account_set_string(account, "server", gwimServer);
 				purple_account_set_int(account, "port", atoi(gwimServerPort));
 				purple_account_set_bool(account, "require_tls", gwimServerTLS);
 			}
-
+			if (strcmp(prplProtocolId, "prpl-qq") == 0)
+			{
+				/*
+				 * Special case for QQ... Set QQ Server Version
+				 */
+				printf("Setting QQ Client Version to qq2008\n");
+				purple_account_set_string(account, "client_version", "qq2008");
+			}
+			if (strcmp(prplProtocolId, "prpl-xfire") == 0)
+			{
+				/*
+				 * Special case for XFire... Set XFire Server Version
+				 */
+				printf("Setting XFire Version to 119\n");
+				purple_account_set_int(account, "version", 119);
+			}
 
 			syslog(LOG_INFO, "Logging in...");
 
@@ -2346,7 +2627,7 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 		/* Now, to connect the account, create a status and activate it. */
 
 		/*
-		 * Create a timer for this account's login. If after 60 seconds login has not succ
+		 * Create a timer for this account's login. If after 180 seconds login has not succeeded
 		 */
 		guint timerHandle = purple_timeout_add_seconds(CONNECT_TIMEOUT_SECONDS, connectTimeoutCallback, accountKey);
 		g_hash_table_insert(accountLoginTimers, accountKey, (gpointer)timerHandle);
@@ -2893,7 +3174,7 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 	else
 	{
 		//If SIPE append sip: to username if required!
-		if (strcmp(serviceName, "sipe") == 0 && strcmp(usernameTo, "sip:") != 0)
+		if (strcmp(serviceName, "sipe") == 0 && strstr(usernameTo, "sip:") == NULL)
 		{
 			char *SIPEUserName = NULL;
 			SIPEUserName = (char *)calloc(strlen("sip:") + strlen(usernameTo) + 1, sizeof(char));
@@ -3112,7 +3393,7 @@ static bool deviceConnectionClosed(LSHandle* lshandle, LSMessage *message, void 
 
 			accountToLogoutList = g_slist_append(accountToLogoutList, account);
 
-			char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+			char *serviceName = getServiceNameFromPrplProtocolId(account);
 			char *username = getJavaFriendlyUsername(account->username, serviceName);
 			char *accountKey = getAccountKeyFromPurpleAccount(account);
 			char *connectionType = g_hash_table_lookup(connectionTypeData, accountKey);
@@ -3181,7 +3462,7 @@ static bool deviceConnectionClosed(LSHandle* lshandle, LSMessage *message, void 
 		for (accountIterator = accountToLogoutList; accountIterator != NULL; accountIterator = accountIterator->next)
 		{
 			account = (PurpleAccount *) accountIterator->data;
-			char *serviceName = getServiceNameFromPrplProtocolId(account->protocol_id);
+			char *serviceName = getServiceNameFromPrplProtocolId(account);
 			char *username = getJavaFriendlyUsername(account->username, serviceName);
 			char *accountKey = getAccountKeyFromPurpleAccount(account);
 			g_hash_table_remove(ipAddressesBoundTo, accountKey);
@@ -3220,6 +3501,7 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	const char *payloadServer = NULL;
 	const char *payloadServerPort = NULL;
 	const char *payloadServerTLS = NULL;
+	const char *payloadServerProxy = NULL;
 	const char *payloadServerLogin = NULL;
 	const char *serviceName = NULL;
 
@@ -3267,12 +3549,13 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	if (strcmp(serviceName, "sipe") == 0)
 	{
 		payloadServerLogin = getField(params, "ServerLogin");
+		payloadServerProxy = getField(params, "Proxy");
 	}
 
 	//Set Filename
 	char *filename = NULL;
-	filename = (char *)calloc(strlen("/var/usr/palm/applications/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
-	strcat(filename, "/var/usr/palm/applications/org.webosinternals.messaging/");
+	filename = (char *)calloc(strlen("/var/preferences/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
+	strcat(filename, "/var/preferences/org.webosinternals.messaging/");
 	strcat(filename, serviceName);
 	strcat(filename, ".cfg");
 
@@ -3330,6 +3613,16 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		else
 		{
 			SIPEServerTLS = FALSE;
+		}
+
+		//Set SIPE Server Proxy
+		if (payloadServerProxy == "true")
+		{
+			SIPEServerProxy = TRUE;
+		}
+		else
+		{
+			SIPEServerProxy = FALSE;
 		}
 
 		//Set SIPE Server Login
@@ -3401,7 +3694,7 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		if (strcmp(serviceName, "sipe") == 0)
 		{
 			printf("Setting %s server address to: %s:%s\n", serviceName, SIPEServer, SIPEServerPort);
-			fprintf(hFile, "%s:%s:%s:%s", SIPEServer, SIPEServerPort, payloadServerTLS, SIPEServerLogin);
+			fprintf(hFile, "%s:%s:%s:%s:%s", SIPEServer, SIPEServerPort, payloadServerTLS, SIPEServerLogin, payloadServerProxy);
 		}
 		else
 		{
@@ -3462,6 +3755,7 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	char *payload = strdup(LSMessageGetPayload(message));
 	const char *serviceName = NULL;
 	char *ServerTLS = "false";
+	char *ServerProxy = "false";
 
 	if (!payload)
 	{
@@ -3526,6 +3820,15 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 		printf("%s server TLS: %s\n",serviceName, ServerTLS);
 		json_object_object_add(responsePayload, "ServerTLS", json_object_new_string(ServerTLS));
+
+		//Set SIPE Server Proxy?
+		if (SIPEServerProxy)
+		{
+			ServerProxy = "true";
+		}
+
+		printf("%s server Proxy: %s\n",serviceName, ServerProxy);
+		json_object_object_add(responsePayload, "ServerProxy", json_object_new_string(ServerProxy));
 	}
 	//Is this sametime?
 	if (strcmp(serviceName, "sametime") == 0)
@@ -3617,8 +3920,8 @@ static bool clearserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 	//Set Filename
 	char *filename = NULL;
-	filename = (char *)calloc(strlen("/var/usr/palm/applications/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
-	strcat(filename, "/var/usr/palm/applications/org.webosinternals.messaging/");
+	filename = (char *)calloc(strlen("/var/preferences/org.webosinternals.messaging/") + strlen(serviceName) + strlen(".cfg") + 1, sizeof(char));
+	strcat(filename, "/var/preferences/org.webosinternals.messaging/");
 	strcat(filename, serviceName);
 	strcat(filename, ".cfg");
 
@@ -3638,6 +3941,7 @@ static bool clearserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		SIPEServer = "";
 		SIPEServerPort = "";
 		SIPEServerTLS = "";
+		SIPEServerProxy = "";
 		SIPEServerLogin = "";
 	}
 	if (strcmp(serviceName, "sametime") == 0)
@@ -3654,6 +3958,50 @@ static bool clearserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		gwimServerPort = "";
 		gwimServerTLS = "";
 	}
+	return true;
+
+	error:
+	retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":false}", &lserror);
+
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+	LSErrorFree(&lserror);
+	free (payload);
+	return true;
+}
+
+static bool EnableContactsReadWrite(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+	LSError lserror;
+	LSErrorInit(&lserror);
+	char *payload = strdup(LSMessageGetPayload(message));
+	const char *PluginName = NULL;
+	
+	if (!payload)
+	{
+		printf("ERROR, No payload.\n");
+		goto error;
+	}
+
+	struct json_object *params = json_tokener_parse(payload);
+	if (is_error(params))
+	{
+		printf("ERROR, Parameters not specified correctly.\n");
+		goto error;
+	}
+
+	PluginName = getField(params, "PluginName");
+	if (!PluginName)
+	{
+		printf("ERROR, PluginName not specified.\n");
+		goto error;
+	}
+
+	ReadWriteContacts (PluginName);
+
 	return true;
 
 	error:
@@ -3689,6 +4037,7 @@ static LSMethod methods[] =
 { "setserver", setserver },
 { "getserver", getserver },
 { "clearserver", clearserver },
+{ "EnableContactsReadWrite", EnableContactsReadWrite },
 { }, 
 };
 

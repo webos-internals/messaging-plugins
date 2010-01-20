@@ -66,7 +66,7 @@ static void fb_get_info_cb(FacebookAccount *fba, gchar *data, gsize data_len, gp
 	FacebookBuddy *fbuddy = NULL;
 
 	purple_debug_info("facebook", "get_info_cb\n");
-	purple_debug_info("facebook", "%s\n", data);
+	purple_debug_misc("facebook", "%s\n", data);
 
 	buddy = purple_find_buddy(fba->account, uid);
 	if (buddy)
@@ -74,6 +74,39 @@ static void fb_get_info_cb(FacebookAccount *fba, gchar *data, gsize data_len, gp
 		fbuddy = buddy->proto_data;
 	}
 	
+	/* look from <div id="info_tab" class="info_tab"> */
+	/* until </div></div></div></div> */
+	search_start = g_strstr_len(data, data_len, "<div id=\"info_tab\" class=\"info_tab\">");
+	if (search_start == NULL)
+	{
+		search_start = g_strstr_len(data, data_len, "window.location.replace(\"http:\\/\\/www.facebook.com\\");
+		if (search_start)
+		{
+			search_start += strlen("window.location.replace(\"http:\\/\\/www.facebook.com\\");
+			search_end = strchr(search_start, '"');
+			value_tmp = g_strndup(search_start, search_end - search_start);
+			if (value_tmp) {
+				purple_debug_info("facebook", "info url: %s\n", value_tmp);
+				fb_post_or_get(fba, FB_METHOD_GET, NULL, value_tmp, NULL, fb_get_info_cb, uid, FALSE);
+				g_free(value_tmp);
+				return;
+			}
+		}
+		purple_debug_warning("facebook",
+				"could not find user info, showing default");
+		user_info = purple_notify_user_info_new();
+		value_tmp = g_strdup_printf("<a href=\"http://www.facebook.com/profile.php?id=%s\">%s</a>",
+				uid, _("View web profile"));
+		purple_notify_user_info_add_pair(user_info, NULL, value_tmp);
+		purple_notify_user_info_add_section_break(user_info);
+		g_free(value_tmp);
+		purple_notify_userinfo(fba->pc, uid, user_info, NULL, NULL);
+		purple_notify_user_info_destroy(user_info);
+		g_free(uid);
+		return;
+	}
+	search_end = strstr(search_start, "</div></div></div></div>");
+
 	user_info = purple_notify_user_info_new();
 
 	/* Insert link to profile at top */
@@ -82,47 +115,6 @@ static void fb_get_info_cb(FacebookAccount *fba, gchar *data, gsize data_len, gp
 	purple_notify_user_info_add_pair(user_info, NULL, value_tmp);
 	purple_notify_user_info_add_section_break(user_info);
 	g_free(value_tmp);
-
-	/* look from <div id="info_tab" class="info_tab"> */
-	/* until </div></div></div></div> */
-	search_start = g_strstr_len(data, data_len, "<div id=\"info_tab\" class=\"info_tab\">");
-	if (search_start == NULL)
-	{
-		search_start = g_strstr_len(data, data_len, "http:\\/\\/");
-		if (search_start)
-		{
-			search_end = strstr(search_start, "\"");
-			value_tmp = g_strndup(search_start, search_end - search_start);
-			value_tmp2 = value_tmp;
-			if (value_tmp) {
-				char * buf = g_new(char, strlen(value_tmp) + 1); 
-				char * url = buf;
-				while(*value_tmp) { 
-				if (*value_tmp=='\\') {
-						// skip escape char 
-						*buf++ = value_tmp[1]; 
-						value_tmp += 2; 
-					} else { 
-						*buf++ = *value_tmp++; 
-					}
-				}
-				*buf = 0;
-				purple_debug_info("facebook", "info url: %s\n", url);
-				fb_post_or_get(fba->pc->proto_data, FB_METHOD_GET, NULL, url, NULL, fb_get_info_cb, g_strdup(uid), FALSE);
-				g_free(uid);
-				g_free(url);
-				g_free(value_tmp2);
-				return;
-			}
-		}
-		purple_debug_warning("facebook",
-				"could not find user info, showing default");
-		purple_notify_userinfo(fba->pc, uid, user_info, NULL, NULL);
-		purple_notify_user_info_destroy(user_info);
-		g_free(uid);
-		return;
-	}
-	search_end = strstr(search_start, "</div></div></div></div>");
 
 	value_tmp = g_strstr_len(data, data_len, "<title>Facebook | ");
 	if (value_tmp)

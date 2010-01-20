@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin ICQ
+
+#Create sym links for ICQ Plugin
+rm -f /usr/lib/liboscar.so
+rm -f /usr/lib/liboscar.so.0
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/liboscar.so.0.0.0 /usr/lib/liboscar.so
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/liboscar.so.0.0.0 /usr/lib/liboscar.so.0
+
+exit 0

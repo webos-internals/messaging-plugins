@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/configure
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/Makefile.in
+END
+VERSION
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/VERSION
+END
+AUTHORS
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/AUTHORS
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/ChangeLog
+END
+depcomp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/depcomp
+END
+config.guess
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/config.guess
+END
+config.sub
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/config.sub
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/README
+END
+ltmain.sh
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/ltmain.sh
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/configure.ac
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/INSTALL
+END
+pre_config.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/pre_config.h.in
+END
+gfire_config.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/gfire_config.h
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/COPYING
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/Makefile.am
+END
+missing
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/missing
+END
+autogen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/autogen.sh
+END
+NEWS
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/NEWS
+END
+aclocal.m4
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/aclocal.m4
+END
+install-sh
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/install-sh
+END

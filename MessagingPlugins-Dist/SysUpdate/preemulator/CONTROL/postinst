@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Backup Palm Libraries
+if [ ! -f /usr/lib/libgpg-error.so.0.3.0.messback ]; then
+	cp /usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so.0.3.0.messback
+fi
+if [ ! -f /usr/lib/libcjson.so.messback ]; then
+	cp /usr/lib/libcjson.so /usr/lib/libcjson.so.messback
+fi
+if [ ! -f /usr/lib/libgcrypt.so.11.5.2.messback ]; then
+	cp /usr/lib/libgcrypt.so.11.5.2 /usr/lib/libgcrypt.so.11.5.2.messback
+fi
+
+#Copy libraries (These can't be symbolic links as the Pre wont boot afterwards)
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libcjson.so /usr/lib/libcjson.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libpurple.so.0.6.2 /usr/lib/libpurple.so.0.6.2
+rm -f /usr/lib/libpurple.so
+rm -f /usr/lib/libpurple.so.0
+ln -s /usr/lib/libpurple.so.0.6.2 /usr/lib/libpurple.so
+ln -s /usr/lib/libpurple.so.0.6.2 /usr/lib/libpurple.so.0
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libtasn1.so.3.1.4 /usr/lib/libtasn1.so.3
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libgnutls.so.26 /usr/lib/libgnutls.so.26
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libjson-glib-1.0.so.0 /usr/lib/libjson-glib-1.0.so.0
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so.0.3.0
+
+#Copy to /tmp first otherwise you get an endpoint not connected error
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libgcrypt.so.11.5.2 /tmp/libgcrypt.so.11.5.2
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libglib-2.0.so.0.2000.4 /usr/lib/libglib-2.0.so.0.2000.4
+cp -f /tmp/libgcrypt.so.11.5.2 /usr/lib/libgcrypt.so.11.5.2
+rm -f /tmp/libgcrypt.so.11.5.2
+rm -f /usr/lib/libglib-2.0.so.0
+ln -s /usr/lib/libglib-2.0.so.0.2000.4 /usr/lib/libglib-2.0.so.0
+
+#Remount Cryptofs (glib and crypt.so unmount this)
+umount cryptofs
+/usr/bin/mountcfs
+
+exit 0

@@ -140,9 +140,9 @@ static void fb_history_fetch_cb(FacebookAccount *fba, gchar *data,
 			gchar *to;
 			JsonObject *text_obj;
 
-			from = g_strdup_printf("%" G_GINT64_FORMAT, json_node_get_int(
+			from = g_strdup_printf("%" G_GINT64_FORMAT, (gint64)json_node_get_int(
 				json_object_get_member(message_obj, "from")));
-			to = g_strdup_printf("%" G_GINT64_FORMAT, json_node_get_int(
+			to = g_strdup_printf("%" G_GINT64_FORMAT, (gint64)json_node_get_int(
 				json_object_get_member(message_obj, "to")));
 
 			text_obj = json_node_get_object(
@@ -182,7 +182,7 @@ void fb_history_fetch(FacebookAccount *fba, const char *who,
 		min_time = 0;
 	}
 
-	gchar *url = g_strdup_printf("/ajax/chat/history.php?id=%s", who);
+	gchar *url = g_strdup_printf("/ajax/chat/history.php?id=%s&__a=1", who);
 	fb_post_or_get(
 		fba, FB_METHOD_GET, NULL, url, NULL, fb_history_fetch_cb,
 		g_strdup_printf("%lld", (long long int) min_time), FALSE);
@@ -203,8 +203,9 @@ void fb_conversation_closed(PurpleConnection *gc, const char *who)
 	/* notify server that we closed the chat window */
 	/* close_chat=589039771&window_id=3168919846&
 	 * post_form_id=c258fe42460c7e8b61e242a37ef05afc */
-	postdata = g_strdup_printf("close_chat=%s&post_form_id=%s", who,
-			fba->post_form_id);
+	postdata = g_strdup_printf("close_chat=%s&post_form_id=%s&fb_dtsg=%s&"
+			"post_form_id_source=AsyncRequest&__a=1", who,
+			fba->post_form_id, fba->dtsg);
 	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/chat/settings.php",
 			postdata, NULL, NULL, FALSE);
 	g_free(postdata);

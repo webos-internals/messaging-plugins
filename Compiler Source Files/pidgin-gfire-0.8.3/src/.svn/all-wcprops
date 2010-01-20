@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src
+END
+gf_chat.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_chat.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/Makefile.in
+END
+gfire.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gfire.h
+END
+gf_packet.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_packet.c
+END
+gf_network.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_network.c
+END
+gf_debug.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_debug.h
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/Makefile.am
+END
+gf_games.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_games.c
+END
+gf_packet.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_packet.h
+END
+gf_network.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_network.h
+END
+gf_chat.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_chat.c
+END
+gfire.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gfire.c
+END
+gf_games.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gfire/!svn/ver/244/branches/gfire-0.8.3/src/gf_games.h
+END

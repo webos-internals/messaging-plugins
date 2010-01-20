@@ -13,16 +13,16 @@ public class Main {
     private static Batch batch;
     private static Database PalmDB = Database.getDatabase("/var/luna/data/dbdata/PalmDatabase.db3");
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException, ActiveRecordException {
         LogEntry("Messaging Plugins");
-        LogEntry("Version: 1.2.0");
+        LogEntry("Version: 2.0.0");
         LogEntry("By Greg Roll 2009");
         LogEntry("");
 
         //Check commandline arguments
         if ((args.length == 0))
         {
-            LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin.");
+            LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin and EnableContactsReadWrite.");
             LogEntry ("");
             System.exit(1);
         }
@@ -32,7 +32,7 @@ public class Main {
 
         if (CommandName.equalsIgnoreCase(""))
         {
-            LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin.");
+            LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin and EnableContactsReadWrite.");
             LogEntry ("");
             return;
         }
@@ -48,7 +48,7 @@ public class Main {
         //Check for plugin name
         if (!(args.length == 2))
         {
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwsie and Facebook.");
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
             LogEntry ("");
             System.exit(1);
         }
@@ -77,7 +77,98 @@ public class Main {
             return;
         }
 
-        LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin.");
+        //Enable Read/Write
+        if (CommandName.equalsIgnoreCase("EnableContactsReadWrite"))
+        {
+
+            //Check for plugin name
+            if (!(args.length == 2))
+            {
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
+                LogEntry ("");
+                System.exit(1);
+            }
+
+            if (args[1].equalsIgnoreCase("gmail"))
+            {
+                EnableContactsReadWrite("Google Talk");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("AIM"))
+            {
+                EnableContactsReadWrite("AIM");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("Live"))
+            {
+                EnableContactsReadWrite("Live Messenger");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("SIPE"))
+            {
+                EnableContactsReadWrite("Office Communicator");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("ICQ"))
+            {
+                EnableContactsReadWrite("ICQ");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("Facebook"))
+            {
+                EnableContactsReadWrite("Facebook Chat");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("Jabber"))
+            {
+                EnableContactsReadWrite("Jabber");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("IRC"))
+            {
+                EnableContactsReadWrite("IRC");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("Sametime"))
+            {
+                EnableContactsReadWrite("Sametime");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("gwim"))
+            {
+                EnableContactsReadWrite("Novell Groupwise");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("qqim"))
+            {
+                EnableContactsReadWrite("QQ");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("xfire"))
+            {
+                EnableContactsReadWrite("XFire");
+                LogEntry ("");
+                return;
+            }
+
+            EnableContactsReadWrite(args[1]);
+
+            LogEntry ("");
+            return;
+        }
+
+        LogEntry("CommandName: Must be specified. Options are: RestartLuna, InstallPlugin, RemovePlugin and EnableContactsReadWrite.");
         LogEntry ("");
         return;
     }
@@ -95,7 +186,7 @@ public class Main {
 
             if (PluginName.equalsIgnoreCase(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
                 return;
             }
 
@@ -207,6 +298,18 @@ public class Main {
                 return;
             }
 
+            //Should we install the XFire Plugin?
+            if (PluginName.equalsIgnoreCase("XFire"))
+                {
+                try {
+                    AddPluginToDataBase ("XFire","xfire","{\"32x32\":\"images/accounts/xfire-32x32.png\",\"48x48\":\"images/accounts/xfire-48x48.png\"}","9919","9920");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("XFire Plugin Installation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
             //Should we install the Yahoo Plugin?
             if (PluginName.equalsIgnoreCase("Palm"))
                 {
@@ -219,7 +322,7 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
             return;
         }
 
@@ -230,7 +333,7 @@ public class Main {
 
             if (PluginName.equals(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Palm1.2, Palm1.3 and Facebook.");
                 return;
             }
 
@@ -271,10 +374,20 @@ public class Main {
             }
 
             //Should we uninstall the Yahoo Plugin?
-            if (PluginName.equalsIgnoreCase("Palm"))
+            if (PluginName.equalsIgnoreCase("Palm1.2"))
                 {
                 try {
-                    DisablePalmPlugins();
+                    DisablePalmPlugins12();
+                } catch (ActiveRecordException ex) {
+                    LogEntry("Palm Plugin Uninstallation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+            if (PluginName.equalsIgnoreCase("Palm1.3"))
+                {
+                try {
+                    DisablePalmPlugins13();
                 } catch (ActiveRecordException ex) {
                     LogEntry("Palm Plugin Uninstallation Error");
                     LogEntry(ex.toString());
@@ -342,7 +455,7 @@ public class Main {
                 return;
             }
 
-             //Should we uninstall the QQ Plugin?
+            //Should we uninstall the QQ Plugin?
             if (PluginName.equalsIgnoreCase("QQ"))
                 {
                 try {
@@ -354,7 +467,19 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ and Facebook.");
+            //Should we uninstall the XFire Plugin?
+            if (PluginName.equalsIgnoreCase("XFire"))
+                {
+                try {
+                    RemovePluginFromDataBase ("XFire");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("XFire Plugin uninstallation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Palm1.2, Palm1.3 and Facebook.");
             System.exit(1);
         }
 
@@ -425,63 +550,130 @@ public class Main {
     {
             LogEntry("Uninstalling " + AccountDisplayName + " Plugin...");
 
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
             //Update com_palm_account_AccountType
             String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
 
             //Get Removal ID
             String RemovalID = GetID("com_palm_accounts_AccountType", AccountDisplayName);
 
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='" + AccountDisplayName + "'").toString());
-            batch.execute();
+            //Removal entry
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                        batch = Batch.create();
+                        batch.setDatabase(PalmDB);
+                        batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE name='" + AccountDisplayName + "'").toString());
+                        batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Removal of " + AccountDisplayName + " Plugin (Part 1) appears successful. No need to try again");
+            }
 
             //Update com_palm_account_AccountTypeService
             tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
 
-            //Add new entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
-            batch.execute();
+            //Removal entry
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                        batch = Batch.create();
+                        batch.setDatabase(PalmDB);
+                        batch.sqlWrite((new StringBuilder()).append("DELETE FROM ").append(tableName).append(" WHERE com_palm_accounts_AccountType_id='" + RemovalID + "'").toString());
+                        batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Removal of " + AccountDisplayName + " Plugin (Part 1) appears successful. No need to try again");
+            }
 
             //Done
             LogEntry(AccountDisplayName + " Plugin Uninstalled.");
     }
 
-     private static void DisablePalmPlugins() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
+     private static void DisablePalmPlugins12() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
     {
-            LogEntry("Disabling Yahoo Plugin...");
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
+            LogEntry("Disabling Yahoo Plugin (WebOS 1.2)...");
 
             //Update com_palm_account_AccountType
             String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
 
-            //Update Palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET acctTypeEnabled=0 WHERE name='Yahoo IM'").toString());
-            batch.execute();
-
-            //Update com_palm_account_AccountTypeService
-            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
-
-            //Update palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='com.nokia.imtransport' WHERE com_palm_accounts_AccountType_id='1099511627792'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET acctTypeEnabled=0 WHERE name='Yahoo IM'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
 
             //Done
             LogEntry("Yahoo Plugin Disabled.");
 
             LogEntry("Configuring Palm Plugins.");
+
+            //Update com_palm_account_AccountTypeService
+            tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
+
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurple.palm' WHERE dbusAddress='im.libpurpleext.greg'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
+
+            //Done
+            LogEntry("Palm Plugins Configured.");
+    }
+
+     private static void DisablePalmPlugins13() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
+    {
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
+            //Update com_palm_account_AccountTypeService
+            String tableName = tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
+
+            LogEntry("Configuring Palm Plugins.");
             
-            //Update palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurple.palm' WHERE dbusAddress='im.libpurpleext.greg'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurple.palm' WHERE dbusAddress='im.libpurpleext.greg'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
 
             //Done
             LogEntry("Palm Plugins Configured.");
@@ -489,36 +681,70 @@ public class Main {
 
     private static void EnablePalmPlugins() throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
     {
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
             LogEntry("Enabling Yahoo Plugin...");
 
             //Update com_palm_account_AccountType
             String tableName = ActiveRecord.tableName(com.palm.accounts.AccountType.class);
 
             //Update Palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET acctTypeEnabled=1 WHERE name='Yahoo IM'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET acctTypeEnabled=1 WHERE name='Yahoo IM'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
 
             //Update com_palm_account_AccountTypeService
             tableName = ActiveRecord.tableName(com.palm.accounts.AccountTypeService.class);
 
             //Update palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurpleext.greg' WHERE dbusAddress='com.nokia.imtransport'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurpleext.greg' WHERE dbusAddress='com.nokia.imtransport'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
 
             //Done
             LogEntry("Yahoo Plugin Enabled.");
 
             LogEntry("Configuring Palm Plugins.");
 
-            //Update palm entry
-            batch = Batch.create();
-            batch.setDatabase(PalmDB);
-            batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurpleext.greg' WHERE dbusAddress='im.libpurple.palm'").toString());
-            batch.execute();
+            try
+            {
+                for(int x = 0; x < numberOfTimes; x++)
+                {
+                    //Update Palm entry
+                    batch = Batch.create();
+                    batch.setDatabase(PalmDB);
+                    batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET dbusAddress='im.libpurpleext.greg' WHERE dbusAddress='im.libpurple.palm'").toString());
+                    batch.execute();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogEntry("Update appears successful. No need to try again");
+            }
 
             //Done
             LogEntry("Palm Plugins Configured.");
@@ -586,5 +812,51 @@ public class Main {
         LogEntry ("Found: " + ColumnValue);
 
         return ColumnValue;
+    }
+
+    private static void EnableContactsReadWrite(String PluginName) throws ActiveRecordException, IOException, ClassNotFoundException, SQLException
+    {
+            int numberOfTimes = 3; //Number of times to try and update the DB
+
+            //Update com_palm_account_ActiveRecordFolder
+            String tableName = ActiveRecord.tableName(com.palm.accounts.Account.class);
+
+            LogEntry("Enabling Contact Read/Write for plugin '" + PluginName + "'...");
+
+            //Get Plugin ID
+            String ColumnValue = "";
+
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:/var/luna/data/dbdata/PalmDatabase.db3");
+            java.sql.Statement stat = conn.createStatement();
+
+            ResultSet rs = stat.executeQuery("select * from " + tableName + " where name='" + PluginName + "';");
+            while (rs.next()) {
+                ColumnValue = rs.getString("id");
+
+                LogEntry ("Setting Account ID '" + ColumnValue + "' to read/write...");
+                tableName = ActiveRecord.tableName(com.palm.accounts.ActiveRecordFolder.class);
+
+                try
+                {
+                    for(int x = 0; x < numberOfTimes; x++)
+                    {
+                         //Set isReadOnly as false
+                        batch = Batch.create();
+                        batch.setDatabase(PalmDB);
+                        batch.sqlWrite((new StringBuilder()).append("UPDATE ").append(tableName).append(" SET isReadOnly=0 WHERE com_palm_accounts_Account_id='" + ColumnValue + "'").toString());
+                        batch.execute();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogEntry("Update appears successful. No need to try again");
+                }
+            }
+            rs.close();
+            conn.close();
+
+            //Done
+            LogEntry("Contact Read/Write Enabled.");
     }
 }

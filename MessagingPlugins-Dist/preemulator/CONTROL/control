@@ -1,9 +1,0 @@
-Package: org.webosinternals.messaging
-Version: 1.2.2
-Architecture: i686
-Maintainer: Greg Roll
-Description: Messaging Pluging
-Section: Services and Plugins
-Priority: optional
-Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
-Depends: org.webosinternals.patch

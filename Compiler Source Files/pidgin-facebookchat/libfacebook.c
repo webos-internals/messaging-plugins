@@ -69,12 +69,6 @@ static void fb_tooltip_text(PurpleBuddy *buddy,
 		purple_notify_user_info_add_pair(userinfo,
 				_("Status"), status);
 		g_free(status);
-		if (fbuddy->status_rel_time && *fbuddy->status_rel_time)
-		{
-			purple_notify_user_info_add_pair(userinfo,
-					_("Status changed"),
-					fbuddy->status_rel_time);
-		}
 	}
 }
 
@@ -86,17 +80,13 @@ static GList *fb_statuses(PurpleAccount *account)
 	/* Online people have a status message and also a date when it was set */
 	status = purple_status_type_new_with_attrs(PURPLE_STATUS_AVAILABLE,
 		NULL, _("Online"), FALSE, TRUE, FALSE, "message",
-		_("Message"), purple_value_new(PURPLE_TYPE_STRING),
-		"message_date", _("Message changed"),
-		purple_value_new(PURPLE_TYPE_STRING), NULL);
+		_("Message"), purple_value_new(PURPLE_TYPE_STRING), NULL);
 	types = g_list_append(types, status);
 	
 	/* Cave into feature requests and allow people to set themselves to be idle */
 	status = purple_status_type_new_with_attrs(PURPLE_STATUS_AWAY,
 		NULL, _("Idle"), FALSE, TRUE, FALSE, "message",
-		_("Message"), purple_value_new(PURPLE_TYPE_STRING),
-		"message_date", _("Message changed"),
-		purple_value_new(PURPLE_TYPE_STRING), NULL);
+		_("Message"), purple_value_new(PURPLE_TYPE_STRING), NULL);
 	types = g_list_append(types, status);
 
 	/* Offline people dont have messages */
@@ -119,50 +109,115 @@ static gboolean fb_get_messages_failsafe(FacebookAccount *fba)
 	return TRUE;
 }
 
+void fb_login_captcha_cancel_cb(PurpleConnection *pc, PurpleRequestFields *fields)
+{
+	purple_connection_error_reason(pc, PURPLE_CONNECTION_ERROR_OTHER_ERROR,
+		"Could not authenticate captcha.  Logging into the Facebook website may fix this.");
+}
+
 void fb_login_captcha_ok_cb(PurpleConnection *pc, PurpleRequestFields *fields)
 {
-	gint birthday_year, birthday_month, birthday_day;
+	const gchar *captcha_response;
 	gchar *postdata, *encoded_username, *encoded_password, *encoded_charset_test,
-			*encoded_auth_token, *encoded_persist_data;
-	const gchar* const *languages;
-	const gchar *locale;
+			*encoded_persist_data, *encoded_response, *encoded_extra_challenge,
+			*encoded_session;
 	FacebookAccount *fba = pc->proto_data;
 
-	birthday_year = purple_request_fields_get_integer(fields, "birthday_year");
-	birthday_month = purple_request_fields_get_integer(fields, "birthday_month");
-	birthday_day = purple_request_fields_get_integer(fields, "birthday_day");
-		
+	captcha_response = purple_request_fields_get_string(fields, "captcha_response");
+	
+	encoded_response = g_strdup(purple_url_encode(captcha_response));
 	encoded_username = g_strdup(purple_url_encode(
 			purple_account_get_username(fba->account)));
 	encoded_password = g_strdup(purple_url_encode(
 			purple_account_get_password(fba->account)));
-	encoded_auth_token = g_strdup(purple_url_encode(
-			fba->auth_token));
+	encoded_extra_challenge = g_strdup(purple_url_encode(
+			fba->extra_challenge));
 	encoded_persist_data = g_strdup(purple_url_encode(
 			fba->persist_data));
+	encoded_session = g_strdup(purple_url_encode(
+			fba->captcha_session));
 	encoded_charset_test = g_strdup(purple_url_encode("€,´,€,´,水,Д,Є"));
-	languages = g_get_language_names();
-	locale = languages[0];
-	if (locale == NULL || g_str_equal(locale, "C"))
-		locale = "en_US";
 
-	postdata = g_strdup_printf(
-			"charset_test=%s&locale=%s&email=%s&pass=%s&persistent=1&login=Login&charset_test=%s&version=1.0&return_session=0&t_auth_token=%s&answered_captcha=1&captcha_persist_data=%s&birthday_captcha_day=%d&birthday_captcha_month=%d&birthday_captcha_year=%d",
-			encoded_charset_test, locale, encoded_username, encoded_password, encoded_charset_test, encoded_auth_token, encoded_persist_data, birthday_day, birthday_month, birthday_year);
+	postdata = g_strdup_printf("charset_test=%s&"
+								"version=1.0&"
+								"return_session=0&"
+								"charset_test=%s&"
+								"answered_captcha=1&"
+								"captcha_persist_data=%s&"
+								"captcha_session=%s&"
+								"extra_challenge_params=%s&"
+								"captcha_response=%s&"
+								"email=%s&pass=%s&"
+								"persistent=1",
+								encoded_charset_test, encoded_charset_test,
+								encoded_persist_data, encoded_session,
+								encoded_extra_challenge, encoded_response,
+								encoded_username, encoded_password);
 	g_free(encoded_username);
 	g_free(encoded_password);
 	g_free(encoded_charset_test);
-	g_free(encoded_auth_token);
+	g_free(encoded_extra_challenge);
 	g_free(encoded_persist_data);
+	g_free(encoded_response);
+	g_free(encoded_session);
 
 	fb_post_or_get(fba, FB_METHOD_POST | FB_METHOD_SSL, "login.facebook.com",
-			"/login.php?login_attempt=1", postdata, fb_login_cb, NULL, FALSE);
+			"/login.php?login_attempt=1&_fb_noscript=1", postdata, fb_login_cb, NULL, FALSE);
 	g_free(postdata);
 	
-	g_free(fba->auth_token);
+	g_free(fba->extra_challenge);
 	g_free(fba->persist_data);
-	fba->auth_token = NULL;
+	g_free(fba->captcha_session);
+	fba->extra_challenge = NULL;
 	fba->persist_data = NULL;
+	fba->captcha_session = NULL;
+}
+
+static void fb_login_captcha_image_cb(FacebookAccount *fba, gchar *response, 
+		gsize len, gpointer userdata)
+{
+	PurpleRequestFields *fields;
+	PurpleRequestFieldGroup *group;
+	PurpleRequestField *field;
+	
+	fields = purple_request_fields_new();
+	group = purple_request_field_group_new(NULL);
+	purple_request_fields_add_group(fields, group);
+	
+	field = purple_request_field_image_new("captcha_image", "", response, len);
+	purple_request_field_group_add_field(group, field);
+	
+	field = purple_request_field_string_new("captcha_response", "", "", FALSE);
+	purple_request_field_group_add_field(group, field);
+	
+	purple_request_fields(fba->pc, 
+		_("Facebook Captcha"), _("Facebook Captcha"), 
+		_("Enter both words below, separated by a space"), 
+		fields, 
+		_("OK"), G_CALLBACK(fb_login_captcha_ok_cb), 
+		_("Logout"), G_CALLBACK(fb_login_captcha_cancel_cb), 
+		fba->account, NULL, NULL, fba->pc	 
+	);
+}
+
+static void fb_login_captcha_cb(FacebookAccount *fba, gchar *response, 
+		gsize len, gpointer userdata)
+{
+	const gchar *challenge_start = "challenge : '";
+	gchar *challenge;
+	gchar *image_url;
+	
+	challenge = g_strstr_len(response, len, challenge_start);
+	if (challenge)
+	{
+		challenge += strlen(challenge_start);
+		challenge = g_strndup(challenge, strchr(challenge, '\'') - challenge);
+		
+		image_url = g_strdup_printf("/image?c=%s", challenge);
+		
+		fb_post_or_get(fba, FB_METHOD_GET | FB_METHOD_SSL, "api-secure.recaptcha.net",
+			image_url, NULL, fb_login_captcha_image_cb, NULL, FALSE);
+	}
 }
 
 static void fb_login_cb(FacebookAccount *fba, gchar *response, gsize len,
@@ -170,11 +225,13 @@ static void fb_login_cb(FacebookAccount *fba, gchar *response, gsize len,
 {
 	gchar *user_cookie;
 	
-	if (len && g_strstr_len(response, len, "captcha"))
+	if (len && g_strstr_len(response, len, "captcha") && !purple_account_get_bool(fba->account, "ignore-facebook-captcha", FALSE))
 	{
+		purple_debug_info("facebook", "captcha page: %s\n", response);
+
 		purple_connection_update_progress(fba->pc, _("Handling Captcha"), 2, 4);
 		
-		const gchar *persist_data_start = "<input type=\"hidden\" name=\"captcha_persist_data\" value=\"";
+		const gchar *persist_data_start = "<input type=\"hidden\" id=\"captcha_persist_data\" name=\"captcha_persist_data\" value=\"";
 		gchar *persist_data = g_strstr_len(response, len, persist_data_start);
 		if (persist_data)
 		{
@@ -182,37 +239,47 @@ static void fb_login_cb(FacebookAccount *fba, gchar *response, gsize len,
 			fba->persist_data = g_strndup(persist_data, strchr(persist_data, '"') - persist_data);
 		}
 		
-		const gchar *auth_token_start = "<input type=\"hidden\" name=\"t_auth_token\" value=\"";
-		gchar *auth_token = g_strstr_len(response, len, auth_token_start);
-		if (auth_token)
+		const gchar *session_start = "<input type=\"hidden\" id=\"captcha_session\" name=\"captcha_session\" value=\"";
+		gchar *session = g_strstr_len(response, len, session_start);
+		if (session)
 		{
-			auth_token += strlen(auth_token);
-			fba->auth_token = g_strndup(auth_token, strchr(auth_token, '"') - auth_token);
+			session += strlen(session_start);
+			fba->captcha_session = g_strndup(session, strchr(session, '"') - session);
 		}
 		
-		PurpleRequestFields *fields;
-		PurpleRequestFieldGroup *group;
-		PurpleRequestField *field;
+		gchar *captcha_url;
+		const gchar *extra_challenge_params = "<input type=\"hidden\" id=\"extra_challenge_params\" name=\"extra_challenge_params\" value=\"";
+		gchar *extra_challenge = g_strstr_len(response, len, extra_challenge_params);
+		if (extra_challenge)
+		{
+			extra_challenge += strlen(extra_challenge_params);
+			fba->extra_challenge = g_strndup(extra_challenge, strchr(extra_challenge, '"') - extra_challenge);
+			extra_challenge = purple_unescape_html(fba->extra_challenge);
+			g_free(fba->extra_challenge);
+			fba->extra_challenge = extra_challenge;
+		}
 		
-		fields = purple_request_fields_new();
-		group = purple_request_field_group_new(NULL);
-		purple_request_fields_add_group(fields, group);
+		if (!fba->extra_challenge || !fba->persist_data || !fba->captcha_session)
+		{
+			purple_debug_info("facebook", "captcha response: %s\n", response);
+			g_free(fba->extra_challenge);
+			g_free(fba->persist_data);
+			g_free(fba->captcha_session);
+			fba->extra_challenge = NULL;
+			fba->persist_data = NULL;
+			fba->captcha_session = NULL;
+			purple_connection_error_reason(fba->pc, PURPLE_CONNECTION_ERROR_OTHER_ERROR,
+				"Could not authenticate captcha.  Logging into the Facebook website may fix this.");
+			return;
+		}
 		
-		field = purple_request_field_int_new("birthday_year", _("Year"), 0);
-		purple_request_field_group_add_field(group, field);
-		field = purple_request_field_int_new("birthday_month", _("Month"), 0);
-		purple_request_field_group_add_field(group, field);
-		field = purple_request_field_int_new("birthday_day", _("Day"), 0);
-		purple_request_field_group_add_field(group, field);
+		captcha_url = g_strdup_printf("/challenge?k=" FACEBOOK_CAPTCHA_SITE "&%s",
+				fba->extra_challenge?fba->extra_challenge:"");
 		
-		purple_request_fields(fba->pc, 
-			_("Facebook Captcha"), _("Facebook Captcha"), 
-			_("Facebook thinks you're not you.  To prove you are, please enter your date of birth"), 
-			fields, 
-			_("OK"), G_CALLBACK(fb_login_captcha_ok_cb), 
-			_("Logout"), G_CALLBACK(fb_close), 
-			fba->account, NULL, NULL, fba->pc	 
-		);
+		fb_post_or_get(fba, FB_METHOD_GET | FB_METHOD_SSL, "api-secure.recaptcha.net",
+			captcha_url, NULL, fb_login_captcha_cb, NULL, FALSE);
+		
+		g_free(captcha_url);
 		
 		return;
 	}
@@ -318,22 +385,23 @@ static void fb_login(PurpleAccount *account)
 	if (locale == NULL || g_str_equal(locale, "C"))
 		locale = "en_US";
 
+	g_hash_table_replace(fba->cookie_table, g_strdup("lsd"), g_strdup("abcde"));
+
 	postdata = g_strdup_printf(
-			"charset_test=%s&locale=%s&email=%s&pass=%s&pass_placeHolder=Password&persistent=1&login=Login&charset_test=%s",
+			"charset_test=%s&locale=%s&email=%s&pass=%s&pass_placeHolder=Password&persistent=1&login=Login&charset_test=%s&lsd=abcde",
 			encoded_charset_test, locale, encoded_username, encoded_password, encoded_charset_test);
 	g_free(encoded_username);
 	g_free(encoded_password);
 	g_free(encoded_charset_test);
 
 	fb_post_or_get(fba, FB_METHOD_POST | FB_METHOD_SSL, "login.facebook.com",
-			"/login.php?login_attempt=1", postdata, fb_login_cb, NULL, FALSE);
+			"/login.php?login_attempt=1&_fb_noscript=1", postdata, fb_login_cb, NULL, FALSE);
 	g_free(postdata);
 }
 
 static void fb_close(PurpleConnection *pc)
 {
 	FacebookAccount *fba;
-	gchar *postdata;
 	GSList *buddies;
 
 	purple_debug_info("facebook", "disconnecting account\n");
@@ -357,37 +425,6 @@ static void fb_close(PurpleConnection *pc)
 		fb_buddy_free(b);
 		buddies = g_slist_delete_link(buddies, buddies);
 	}
-
-	/* Tell Facebook that we've logged out. */
-	/*
-	 * TODO
-	 * This doesn't actually work because the request is non-blocking
-	 * and we're in the process of logging out.  So we start making a
-	 * connection but then libpurple immediately cancels the attempt
-	 * and frees everything.
-	 *
-	 * There are two ways to fix this:
-	 * 1. We could make this request, but not pass in fba or reference
-	 *    any other data.  The request could complete normally even
-	 *    after this account has logged out, since it really doesn't
-	 *    need access to the PurpleConnection or the FacebookAccount.
-	 *
-	 * 2. The close prpl callback could be changed in libpurple so that
-	 *    protocol plugins can have a chance to make network requests
-	 *    and do other long cleanup operations.  So the call to
-	 *    prpl->close() would become asynchronous.  It tells the
-	 *    protocol plugin to begin the shutdown sequence, and the
-	 *    protocol plugin tells the core when it's finished.
-	 */
-	if (fba->post_form_id)
-		postdata = g_strdup_printf(
-				"visibility=false&post_form_id=%s",
-				fba->post_form_id);
-	else
-		postdata = g_strdup("visibility=false");
-	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/chat/settings.php",
-			postdata, NULL, NULL, FALSE);
-	g_free(postdata);
 
 	if (fba->friend_request_timer) {
 		purple_timeout_remove(fba->friend_request_timer);
@@ -424,9 +461,11 @@ static void fb_close(PurpleConnection *pc)
 	g_hash_table_destroy(fba->hostname_ip_cache);
 	g_hash_table_destroy(fba->auth_buddies);
 	g_free(fba->post_form_id);
+	g_free(fba->dtsg);
 	g_free(fba->channel_number);
 	g_free(fba->last_status_message);
-	g_free(fba->auth_token);
+	g_free(fba->extra_challenge);
+	g_free(fba->captcha_session);
 	g_free(fba->persist_data);
 	g_free(fba);
 }
@@ -539,7 +578,6 @@ static void fb_buddy_free(PurpleBuddy *buddy)
 
 		g_free(fbuddy->name);
 		g_free(fbuddy->status);
-		g_free(fbuddy->status_rel_time);
 		g_free(fbuddy->thumb_url);
 		g_free(fbuddy);
 	}

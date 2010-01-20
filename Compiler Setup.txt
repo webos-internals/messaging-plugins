@@ -17,6 +17,7 @@ apt-get install texinfo
 apt-get install automake
 apt-get install libtool
 apt-get install gawk
+apt-get pidgin-dev
 cd ../; make i686g25-target
 cd i686g25; make directories ipkg-utils toolchain
 =================

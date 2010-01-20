@@ -1,0 +1,140 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Get WebOS Version
+/usr/bin/luna-send -n 1 palm://com.palm.preferences/systemProperties/Get {\"key\":\"com.palm.properties.version\"} 2>/var/tmp/webosver
+
+#Set Defaults
+WEBOSVER=1.3
+SUBVER=200.72
+
+if (cat /var/tmp/webosver | grep -i 1.2); then
+	WEBOSVER=1.2
+	SUBVER=200.18
+fi
+if (cat /var/tmp/webosver | grep -i 1.3.1); then
+	WEBOSVER=1.3
+	SUBVER=200.47
+fi
+if (cat /var/tmp/webosver | grep -i 1.3.5); then
+	WEBOSVER=1.3
+	SUBVER=200.72
+fi
+
+CheckPatch() {
+	if (!(echo $? | grep "0")); then
+	{
+		echo
+		echo Uninstallation of patching for $1 failed! Another patch may have modified this file too.
+		PATCHERROR=YES
+	}
+	fi
+}
+
+#Unload Messaging Application
+/usr/bin/luna-send -n 1 "palm://com.palm.applicationManager/close" "{\"processId\":\"1010\"}"
+
+#Kill LibpurpleAdapterExt if it's running
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep LibpurpleAdapterExt | grep -v grep | awk '{print $2}'`
+#Kill LibpurpleAdapter if it's running
+kill `ps -ef | grep LibpurpleAdapter | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep LibpurpleAdapter | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep LibpurpleAdapter | grep -v grep | awk '{print $2}'`
+
+#Restore Files (Unpatch)
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-constants.patch || CheckPatch messaging-constants
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-luna-service.patch || CheckPatch messaging-luna-service
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-scene.patch || CheckPatch prefsSetupAccount-scene
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch || CheckPatch prefsAccountTypeList-assistant
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch || CheckPatch prefsSetupAccount-assistant
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch || CheckPatch compose-assistant
+$INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-iconography.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch || CheckPatch global-iconography
+$INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-widget-addressing.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch || CheckPatch global-widget-addressing
+if (cat /var/tmp/webosver | grep -i 1.3); then
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant
+fi
+if (cat /var/tmp/webosver | grep -i 1.4); then
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant
+fi
+
+#Cleanup Patching Failures
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.rej
+rm /usr/palm/applications/com.palm.app.messaging/app/models/*.orig
+rm /usr/palm/applications/com.palm.app.messaging/app/controllers/*.orig
+rm /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/*.orig
+rm /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/*.rej
+
+#Restore Palm Libraries
+if [ -d /usr/lib/purple-2.messback ]; then
+	if [ -d /usr/lib/purple-2 ]; then
+		rm /usr/lib/purple-2/ -r -f
+		mv /usr/lib/purple-2.messback /usr/lib/purple-2
+	fi
+fi
+if [ -d /usr/share/purple/ca-certs.messback ]; then
+	if [ -d /usr/share/purple/ca-certs ]; then
+		rm /usr/share/purple/ca-certs/ -r -f
+		mv /usr/share/purple/ca-certs.messback /usr/share/purple/ca-certs
+	fi
+fi
+
+#Restore Palm Plugins
+if [ ! -f /usr/lib/purple-2/libyahoo.so ]; then
+	sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Palm1.2
+fi
+if [ -f /usr/lib/purple-2/libyahoo.so ]; then
+	sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Palm1.3
+fi
+
+#Remove installed files
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/facebook*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/icq*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/messenger*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/irc*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/jabber*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/novell*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/sametime*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/sipe*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/qq*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/images/transports/xfire*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/icq*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/messenger*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/irc*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/jabber*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/novell*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/sametime*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/sipe*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/qq*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/xfire*.png
+rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/OfficeCommunicator.html
+rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/ServerDetails.html
+rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/passwordDialog.html
+
+#Remove sym links, java file and install directory
+rm -f /usr/lib/libymsg.so.0
+rm -f /usr/lib/liboscar.so
+rm -f /usr/lib/liboscar.so.0
+rm -f /var/tmp/webosver
+rm -f /var/home/root/DebugMP.sh
+rm -f -r $INSTDIR/usr/palm/applications/org.webosinternals.messaging
+
+#Check for patching errors
+if (echo PATCHEROR | grep -i "YES"); then
+	echo
+	echo Removal Error
+	echo 
+	echo Uninstallation of one or more patchs failed!
+	echo Another patch may have modified the messaging application.
+	echo
+	exit 1
+fi
+exit 0

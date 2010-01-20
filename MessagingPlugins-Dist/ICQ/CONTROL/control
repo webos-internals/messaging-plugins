@@ -1,0 +1,10 @@
+Package: org.webosinternals.messagingicq
+Version: 2.0.0
+Architecture: all
+Maintainer: Greg Roll
+Description: Messaging Plugins ICQ
+Section: Services and Plugins
+Priority: optional
+Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
+Depends: org.webosinternals.messaging
+Source: {"Type":"Plugin"}

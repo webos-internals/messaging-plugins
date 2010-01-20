@@ -21,8 +21,9 @@
 #ifndef LIBFACEBOOK_H
 #define LIBFACEBOOK_H
 
-#define FACEBOOK_PLUGIN_VERSION "1.61"
+#define FACEBOOK_PLUGIN_VERSION "1.64"
 #define FACEBOOK_PLUGIN_ID "prpl-bigbrownchunx-facebookim"
+#define FACEBOOK_CAPTCHA_SITE "6LezHAAAAAAAADqVjseQ3ctG3ocfQs2Elo1FTa_a"
 
 #include <glib.h>
 
@@ -104,8 +105,12 @@ struct _FacebookAccount {
 	gboolean is_idle;
 	GHashTable *sent_messages_hash;
 	gint last_inbox_count;
-	gchar *auth_token;
+	gchar *extra_challenge;
 	gchar *persist_data;
+	gchar *captcha_session;
+	gint last_status_timestamp;
+	guint bad_buddy_list_count;
+	gchar *dtsg;
 };
 
 struct _FacebookBuddy {
@@ -114,7 +119,6 @@ struct _FacebookBuddy {
 	gint64 uid;
 	gchar *name;
 	gchar *status;
-	gchar *status_rel_time;
 	gchar *thumb_url;
 };
 

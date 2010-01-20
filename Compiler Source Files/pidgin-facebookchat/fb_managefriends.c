@@ -35,8 +35,10 @@ static void fb_auth_accept_cb(gpointer data)
 	buddy_uid = g_strdup_printf("%" G_GINT64_FORMAT, fbuddy->uid);
 
 	postdata = g_strdup_printf(
-			"type=friend_add&id=%s&action=accept&post_form_id=%s",
-			buddy_uid, fba->post_form_id);
+			"type=friend_connect&id=%s&actions[accept]=Confirm&"
+			"post_form_id=%s&fb_dtsg=%s&confirm=%s&"
+			"post_form_id_source=AsyncRequest&__a=1",
+			buddy_uid, fba->post_form_id, fba->dtsg, buddy_uid);
 	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/reqs.php",
 			postdata, NULL, NULL, FALSE);
 
@@ -61,8 +63,10 @@ static void fb_auth_reject_cb(gpointer data)
 	buddy_uid = g_strdup_printf("%" G_GINT64_FORMAT, fbuddy->uid);
 
 	postdata = g_strdup_printf(
-			"type=friend_add&id=%s&action=reject&post_form_id=%s",
-			buddy_uid, fba->post_form_id);
+			"type=friend_connect&id=%s&action=reject&"
+			"post_form_id=%s&fb_dtsg=%s&"
+			"post_form_id_source=AsyncRequest&__a=1",
+			buddy_uid, fba->post_form_id, fba->dtsg);
 	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/reqs.php",
 			postdata, NULL, NULL, FALSE);
 
@@ -80,7 +84,7 @@ static void fb_check_friend_request_cb(FacebookAccount *fba, gchar *data,
 	const char *name_pre_text = "<td class=\"info\"><a ";
 	const char *msg_pre_text = "<div class=\"personal_msg\"><span>";
 	gchar *uid;
-	gint32 uid_int;
+	gint64 uid_int;
 	gchar *name;
 	gchar *msg;
 	gchar *msg_plain;
@@ -143,7 +147,6 @@ static void fb_check_friend_request_cb(FacebookAccount *fba, gchar *data,
 		g_hash_table_insert(fba->auth_buddies, uid, NULL);
 		
 		g_free(name);
-		g_free(uid);
 		g_free(msg_plain);		
 	}
 }
@@ -166,7 +169,6 @@ gboolean fb_check_friend_requests(gpointer data)
 void fb_add_buddy(PurpleConnection *pc, PurpleBuddy *buddy, PurpleGroup *group)
 {
 	gchar *postdata;
-	gchar *url;
 	FacebookAccount *fba = pc->proto_data;
 	gchar *buddy_tmp;
 
@@ -192,15 +194,40 @@ void fb_add_buddy(PurpleConnection *pc, PurpleBuddy *buddy, PurpleGroup *group)
 
 	buddy_tmp = g_strdup(purple_url_encode(buddy->name));
 	postdata = g_strdup_printf(
-			"confirmed=1&add=Add+Friend&action=follow_up&uid=%s&flids=&flid_name=&source=search&is_from_whitelist=0&message=&failed_captcha=0&post_form_id=%s",
-			buddy_tmp, fba->post_form_id);
-	url = g_strdup_printf("/ajax/addfriend.php?id=%s", buddy_tmp);
+			"user=%" G_GINT64_FORMAT "&profile_id=%s&message=&"
+			"source=&submit=1&post_form_id=%s&fb_dtsg=%s&"
+			"post_form_id_source=AsyncRequest&__a=1",
+			fba->uid, buddy_tmp, fba->post_form_id, fba->dtsg);
 	g_free(buddy_tmp);
 
-	fb_post_or_get(fba, FB_METHOD_POST, NULL, url, postdata,
-			NULL, NULL, FALSE);
+	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/profile/connect.php",
+			postdata, NULL, NULL, FALSE);
 
 	g_free(postdata);
-	g_free(url);
 }
 
+void fb_buddy_delete(PurpleConnection *pc, PurpleBuddy *buddy,
+		PurpleGroup *group)
+{
+	FacebookAccount *fba = pc->proto_data;
+	gchar *buddy_tmp, *postdata;
+
+	//This function removes a buddy from our friends list on facebook
+	//and shouldn't really be used
+	if (!purple_account_get_bool(fba->account, "facebook_manage_friends", FALSE)) {
+		purple_debug_warning("facebook", "attempted to add %s but was blocked\n", buddy->name);
+		return;
+	}
+
+	buddy_tmp = g_strdup(purple_url_encode(buddy->name));
+	postdata = g_strdup_printf(
+			"uid=%s&post_form_id=%s&fb_dtsg=%s&"
+			"post_form_id_source=AsyncRequest&__a=1",
+			buddy_tmp, fba->post_form_id, fba->dtsg);
+	g_free(buddy_tmp);
+
+	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/profile/removefriend.php",
+			postdata, NULL, NULL, FALSE);
+
+	g_free(postdata);
+}

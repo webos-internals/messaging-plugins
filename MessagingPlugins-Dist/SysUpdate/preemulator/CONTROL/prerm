@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Restore Palm Libraries
+if [ -f /usr/lib/libgpg-error.so.0.3.0.messback ]; then
+	if [ -f /usr/lib/libgpg-error.so.0.3.0 ]; then
+		rm /usr/lib/libgpg-error.so.0.3.0
+		mv /usr/lib/libgpg-error.so.0.3.0.messback /usr/lib/libgpg-error.so.0.3.0
+	fi
+fi
+if [ -f /usr/lib/libcjson.so.messback ]; then
+	if [ -f /usr/lib/libcjson.so ]; then
+		rm /usr/lib/libcjson.so
+		mv /usr/lib/libcjson.so.messback /usr/lib/libcjson.so
+	fi
+fi
+if [ -f /usr/lib/libgcrypt.so.11.5.2.messback ]; then
+	if [ -f /usr/lib/libgcrypt.so.11.5.2 ]; then
+		rm /usr/lib/libgcrypt.so.11.5.2
+		mv /usr/lib/libgcrypt.so.11.5.2.messback /usr/lib/libgcrypt.so.11.5.2
+	fi
+fi
+
+#Cleanup Sym-Links and files
+rm -f /usr/lib/libgnutls.so.26
+rm -f /usr/lib/libtasn1.so.3
+rm -f /usr/lib/libglib-2.0.so.0
+ln -s /usr/lib/libglib-2.0.so.0.1400.4 /usr/lib/libglib-2.0.so.0
+rm -f /usr/lib/libglib-2.0.so.0.2000.4
+rm -f /usr/lib/libpurple.so
+rm -f /usr/lib/libpurple.so.0
+rm -f /usr/lib/libpurple.so.0.6.2
+ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so
+ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so.0
+rm -f /usr/lib/libgpg-error.so
+rm -f /usr/lib/libgpg-error.so.0
+ln -s /usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so
+ln -s /usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so.0
+rm -f /usr/lib/libgcrypt.so.11
+ln -s /usr/lib/libgcrypt.so.11.5.2 /usr/lib/libgcrypt.so.11
+
+#Remount Cryptofs (glib and crypt.so unmount this)
+umount cryptofs
+/usr/bin/mountcfs
+
+exit 0

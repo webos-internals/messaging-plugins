@@ -110,81 +110,37 @@ static GList *get_buddies(FacebookAccount *fba, const gchar *uid,
 	return buddies;
 }
 
-static gboolean process_buddy_status(FacebookAccount *fba, PurpleBuddy *buddy,
-	JsonObject *userInfo)
-{
-	FacebookBuddy *fbuddy;
-	gboolean status_changed;
-
-	status_changed = FALSE;
-	fbuddy = buddy->proto_data;
-
-	if (json_object_has_member(userInfo, "status"))
-	{
-		gchar *status_text;
-		const gchar *status_time_text;
-
-		status_time_text = json_node_get_string(
-				json_object_get_member(userInfo, "statusTimeRel"));
-		status_text = fb_strdup_withhtml(json_node_get_string(
-				json_object_get_member(userInfo, "status")));
-
-		/* set our last known status so that we don't re-set it */
-		if (!fba->last_status_message &&
-		    atoll(buddy->name) == fba->uid) {
-			fba->last_status_message = g_strdup(status_text);
-		}
-
-		if (strlen(status_time_text) == 0) {
-			status_time_text = NULL;
-		}
-
-		g_free(fbuddy->status_rel_time);
-		if (status_time_text != NULL) {
-			fbuddy->status_rel_time = 
-				fb_strdup_withhtml(status_time_text);
-		} else {
-			fbuddy->status_rel_time = NULL;
-		}
-
-		/* if the buddy status has changed, update the contact list */
-		if (fbuddy->status == NULL ||
-			!g_str_equal(fbuddy->status, status_text))
-		{
-			g_free(fbuddy->status);
-			fbuddy->status = g_strdup(status_text);
-			status_changed = TRUE;
-		}
-
-		g_free(status_text);
-	} else {
-		if (fbuddy->status != NULL) {
-			g_free(fbuddy->status);
-			fbuddy->status = NULL;
-			status_changed = TRUE;
-		}
-	}
-
-	return status_changed;
-}
-
 static void process_buddy_icon(FacebookAccount *fba, PurpleBuddy *buddy,
 	JsonObject *userInfo)
 {
 	FacebookBuddy *fbuddy;
 	gchar *buddy_icon_url;
+	gchar *icon_host;
+	gchar *icon_path, *real_path;
+	gchar *search_tmp;
 
 	fbuddy = buddy->proto_data;
 	
 	/* Set the buddy icon (if it hasn't changed) */
 	buddy_icon_url = g_strdup(json_node_get_string(json_object_get_member(
 			userInfo, "thumbSrc")));
+	/* Seperate the URL into pieces */
+	purple_url_parse(buddy_icon_url, &icon_host, NULL, &icon_path, NULL, NULL);
+	g_free(buddy_icon_url);
+	
+	if (icon_path != NULL && icon_path[0] != '/')
+	{
+		/* Slap a / at the front of that badboy */
+		real_path = g_strconcat("/", icon_path, NULL);
+		g_free(icon_path);
+		icon_path = real_path;
+	}
+	
 	if (fbuddy->thumb_url == NULL ||
-	    !g_str_equal(fbuddy->thumb_url, buddy_icon_url))
+	    !g_str_equal(fbuddy->thumb_url, icon_path))
 	{
 		g_free(fbuddy->thumb_url);
-		if (g_str_equal(buddy_icon_url,
-			"http://static.ak.fbcdn.net/pics/q_silhouette.gif"))
+		if (g_str_equal(icon_path, "/pics/q_silhouette.gif"))
 		{
 			fbuddy->thumb_url = NULL;
 			/* User has no icon */
@@ -193,23 +149,22 @@ static void process_buddy_icon(FacebookAccount *fba, PurpleBuddy *buddy,
 		}
 		else
 		{
-			gchar *search_tmp;
+			fbuddy->thumb_url = g_strdup(icon_path);
 
-			fbuddy->thumb_url = g_strdup(buddy_icon_url);
-
-			/* small icon at http://profile.ak.facebook.com/profile6/1845/74/q800753867_2878.jpg */
-			/* bigger icon at http://profile.ak.facebook.com/profile6/1845/74/n800753867_2878.jpg */
-			search_tmp = strstr(buddy_icon_url, "/q");
+			/* small icon at /profile6/1845/74/q800753867_2878.jpg */
+			/* bigger icon at /profile6/1845/74/n800753867_2878.jpg */
+			search_tmp = strstr(icon_path, "/q");
 			if (search_tmp)
-				*(search_tmp + 1) = 'n';
-				
+				*(search_tmp + 1) = 'n';			
+			purple_debug_info("facebook", "buddy %s has a new buddy icon at http://%s%s\n", buddy->name, icon_host, icon_path);
 			/* Fetch their icon */
-			fb_post_or_get(fba, FB_METHOD_GET, "profile.ak.facebook.com",
-					buddy_icon_url, NULL,
+			fb_post_or_get(fba, FB_METHOD_GET, icon_host,
+					icon_path, NULL,
 					buddy_icon_cb, g_strdup(purple_buddy_get_name(buddy)), FALSE);
 		}
 	}
-	g_free(buddy_icon_url);
+	g_free(icon_host);
+	g_free(icon_path);
 }
 
 static void process_buddies(FacebookAccount *fba, GHashTable *online_buddies_list,
@@ -260,12 +215,10 @@ static void process_buddies(FacebookAccount *fba, GHashTable *online_buddies_lis
 	for (cur = buddies; cur != NULL; cur = cur->next)
 	{
 		PurpleBuddy *buddy;
-		gboolean status_changed;
 
 		buddy = (PurpleBuddy *)cur->data;
 
 		process_buddy_icon(fba, buddy, userInfo);
-		status_changed = process_buddy_status(fba, buddy, userInfo);
 
 		purple_presence_set_idle(purple_buddy_get_presence(buddy),
 				idle, 0);
@@ -279,7 +232,6 @@ static void process_buddies(FacebookAccount *fba, GHashTable *online_buddies_lis
 			// conditions before doing this, because if we set it always
 			// Pidgin has a bug where the logs go nuts with "x is online".
 			if (!PURPLE_BUDDY_IS_ONLINE(buddy) ||
-			    status_changed ||
 			    idle != purple_presence_is_idle(
 				purple_buddy_get_presence(buddy)))
 			{
@@ -320,6 +272,123 @@ static void process_notifications(FacebookAccount *fba,
 	}
 }
 
+static void got_status_stream_cb(FacebookAccount *fba, gchar *data,
+		gsize data_len, gpointer userdata)
+{
+	gchar *error = NULL;
+	JsonParser *parser;
+	JsonObject *objnode;
+	gint new_latest;
+	const gchar *html;
+	gchar **messages;
+	gchar *message;
+	gint i;
+	gchar *uid_string;
+	gchar *message_string;
+	gsize uid_length;
+	FacebookBuddy *fbuddy;
+	PurpleBuddy *buddy;
+	
+	purple_debug_info("facebook", "parsing status message stream\n");
+	
+	if (fba == NULL)
+		return;
+
+	parser = fb_get_parser(data, data_len);
+	if (parser == NULL) {
+		purple_debug_info("facebook", "could not parse\n");
+		return;
+	}
+	
+	//purple_debug_misc("facebook", "status message stream\n%s\n", data);
+	
+	objnode = fb_get_json_object(parser, &error);
+	
+	if (error || !json_object_has_member(objnode, "payload")) {
+		purple_debug_info("facebook", "no payload\n");
+		json_parser_free(parser);
+		return;
+	}
+	
+	objnode = json_node_get_object(json_object_get_member(
+			objnode, "payload"));
+	
+	html = json_node_get_string(json_object_get_member(
+			objnode, "html"));
+	//purple_debug_misc("facebook", "html data\n%s\n", html);
+	
+	messages = g_strsplit(html, "/h3>", -1);
+	for(i = 0; messages[i]; i++)
+	{
+		message = messages[i];
+		uid_length = 0;
+		
+		//find uid:
+		//start with aid_ ...  "
+		uid_string = strstr(message, "aid_");
+		if (!uid_string)
+			continue;
+		uid_string += 4;
+		while (uid_string[uid_length] >= '0' &&
+				uid_string[uid_length] <= '9')
+		{
+			uid_length++;
+		}
+		uid_string = g_strndup(uid_string, uid_length);
+		purple_debug_info("facebook", "uid: %s\n", uid_string);
+		
+		//find message:
+		// last index of
+		// /a> ... <
+		message_string = g_strrstr(message, "/a>");
+		if (!message_string)
+		{
+			g_free(uid_string);
+			continue;	
+		}
+		message_string = strchr(message_string, '>');
+		if (!message_string)
+		{
+			g_free(uid_string);
+			continue;
+		}
+		message_string += 1;
+		message_string = g_strndup(message_string, g_strrstr(message_string, "<")-message_string);
+		purple_debug_info("facebook", "message: %s\n", message_string);
+		
+		buddy = purple_find_buddy(fba->account, uid_string);
+		if (buddy && buddy->proto_data)
+		{
+			fbuddy = buddy->proto_data;
+			g_free(fbuddy->status);
+			
+			fbuddy->status = purple_strreplace(message_string, "&hearts;", "♥");
+			g_free(message_string); message_string = fbuddy->status;
+			fbuddy->status = purple_markup_strip_html(message_string);
+			
+			purple_prpl_got_user_status(fba->account, buddy->name,
+				purple_primitive_get_id_from_type(
+					purple_presence_is_idle(purple_buddy_get_presence(buddy)) ? PURPLE_STATUS_AWAY :
+						PURPLE_STATUS_AVAILABLE), "message", fbuddy->status, NULL);
+		}
+		
+		g_free(uid_string);
+		g_free(message_string);
+	}
+	g_strfreev(messages);
+	
+	new_latest = json_node_get_int(json_object_get_member(
+			objnode, "newestStoryTime"));
+	if (!new_latest)
+	{
+		purple_debug_info("facebook", "no newestStoryTime\n");
+	} else {
+		fba->last_status_timestamp = new_latest;
+	}
+	
+	json_parser_free(parser);
+}
+
 static void got_buddy_list_cb(FacebookAccount *fba, gchar *data,
 		gsize data_len, gpointer userdata)
 {
@@ -335,9 +404,12 @@ static void got_buddy_list_cb(FacebookAccount *fba, gchar *data,
 
 	JsonParser *parser = fb_get_parser(data, data_len);
 	if (parser == NULL) {
-		purple_connection_error_reason(fba->pc,
+		if (fba->bad_buddy_list_count++ == 3)
+		{
+			purple_connection_error_reason(fba->pc,
 				PURPLE_CONNECTION_ERROR_NETWORK_ERROR,
 				_("Could not retrieve buddy list"));
+		}
 		return;
 	}
 
@@ -346,12 +418,16 @@ static void got_buddy_list_cb(FacebookAccount *fba, gchar *data,
 	gchar *error = NULL;
 	JsonObject *objnode = fb_get_json_object(parser, &error);
 	if (error) {
-		purple_connection_error_reason(
+		if (fba->bad_buddy_list_count++ == 3)
+		{
+			purple_connection_error_reason(
 				fba->pc,
 				PURPLE_CONNECTION_ERROR_NETWORK_ERROR,
 				error);
-			json_parser_free(parser);
-			return;
+		}
+		json_parser_free(parser);
+		
+		return;
 	}
 	
 	/* look for "userInfos":{ ... }, */
@@ -374,6 +450,9 @@ static void got_buddy_list_cb(FacebookAccount *fba, gchar *data,
 		json_parser_free(parser);
 		return;
 	}
+	
+	//Reset invalid buddy list counter
+	fba->bad_buddy_list_count = 0;
 	
 	if (purple_account_get_bool(fba->account, "facebook_use_groups", TRUE))
 	{
@@ -437,10 +516,16 @@ gboolean fb_get_buddy_list(gpointer data)
 	fba = data;
 
 	postdata = g_strdup_printf(
-			"user=%" G_GINT64_FORMAT "&popped_out=true&force_render=true&buddy_list=1&notifications=1",
-			fba->uid);
-	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/chat/buddy_list.php",
+			"user=%" G_GINT64_FORMAT "&popped_out=true&force_render=true&buddy_list=1&__a=1&post_form_id_source=AsyncRequest&post_form_id=%s&fb_dtsg=%s&notifications=1",
+			fba->uid, fba->post_form_id?fba->post_form_id:"(null)", fba->dtsg?fba->dtsg:"(null)");
+	fb_post_or_get(fba, FB_METHOD_POST, NULL, "/ajax/presence/update.php",
 			postdata, got_buddy_list_cb, NULL, FALSE);
+	g_free(postdata);
+	
+	postdata = g_strdup_printf("/ajax/intent.php?filter=app_2915120374&request_type=1&__a=1&newest=%d&ignore_self=true",
+			fba->last_status_timestamp);
+	fb_post_or_get(fba, FB_METHOD_GET, NULL, postdata,
+			NULL, got_status_stream_cb, NULL, FALSE);
 	g_free(postdata);
 
 	return TRUE;

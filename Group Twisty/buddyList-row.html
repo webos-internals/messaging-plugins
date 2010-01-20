@@ -1,0 +1,14 @@
+<div id="#{chatId}" class="palm-row buddyListRow group#{groupName} #{hideListEntry}" x-mojo-tap-highlight="momentary">
+  <div class="palm-row-wrapper">
+    <img class="avatar-location" width="34px" height="34px" src="#{avatar}" />
+    <img class="avatar-overlay" width="42px" height="42px" src="#{imAvatarOverlay}" />
+    <div class="icon left status-#{availabilityClass} status-icon"></div>
+    <div class="title #{hideCustomMessage} #{unreadCountClass}" id="buddyBageContainer#{chatId}">
+      <div class="truncating-text im-name-info">#{displayName}</div>
+      <div class="unread-count-container">
+        <div class="unread-count-wrapper">#{unreadCount}</div>
+      </div>
+      <div class="truncating-text custom-message">#{-customMessage}</div>
+    </div>
+  </div>
+</div>

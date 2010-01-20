@@ -1,0 +1,99 @@
+--- messaging-constants.js	Mon Nov  2 11:14:47 2009
++++ messaging-constants.js.new	Mon Jan 18 01:28:46 2010
+@@ -270,6 +270,96 @@
+ 		displayName: $L('Yahoo'),
+ 		secondaryDisplayName: $L('Yahoo!')
+       },
++	  'qqim': {
++        className: 'qqim',
++        iconPath: 'images/transports/transport-qq-32x32.png',
++        smallIcon: 'images/transports/qq_transport_splitter.png',
++        largeIcon: 'images/transports/qq-logo.png',
++		title: $L('QQ'),
++		displayName: $L('QQ'),
++		secondaryDisplayName: $L('QQ')
++      },
++	  'irc': {
++        className: 'irc',
++        iconPath: 'images/transports/transport-irc-32x32.png',
++        smallIcon: 'images/transports/irc_transport_splitter.png',
++        largeIcon: 'images/transports/irc-logo.png',
++		title: $L('IRC'),
++		displayName: $L('IRC'),
++		secondaryDisplayName: $L('IRC')
++      },
++	  'gwim': {
++        className: 'gwim',
++        iconPath: 'images/transports/transport-novell-32x32.png',
++        smallIcon: 'images/transports/novell_transport_splitter.png',
++        largeIcon: 'images/transports/novell-logo.png',
++		title: $L('Novell Groupwise'),
++		displayName: $L('Novell Groupwise'),
++		secondaryDisplayName: $L('Groupwise')
++      },
++	  'sametime': {
++        className: 'sametime',
++        iconPath: 'images/transports/transport-sametime-32x32.png',
++        smallIcon: 'images/transports/sametime_transport_splitter.png',
++        largeIcon: 'images/transports/sametime-logo.png',
++		title: $L('Sametime'),
++		displayName: $L('Sametime'),
++		secondaryDisplayName: $L('Sametime')
++      },
++	  'sipe': {
++        className: 'sipe',
++        iconPath: 'images/transports/transport-sipe-32x32.png',
++        smallIcon: 'images/transports/sipe_transport_splitter.png',
++        largeIcon: 'images/transports/sipe-logo.png',
++		title: $L('Office Communicator'),
++		displayName: $L('Office Communicator'),
++		secondaryDisplayName: $L('SIPE')
++      },
++	  'jabber': {
++        className: 'jabber',
++        iconPath: 'images/transports/transport-jabber-32x32.png',
++        smallIcon: 'images/transports/jabber_transport_splitter.png',
++        largeIcon: 'images/transports/jabber-logo.png',
++		title: $L('Jabber'),
++		displayName: $L('Jabber'),
++		secondaryDisplayName: $L('Jabber')
++      },
++	  'facebook': {
++        className: 'facebook',
++        iconPath: 'images/transports/transport-facebook-32x32.png',
++        smallIcon: 'images/transports/facebook_transport_splitter.png',
++        largeIcon: 'images/transports/facebook-logo.png',
++		title: $L('Facebook Chat'),
++		displayName: $L('Facebook Chat'),
++		secondaryDisplayName: $L('Facebook')
++      },
++	  'icq': {
++        className: 'icq',
++        iconPath: 'images/transports/transport-icq-32x32.png',
++        smallIcon: 'images/transports/icq_transport_splitter.png',
++        largeIcon: 'images/transports/icq-logo.png',
++		title: $L('ICQ'),
++		displayName: $L('ICQ'),
++		secondaryDisplayName: $L('ICQ')
++      },
++	'xfire': {
++        className: 'xfire',
++        iconPath: 'images/transports/transport-xfire-32x32.png',
++        smallIcon: 'images/transports/xfire_transport_splitter.png',
++        largeIcon: 'images/transports/xfire-logo.png',
++		title: $L('XFire'),
++		displayName: $L('XFire'),
++		secondaryDisplayName: $L('XFire')
++      },
++      'live': {
++        className: 'live',
++        iconPath: 'images/transports/transport-messenger-32x32.png',
++        smallIcon: 'images/transports/messenger_transport_splitter.png',
++        largeIcon: 'images/transports/messenger-logo.png',
++		title: $L('Live Messenger'),
++		displayName: $L('Live Messenger'),
++		secondaryDisplayName: $L('Messenger')
++      },
+       'default': {  // TODO: get assets for this default case
+ 	  	cannotBeAdded: true,
+         className: 'default',

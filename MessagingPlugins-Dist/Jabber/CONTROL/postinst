@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Jabber
+
+#Create sym links for Jabber
+rm -f /usr/lib/libjabber.so
+rm -f /usr/lib/libjabber.so.0
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libjabber.so.0.0.0 /usr/lib/libjabber.so
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libjabber.so.0.0.0 /usr/lib/libjabber.so.0
+
+exit 0

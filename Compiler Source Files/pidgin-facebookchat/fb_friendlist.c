@@ -455,8 +455,9 @@ GList *fb_get_buddies_friend_list (FacebookAccount *fba,
 
 		group_name = purple_group_get_name(purple_buddy_get_group(
 					(PurpleBuddy *)cur->data));
-
-		g_hash_table_insert(cur_groups, g_utf8_strdown(group_name, -1), cur->data);
+		group_name = purple_normalize_nocase(NULL, group_name);
+		
+		g_hash_table_insert(cur_groups, g_strdup(group_name), cur->data);
 	}
 	g_slist_free(buddies);
 
@@ -483,9 +484,9 @@ GList *fb_get_buddies_friend_list (FacebookAccount *fba,
 	for (cur_buddy = final_buddies; cur_buddy != NULL;
 	     cur_buddy = cur_buddy->next)
 	{
-		g_hash_table_remove(cur_groups, purple_normalize_nocase(NULL, 
-			purple_group_get_name(purple_buddy_get_group(
-				(PurpleBuddy *)cur_buddy->data))));
+		const gchar *group_name = purple_group_get_name(purple_buddy_get_group(
+					(PurpleBuddy *)cur_buddy->data));
+		g_hash_table_remove(cur_groups, purple_normalize_nocase(NULL, group_name));
 	}
 
 	// Delete remaining buddies to maintain sync state with server.

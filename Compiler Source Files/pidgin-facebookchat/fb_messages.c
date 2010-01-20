@@ -103,8 +103,8 @@ static void parse_new_messages(PurpleConnection *pc, FacebookAccount *fba, JsonA
 		JsonObject *object = json_node_get_object(json_array_get_element(messages, i));
 		type = json_node_get_string(json_object_get_member(object, "type"));
 
-		from = g_strdup_printf("%" G_GINT64_FORMAT, json_node_get_int(json_object_get_member(object, "from")));
-		to = g_strdup_printf("%" G_GINT64_FORMAT, json_node_get_int(json_object_get_member(object, "to")));
+		from = g_strdup_printf("%" G_GINT64_FORMAT, (gint64)json_node_get_int(json_object_get_member(object, "from")));
+		to = g_strdup_printf("%" G_GINT64_FORMAT, (gint64)json_node_get_int(json_object_get_member(object, "to")));
 		
 		/* Use the in-line buddy name if the buddy list hasn't been downloaded yet */
 		buddy = purple_find_buddy(pc->account, from);
@@ -291,7 +291,7 @@ static gboolean fb_get_new_messages(FacebookAccount *fba)
 
 	purple_debug_info("facebook", "getting new messages\n");
 
-	fetch_server = g_strdup_printf("%d.channel%s.facebook.com", 0, channel_number);
+	fetch_server = g_strdup_printf("%d.%s.facebook.com", 0, channel_number);
 	/* use the current time in the url to get past any transparent proxy caches */
 	fetch_url = g_strdup_printf("/x/%lu/%s/p_%" G_GINT64_FORMAT "=%d", (gulong)time(NULL), (fba->is_idle?"false":"true"), fba->uid, fba->message_fetch_sequence);
 
@@ -407,8 +407,6 @@ int fb_send_im(PurpleConnection *pc, const gchar *who, const gchar *message, Pur
 
 void got_reconnect_json(FacebookAccount *fba, gchar *data, gsize data_len, gpointer userdata)
 {
-	gchar *new_channel_number;
-	
 	JsonParser *parser;
 	JsonObject *objnode;
 
@@ -441,9 +439,8 @@ void got_reconnect_json(FacebookAccount *fba, gchar *data, gsize data_len, gpoin
 		return;
 	}
 	
-	new_channel_number = g_strdup(&new_channel_host[7]);
 	g_free(fba->channel_number);
-	fba->channel_number = new_channel_number;
+	fba->channel_number = g_strdup(new_channel_host);
 	
 	gint new_seq = json_node_get_int(json_object_get_member(payload, "seq"));
 	fba->message_fetch_sequence = new_seq;
@@ -458,7 +455,7 @@ void got_reconnect_json(FacebookAccount *fba, gchar *data, gsize data_len, gpoin
 
 gboolean fb_reconnect(FacebookAccount *fba)
 {
-	gchar *url = g_strdup_printf("/ajax/presence/reconnect.php?reason=3&post_form_id=%s", fba->post_form_id);
+	gchar *url = g_strdup_printf("/ajax/presence/reconnect.php?reason=7&post_form_id=%s&__a=1", fba->post_form_id);
 	fb_post_or_get(fba, FB_METHOD_GET, NULL, url, NULL, got_reconnect_json, NULL, FALSE);
 	g_free(url);
 	
@@ -468,7 +465,11 @@ gboolean fb_reconnect(FacebookAccount *fba)
 static void got_form_id_page(FacebookAccount *fba, gchar *data, gsize data_len, gpointer userdata)
 {
 	const gchar *start_text = "id=\"post_form_id\" name=\"post_form_id\" value=\"";
+	const gchar *dtsg_start = "fb_dtsg:\"";
+	const gchar *channel_start = "js\", \"channel";
+	const gchar *channel_start2 = "js\",\"channel";
 	gchar *post_form_id;
+	gchar *channel = NULL;
 	gchar *tmp = NULL;
 	
 	/* NULL data crashes on Windows */
@@ -488,17 +489,45 @@ static void got_form_id_page(FacebookAccount *fba, gchar *data, gsize data_len, 
 	}
 	tmp += strlen(start_text);
 	post_form_id = g_strndup(tmp, strchr(tmp, '"') - tmp);
-
+	
 	g_free(fba->post_form_id);
 	fba->post_form_id = post_form_id;
+	
+	tmp = g_strstr_len(data, data_len, dtsg_start);
+	if (tmp != NULL)
+	{
+		tmp += strlen(dtsg_start);
+		g_free(fba->dtsg);
+		fba->dtsg = g_strndup(tmp, strchr(tmp, '"') - tmp);
+	}
 
+	tmp = g_strstr_len(data, data_len, channel_start);
+	if (tmp != NULL)
+	{
+		tmp += 6;
+	} else {
+		tmp = g_strstr_len(data, data_len, channel_start2);
+		if (tmp != NULL)
+			tmp += 5;
+	}
+	if (tmp != NULL)
+	{
+		channel = g_strndup(tmp, strchr(tmp, '"') - tmp);
+		g_free(fba->channel_number);
+		fba->channel_number = channel;
+	}
 
 	tmp = g_strdup_printf("visibility=true&post_form_id=%s", post_form_id);
 	fb_post_or_get(fba, FB_METHOD_POST, "apps.facebook.com", "/ajax/chat/settings.php", tmp, NULL, NULL, FALSE);
 	g_free(tmp);
 	
-	/* Grab new channel number */
-	fb_reconnect(fba);
+	if (channel == NULL)
+	{
+		/* Grab new channel number */
+		fb_reconnect(fba);
+	} else {
+		fb_get_new_messages(fba);
+	}
 }
 
 gboolean fb_get_post_form_id(FacebookAccount *fba)

@@ -1,0 +1,7 @@
+luna-send -i luna://com.palm.connectionmanager/getstatus {}
+luna-send -i palm://com.palm.messaging/loginToAccount {\"connectionType\":\"wifi\",\"ipAddress\":\"10.0.2.15\",\"accountId\":\"20890720927749\",\"serviceName\":\"live\",\"username\":\"commodoreking@hotmail.com\",\"password\":\"hsvvtgts\"}
+
+** Message: serviceResponse Handling: 2, { "returnValue": true, "isInternetConnectionAvailable": true, "wifi": { "state": "connected", "ipAddress": "10.0.2.15", "ssid": "Emulator", "bssid": "Emulator" }, "wan": { "state": "disconnected" }, "btpan": { "state": "disconnected" } }
+
+LOGOUT						
+luna-send -i palm://com.palm.messaging/setMyAvailability {\"serviceName\":\"live\",\"username\":\"commodoreking@hotmail.com\",\"availability\":\"4\"}

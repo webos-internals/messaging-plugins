@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Live
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin ICQ
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin SIPE
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Jabber
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin IRC
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Sametime
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Groupwise
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin QQ
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin XFire
+
+#Remove files from main source
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libnovell.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libnovell.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libirc.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libirc.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmsn.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmsn.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsipe.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsipe.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libqq.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libqq.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.la
+
+#Remove Jabber sym links
+rm -f /usr/lib/libjabber.so
+rm -f /usr/lib/libjabber.so.0
+
+#Remove sym link for Sametime
+rm -f /usr/lib/libmeanwhile.so.1
+
+exit 0
