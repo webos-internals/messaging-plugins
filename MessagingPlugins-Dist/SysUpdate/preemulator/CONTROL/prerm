@@ -30,22 +30,15 @@ fi
 #Cleanup Sym-Links and files
 rm -f /usr/lib/libgnutls.so.26
 rm -f /usr/lib/libtasn1.so.3
-rm -f /usr/lib/libglib-2.0.so.0
-ln -s /usr/lib/libglib-2.0.so.0.1400.4 /usr/lib/libglib-2.0.so.0
-rm -f /usr/lib/libglib-2.0.so.0.2000.4
-rm -f /usr/lib/libpurple.so
-rm -f /usr/lib/libpurple.so.0
-rm -f /usr/lib/libpurple.so.0.6.2
-ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so
-ln -s /usr/lib/libpurple.so.0.5.1 /usr/lib/libpurple.so.0
 rm -f /usr/lib/libgpg-error.so
 rm -f /usr/lib/libgpg-error.so.0
 ln -s /usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so
 ln -s /usr/lib/libgpg-error.so.0.3.0 /usr/lib/libgpg-error.so.0
 rm -f /usr/lib/libgcrypt.so.11
 ln -s /usr/lib/libgcrypt.so.11.5.2 /usr/lib/libgcrypt.so.11
+rim -f /usr/lib/libjson-glib-1.0.so.0
 
-#Remount Cryptofs (glib and crypt.so unmount this)
+#Remount Cryptofs (gcrypt.so unmount this)
 umount cryptofs
 /usr/bin/mountcfs
 

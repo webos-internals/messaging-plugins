@@ -223,7 +223,9 @@ static char* getPrplFriendlyUsername(const char *serviceName, const char *userna
 	char *transportFriendlyUsername;
 	if (strcmp(serviceName, "aol") == 0)
 	{
-		if (strstr(username, "@aol.com") != NULL)
+		// Need to strip off @aol.com, but not @aol.com.mx
+		const char *extension = strstr(username, "@aol.com");
+		if (extension != NULL && strstr(extension, "aol.com.") == NULL)
 		{
 			transportFriendlyUsername = malloc(strlen(username) - strlen("@aol.com") + 1);
 			char *usernameCopy= alloca(strlen(username) + 1);
@@ -358,7 +360,7 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 {
 	if (!username || !serviceName)
 	{
-		return "";
+		return strdup("");
 	}
 	GString *javaFriendlyUsername = g_string_new(username);
 	if (strcmp(serviceName, "aol") == 0 && strchr(username, '@') == NULL)
@@ -434,7 +436,9 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 	{
 		g_string_append(javaFriendlyUsername, "@qqim.com");
 	}
-	return javaFriendlyUsername->str;
+	char *javaFriendlyUsernameToReturn = strdup(javaFriendlyUsername->str);
+	g_string_free(javaFriendlyUsername, TRUE);
+	return javaFriendlyUsernameToReturn;
 }
 
 static char* stripResourceFromGtalkUsername(const char *username)
@@ -450,7 +454,9 @@ static char* stripResourceFromGtalkUsername(const char *username)
 		int charsToKeep = resource - username;
 		g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 	}
-	return javaFriendlyUsername->str;
+	char *javaFriendlyUsernameToReturn = strdup(javaFriendlyUsername->str);
+	g_string_free(javaFriendlyUsername, TRUE);
+	return javaFriendlyUsernameToReturn;
 }
 
 static char* getJavaFriendlyErrorCode(PurpleConnectionError type)
@@ -556,7 +562,9 @@ static char* getPrplProtocolIdFromServiceName(const char *serviceName)
 	{
 		g_string_append(prplProtocolId, serviceName);
 	}
-	return prplProtocolId->str;
+	char *prplProtocolIdToReturn = strdup(prplProtocolId->str);
+	g_string_free(prplProtocolId, TRUE);
+	return prplProtocolIdToReturn;
 }
 
 /*
@@ -568,7 +576,7 @@ static char* getServiceNameFromPrplProtocolId(PurpleAccount *prplaccount)
 	char *prplProtocolId = prplaccount->protocol_id;
 	if (!prplProtocolId)
 	{
-		return "";
+		return strdup("");
 	}
 
 	char *stringChopper = prplProtocolId;
@@ -670,14 +678,16 @@ static char* getServiceNameFromPrplProtocolId(PurpleAccount *prplaccount)
 		// Special case for QQ where the java serviceName is "qqim" and the prpl protocol_id is "prpl-qq"
 		serviceName = g_string_new("qqim");
 	}
-	return serviceName->str;
+	char *serviceNameToReturn = strdup(serviceName->str);
+	g_string_free(serviceName, TRUE);
+	return serviceNameToReturn;
 }
 
 static char* getAccountKey(const char *username, const char *serviceName)
 {
 	if (!username || !serviceName)
 	{
-		return "";
+		return strdup("");
 	}
 	char *accountKey = malloc(strlen(username) + strlen(serviceName) + 2);
 	strcpy(accountKey, username);
@@ -721,20 +731,28 @@ static GString* getEnableQueueStanza(PurpleAccount *account)
 	GString *stanza = NULL;
 	if (account != NULL)
 	{
-		stanza = g_string_new("");
-		PurpleConnection *pc = purple_account_get_connection(account);
-		if (pc == NULL)
+		if (strcmp(account->protocol_id, "prpl-jabber") == 0)
 		{
-			return NULL;
+			stanza = g_string_new("");
+			PurpleConnection *pc = purple_account_get_connection(account);
+			if (pc == NULL)
+			{
+				return NULL;
+			}
+			const char *displayName = purple_connection_get_display_name(pc);
+			if (displayName == NULL)
+			{
+				return NULL;
+			}
+			g_string_append(stanza, "<iq from='");
+			g_string_append(stanza, displayName);
+			g_string_append(stanza, "' type='set'><query xmlns='google:queue'><enable/></query></iq>");
 		}
-		const char *displayName = purple_connection_get_display_name(pc);
-		if (displayName == NULL)
+		else if (strcmp(account->protocol_id, "prpl-aim") == 0)
 		{
-			return NULL;
+			syslog(LOG_INFO, "getEnableQueueStanza for AIM");
+			stanza = g_string_new("true");
 		}
-		g_string_append(stanza, "<iq from='");
-		g_string_append(stanza, displayName);
-		g_string_append(stanza, "' type='set'><query xmlns='google:queue'><enable/></query></iq>");
 	}
 	return stanza;
 }
@@ -748,20 +766,28 @@ static GString* getDisableQueueStanza(PurpleAccount *account)
 	GString *stanza = NULL;
 	if (account != NULL)
 	{
-		stanza = g_string_new("");
-		PurpleConnection *pc = purple_account_get_connection(account);
-		if (pc == NULL)
+		if (strcmp(account->protocol_id, "prpl-jabber") == 0)
 		{
-			return NULL;
+			stanza = g_string_new("");
+			PurpleConnection *pc = purple_account_get_connection(account);
+			if (pc == NULL)
+			{
+				return NULL;
+			}
+			const char *displayName = purple_connection_get_display_name(pc);
+			if (displayName == NULL)
+			{
+				return NULL;
+			}
+			g_string_append(stanza, "<iq from='");
+			g_string_append(stanza, displayName);
+			g_string_append(stanza, "' type='set'><query xmlns='google:queue'><disable/><flush/></query></iq>");
 		}
-		const char *displayName = purple_connection_get_display_name(pc);
-		if (displayName == NULL)
+		else if (strcmp(account->protocol_id, "prpl-aim") == 0)
 		{
-			return NULL;
+			syslog(LOG_INFO, "getDisableQueueStanza for AIM");
+			stanza = g_string_new("false");
 		}
-		g_string_append(stanza, "<iq from='");
-		g_string_append(stanza, displayName);
-		g_string_append(stanza, "' type='set'><query xmlns='google:queue'><disable/><flush/></query></iq>");
 	}
 	return stanza;
 }
@@ -792,7 +818,7 @@ static void enableServerQueueForAccount(PurpleAccount *account)
 		GString *enableQueueStanza = getEnableQueueStanza(account);
 		if (enableQueueStanza != NULL) 
 		{
-			syslog(LOG_INFO, "Enabling server queue");
+			syslog(LOG_INFO, "Enabling server queue for %s", account->protocol_id);
 			prpl_info->send_raw(gc, enableQueueStanza->str, enableQueueStanza->len);
 			g_string_free(enableQueueStanza, TRUE);
 		}
@@ -833,12 +859,10 @@ static void disableServerQueueForAccount(PurpleAccount *account)
 
 /**
  * Asking the gtalk server to enable/disable queueing of presence updates 
- * This is called when the screen is turned off (enalbe:true) or turned on (enable:false)
+ * This is called when the screen is turned off (enable:true) or turned on (enable:false)
  */
 static bool queuePresenceUpdates(bool enable)
 {
-	bool retVal;
-	bool success = TRUE;
 	PurpleAccount *account;
 	GList *onlineAccountKeys = NULL;
 	GList *iterator = NULL;
@@ -849,20 +873,23 @@ static bool queuePresenceUpdates(bool enable)
 	{
 		accountKey = iterator->data;
 		account = g_hash_table_lookup(onlineAccountData, accountKey);
-		if (!account || strcmp(account->protocol_id, "prpl-jabber") != 0)
+		if (account)
 		{
 			/*
-			 * enabling/disabling server queue is only supported by gtalk
+			 * enabling/disabling server queue is supported by gtalk (jabber) or aim
 			 */
-			continue;
-		}
-		if (enable)
-		{
-			enableServerQueueForAccount(account);
-		}
-		else
-		{
-			disableServerQueueForAccount(account);
+ 			if ((strcmp(account->protocol_id, "prpl-jabber") == 0) ||
+			    (strcmp(account->protocol_id, "prpl-aim") == 0))
+ 			{
+				if (enable)
+				{
+					enableServerQueueForAccount(account);
+				}
+				else
+				{
+					disableServerQueueForAccount(account);
+				}
+ 			}
 		}
 	}
 	return TRUE;
@@ -1134,6 +1161,11 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 		buddyAvatarLocation = purple_buddy_icon_get_full_path(icon);
 	}
 		
+	if (buddyAvatarLocation == NULL)
+	{
+		buddyAvatarLocation = "";
+	}
+
 	if (buddy->name == NULL)
 	{
 		buddy->name = "";
@@ -1231,6 +1263,7 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 			"%s says: %s's presence: availability: '%s', custom message: '%s', avatar location: '%s', display name: '%s', group name: '%s'",
 			__FUNCTION__, buddy->name, availabilityString, customMessage, buddyAvatarLocation, buddy->alias, groupName);
 	
+	free(serviceName);
 	if (myJavaFriendlyUsername)
 	{
 		free(myJavaFriendlyUsername);
@@ -1239,10 +1272,6 @@ static void buddy_signed_on_off_cb(PurpleBuddy *buddy, gpointer data)
 	{
 		json_object_put(payload);
 	}	
-	if (buddyAvatarLocation)
-	{
-		g_free(buddyAvatarLocation);
-	}
 }
 
 static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *old_status, PurpleStatus *new_status,
@@ -1277,6 +1306,11 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *old_status
 	if (icon != NULL)
 	{
 		buddyAvatarLocation = purple_buddy_icon_get_full_path(icon);
+	}
+
+	if (buddyAvatarLocation == NULL)
+	{
+		buddyAvatarLocation = "";
 	}
 
 	PurpleGroup *group = purple_buddy_get_group(buddy);
@@ -1342,10 +1376,6 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *old_status
 	if (!is_error(payload)) 
 	{
 		json_object_put(payload);
-	}
-	if (buddyAvatarLocation)
-	{
-		g_free(buddyAvatarLocation);
 	}
 }
 
@@ -1636,6 +1666,8 @@ static void account_login_failed(PurpleConnection *gc, PurpleConnectionError typ
 		connectionType = "";
 	}
 
+	char *escapedDescription = g_strescape(description, NULL);
+	
 	GString *jsonResponse = g_string_new("{\"serviceName\":\"");
 	g_string_append(jsonResponse, serviceName);
 	g_string_append(jsonResponse, "\",  \"username\":\"");
@@ -1645,7 +1677,7 @@ static void account_login_failed(PurpleConnection *gc, PurpleConnectionError typ
 	g_string_append(jsonResponse, "\",  \"localIpAddress\":\"");
 	g_string_append(jsonResponse, accountBoundToIpAddress);
 	g_string_append(jsonResponse, "\", \"errorText\":\"");
-	g_string_append(jsonResponse, g_strescape(description, NULL));
+	g_string_append(jsonResponse, escapedDescription);
 	if (loggedOut)
 	{
 		g_string_append(jsonResponse, "\", \"connectionStatus\":\"loggedOut\", \"connectionType\":\"");
@@ -1688,7 +1720,10 @@ static void account_login_failed(PurpleConnection *gc, PurpleConnectionError typ
 	}
 	LSErrorFree(&lserror);
 	g_string_free(jsonResponse, TRUE);
-	//free(accountKey);
+	if (escapedDescription)
+	{
+		g_free(escapedDescription);
+	}
 }
 
 static void account_status_changed(PurpleAccount *account, PurpleStatus *old, PurpleStatus *new, gpointer data)
@@ -1724,6 +1759,8 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 	if (strcmp(username, usernameFrom) == 0)
 	{
 		/* We get notified even though we sent the message. Just ignore it */
+		free(serviceName);
+		free(username);
 		return;
 	}
 
@@ -1733,6 +1770,8 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 		/*
 		 * ignore messages from the annoying aolsystemmsg telling us that we're logged in somewhere else
 		 */
+		free(serviceName);
+		free(username);
 		return;
 	}
 
@@ -2190,12 +2229,13 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	bool accountIsAlreadyOnline = FALSE;
 	bool accountIsAlreadyPending = FALSE;
 
-	boolean invalidParameters = TRUE;
+	bool invalidParameters = TRUE;
 
 	syslog(LOG_INFO, "%s called.", __FUNCTION__);
 
 	char *payload = strdup(LSMessageGetPayload(message));
-
+	struct json_object *responsePayload = json_object_new_object();
+	
 	if (!payload)
 	{
 		success = FALSE;
@@ -2225,11 +2265,6 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	}
 
 	password = getField(params, "password");
-	if (!password)
-	{
-		success = FALSE;
-		goto error;
-	}
 
 	availability = json_object_get_int(json_object_object_get(params, "availability"));
 
@@ -2244,19 +2279,11 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	{
 		localIpAddress = "";
 	}
-	else
-	{
-		localIpAddress = strdup(localIpAddress);
-	}
 	
 	connectionType = getField(params, "connectionType");
 	if (!connectionType)
 	{
 		connectionType = "";
-	}
-	else
-	{
-		connectionType = strdup(connectionType);
 	}
 
 	invalidParameters = FALSE;
@@ -2269,13 +2296,11 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	}
 
 	/* libpurple variables */
-	prplProtocolId = getPrplProtocolIdFromServiceName(serviceName);
 	transportFriendlyUserName = getPrplFriendlyUsername(serviceName, username);
 	accountKey = getAccountKey(username, serviceName);
 
 	myJavaFriendlyUsername = getJavaFriendlyUsername(username, serviceName);
 
-	struct json_object *responsePayload = json_object_new_object();
 	json_object_object_add(responsePayload, "serviceName", json_object_new_string((char*)serviceName));
 	json_object_object_add(responsePayload, "username", json_object_new_string((char*)myJavaFriendlyUsername));
 
@@ -2391,7 +2416,13 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	{
 		if (strcmp(password, "") == 0 && strcmp(serviceName, "irc") != 0)
 		{
+			syslog(LOG_INFO, "Error: null or empty password trying to log in to servicename %s", serviceName);
 			success = FALSE;
+			invalidParameters = FALSE;
+			json_object_object_add(responsePayload, "returnValue", json_object_new_boolean(FALSE));
+			json_object_object_add(responsePayload, "errorCode", json_object_new_string("AcctMgr_Bad_Password"));
+			json_object_object_add(responsePayload, "errorText", json_object_new_string("Bad password"));
+			goto error;
 		}
 		else
 		{
@@ -2417,8 +2448,10 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 			/* save the local IP address that we need to use */
 			if (connectionType != NULL && strcmp(connectionType, "") != 0)
 			{
-				g_hash_table_insert(connectionTypeData, accountKey, (char*)connectionType);
+				g_hash_table_insert(connectionTypeData, accountKey, strdup(connectionType));
 			}
+			
+			prplProtocolId = getPrplProtocolIdFromServiceName(serviceName);
 
 			/*
 			 * If we've already logged in to this account before then re-use the old PurpleAccount struct
@@ -2435,11 +2468,11 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 				}
 			}
 
-			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && g_str_has_suffix(transportFriendlyUserName, "@gmail.com") == FALSE && strcmp(serviceName, "gmail") == 0)
+			if (strcmp(prplProtocolId, "prpl-jabber") == 0 && g_str_has_suffix(transportFriendlyUserName, "@gmail.com") == FALSE && g_str_has_suffix(transportFriendlyUserName, "@googlemail.com") == FALSE && strcmp(serviceName, "gmail") == 0)
 			{
 				/*
-				 * Special case for gmail... don't try to connect to theraghavans.com if the username is nash@theraghavans.com
-				 * Always connect to gmail.
+				 * Special case for gmail... don't try to connect to mydomain.com if the username is me@mydomain.com. They might not have
+				 * setup the SRV record. Always connect to gmail.
 				 */
 				purple_account_set_string(account, "connect_server", "talk.google.com");
 
@@ -2575,12 +2608,6 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 			syslog(LOG_INFO, "Logging in...");
 
-			if (transportFriendlyUserName)
-			{
-				free(transportFriendlyUserName);
-			}
-
-			//Login
 			purple_account_set_password(account, password);
 
 			if (registeredForAccountSignals == FALSE)
@@ -2617,13 +2644,12 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 		if (localIpAddress != NULL && strcmp(localIpAddress, "") != 0)
 		{
 			/* keep track of the local IP address that we bound to when logging in to this account */
-			g_hash_table_insert(ipAddressesBoundTo, accountKey, (char*)localIpAddress);
+			g_hash_table_insert(ipAddressesBoundTo, accountKey, strdup(localIpAddress));
 		}
 
 		/* It's necessary to enable the account first. */
 		purple_account_set_enabled(account, UI_ID, TRUE);
 
-		void *blist_handle = purple_blist_get_handle();
 		/* Now, to connect the account, create a status and activate it. */
 
 		/*
@@ -2671,6 +2697,10 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	if (prplProtocolId)
 	{
 		free(prplProtocolId);
+	}
+	if (transportFriendlyUserName)
+	{
+		free(transportFriendlyUserName);
 	}
 	if (!is_error(responsePayload)) 
 	{
@@ -2782,8 +2812,8 @@ static bool logout(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 {
-	bool retVal;
-	bool success = TRUE;
+	bool retVal = FALSE;
+//	bool success = TRUE;
 	LSError lserror;
 	LSErrorInit(&lserror);
 
@@ -2799,28 +2829,28 @@ static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 	if (!object)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_string(object, "serviceName", &serviceName);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_string(object, "username", &username);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_int(object, "availability", &availability);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -2841,7 +2871,7 @@ static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 		{
 			LSErrorPrint(&lserror, stderr);
 		}
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 	else
@@ -2852,7 +2882,11 @@ static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 		PurplePresence *presence = purple_account_get_presence(account);
 		const PurpleStatus *status = purple_presence_get_active_status(presence);
 		const PurpleValue *value = purple_status_get_attr_value(status, "message");
-		const char *customMessage = purple_value_get_string(value);
+		const char *customMessage = NULL;
+		if (value != NULL)
+		{
+			customMessage = purple_value_get_string(value);
+		}
 		if (customMessage == NULL)
 		{
 			customMessage = "";
@@ -2895,8 +2929,8 @@ static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 static bool setMyCustomMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 {
-	bool retVal;
-	bool success = TRUE;
+	bool retVal = FALSE;
+	//bool success = TRUE;
 	LSError lserror;
 	LSErrorInit(&lserror);
 
@@ -2911,34 +2945,34 @@ static bool setMyCustomMessage(LSHandle* lshandle, LSMessage *message, void *ctx
 
 	if (!payload)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	struct json_object *params = json_tokener_parse(payload);
 	if (is_error(params))
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	serviceName = getField(params, "serviceName");
 	if (!serviceName)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	username = getField(params, "username");
 	if (!username)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 	customMessage = getField(params, "customMessage");
 	if (!customMessage)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -2987,10 +3021,115 @@ static bool setMyCustomMessage(LSHandle* lshandle, LSMessage *message, void *ctx
 	return TRUE;
 }
 
+static bool blockBuddy(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+	bool success = FALSE;
+	LSError lserror;
+	struct json_object *payload = json_object_new_object();
+	LSErrorInit(&lserror);
+
+	syslog(LOG_INFO, "%s called.", __FUNCTION__);
+
+	/* Passed parameters */
+	const char *serviceName = "";
+	const char *username = "";
+	const char *buddyUsername = "";
+	char *errorCode = "";
+	char *errorText = "";
+
+	bool block = TRUE;
+
+	// get the message's payload (json object)
+	json_t *object = LSMessageGetPayloadJSON(message);
+
+	if (!object)
+	{
+		goto error;
+	}
+
+	retVal = json_get_string(object, "serviceName", &serviceName);
+	if (!retVal)
+	{
+		goto error;
+	}
+	json_object_object_add(payload, "serviceName", json_object_new_string((char*)serviceName));
+
+	retVal = json_get_string(object, "username", &username);
+	if (!retVal)
+	{
+		goto error;
+	}
+	json_object_object_add(payload, "username", json_object_new_string((char*)username));
+
+	retVal = json_get_string(object, "usernameToBlock", &buddyUsername);
+	if (!retVal)
+	{
+		goto error;
+	}
+
+	retVal = json_get_bool(object, "block", &block);
+	if (!retVal)
+	{
+		goto error;
+	}
+
+	char *accountKey = getAccountKey(username, serviceName);
+	PurpleAccount *account = g_hash_table_lookup(onlineAccountData, accountKey);
+	success = (account != NULL);
+	if (success)
+	{
+		if (block) {
+			purple_privacy_deny(account, buddyUsername, false, true);
+		}
+		else
+		{
+			purple_privacy_allow(account, buddyUsername, false, true);
+		}
+	}
+	else
+	{
+		errorCode = "11";
+		errorText = "Trying to send from an account that is not logged in";
+	}
+
+error:
+	if (!retVal)
+	{
+		errorCode = "1";
+		errorText = "Invalid parameter. Please double check the passed parameters.";
+		syslog(LOG_INFO, "%s: block user failed", __FUNCTION__);
+	}
+
+	if (accountKey)
+	{
+		free(accountKey);
+	}
+
+	if (success)
+	{
+		json_object_object_add(payload, "returnValue", json_object_new_boolean(TRUE));
+	}
+	else
+	{
+		json_object_object_add(payload, "returnValue", json_object_new_boolean(FALSE));
+		json_object_object_add(payload, "errorCode", json_object_new_string(errorCode));
+		json_object_object_add(payload, "errorText", json_object_new_string(errorText));
+	}
+
+	retVal = LSMessageReturn(lshandle, message, json_object_to_json_string(payload), &lserror);
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+	LSErrorFree(&lserror);
+	return success;
+}
+
 static bool getBuddyList(LSHandle* lshandle, LSMessage *message, void *ctx)
 {
 	bool retVal;
-	bool success = TRUE;
+	//bool success = TRUE;
 	LSError lserror;
 	LSErrorInit(&lserror);
 
@@ -3006,28 +3145,28 @@ static bool getBuddyList(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 	if (!object)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_string(object, "serviceName", &serviceName);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_string(object, "username", &username);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_bool(object, "subscribe", &subscribe);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -3061,7 +3200,7 @@ static bool getBuddyList(LSHandle* lshandle, LSMessage *message, void *ctx)
 static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 {
 	bool retVal;
-	bool success = TRUE;
+	//bool success = TRUE;
 	LSError lserror;
 	LSErrorInit(&lserror);
 
@@ -3079,40 +3218,40 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 	if (!payload)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	struct json_object *params = json_tokener_parse(payload);
 	if (is_error(params))
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	serviceName = getField(params, "serviceName");
 	if (!serviceName)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	username = getField(params, "username");
 	if (!username)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 	usernameTo = getField(params, "usernameTo");
 	if (!usernameTo)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 	messageText = getField(params, "messageText");
 	if (!messageText)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -3133,7 +3272,7 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 		{
 			LSErrorPrint(&lserror, stderr);
 		}
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -3220,7 +3359,7 @@ static bool sendMessage(LSHandle* lshandle, LSMessage *message, void *ctx)
 static bool registerForIncomingMessages(LSHandle* lshandle, LSMessage *message, void *ctx)
 {
 	bool retVal;
-	bool success = TRUE;
+	//bool success = TRUE;
 	LSError lserror;
 	LSErrorInit(&lserror);
 
@@ -3234,14 +3373,14 @@ static bool registerForIncomingMessages(LSHandle* lshandle, LSMessage *message, 
 
 	if (!object)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
 	retVal = json_get_bool(object, "subscribe", &subscribe);
 	if (!retVal)
 	{
-		success = FALSE;
+		//success = FALSE;
 		goto error;
 	}
 
@@ -3317,7 +3456,6 @@ static bool deviceConnectionClosed(LSHandle* lshandle, LSMessage *message, void 
 	const char *ipAddress = "";
 
 	PurpleAccount *account;
-	GString *jsonResponse;
 	GSList *accountToLogoutList = NULL;
 	GList *onlineAndPendingAccountKeys = NULL;
 	GList *iterator = NULL;
@@ -3354,7 +3492,7 @@ static bool deviceConnectionClosed(LSHandle* lshandle, LSMessage *message, void 
 		if (accountBoundToIpAddress != NULL && strcmp(accountBoundToIpAddress, "") != 0 && strcmp(ipAddress,
 				accountBoundToIpAddress) == 0)
 		{
-			boolean accountWasLoggedIn = FALSE;
+			bool accountWasLoggedIn = FALSE;
 
 			account = g_hash_table_lookup(onlineAccountData, accountKey);
 			if (account == NULL)
@@ -3429,16 +3567,16 @@ static bool deviceConnectionClosed(LSHandle* lshandle, LSMessage *message, void 
 			LSError lserror;
 			LSErrorInit(&lserror);
 
-			LSMessage *message = g_hash_table_lookup(loginMessages, accountKey);
-			if (message != NULL)
+			LSMessage *loginMsg = g_hash_table_lookup(loginMessages, accountKey);
+			if (loginMsg != NULL)
 			{
-				retVal = LSMessageReply(serviceHandle, message, jsonResponse->str, &lserror);
+				retVal = LSMessageReply(serviceHandle, loginMsg, jsonResponse->str, &lserror);
 				if (!retVal)
 				{
 					LSErrorPrint(&lserror, stderr);
 				}
 				g_hash_table_remove(loginMessages, accountKey);
-				LSMessageUnref(message);
+				LSMessageUnref(loginMsg);
 			}
 			LSErrorFree(&lserror);
 			free(serviceName);
@@ -4034,6 +4172,7 @@ static LSMethod methods[] =
 { "deviceConnectionClosed", deviceConnectionClosed },
 { "enable", enable },
 { "disable", disable },
+{ "blockBuddy", blockBuddy },
 { "setserver", setserver },
 { "getserver", getserver },
 { "clearserver", clearserver },

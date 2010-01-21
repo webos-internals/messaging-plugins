@@ -1,0 +1,7 @@
+/usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js
+/usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js
+/usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html
+/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js
+/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
+/usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js
+/usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
