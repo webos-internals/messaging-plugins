@@ -10,8 +10,4 @@ fi
 #Update Database (call Java)
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Jabber
 
-#Remove Jabber sym links
-rm -f /usr/lib/libjabber.so
-rm -f /usr/lib/libjabber.so.0
-
 exit 0

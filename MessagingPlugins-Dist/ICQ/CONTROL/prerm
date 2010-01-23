@@ -10,7 +10,4 @@ fi
 #Update Database (call Java)
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin ICQ
 
-#Remove sym link
-rm -f /usr/lib/purple-2/liboscar.so.0
-
 exit 0

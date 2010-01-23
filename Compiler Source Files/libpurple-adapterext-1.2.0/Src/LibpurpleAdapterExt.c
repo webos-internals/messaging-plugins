@@ -283,18 +283,6 @@ static char* getPrplFriendlyUsername(const char *serviceName, const char *userna
 			return transportFriendlyUsername;
 		}
 	}
-	else if (strcmp(serviceName, "gwim") == 0)
-	{
-		if (strstr(username, "@gwim.com") != NULL)
-		{
-			transportFriendlyUsername = malloc(strlen(username) - strlen("@gwim.com") + 1);
-			char *usernameCopy= alloca(strlen(username) + 1);
-			strcpy(usernameCopy, username);
-			strtok(usernameCopy, "@");
-			strcpy(transportFriendlyUsername, usernameCopy);
-			return transportFriendlyUsername;
-		}
-	}
 	else if (strcmp(serviceName, "qqim") == 0)
 	{
 		if (strstr(username, "@qqim.com") != NULL)
@@ -421,7 +409,12 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 	}
 	else if (strcmp(serviceName, "gwim") == 0 && strchr(username, '@') == NULL)
 	{
-		g_string_append(javaFriendlyUsername, "@gwim.com");
+		char *resource = memchr(username, '/', strlen(username));
+		if (resource != NULL)
+		{
+			int charsToKeep = resource - username;
+			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
+		}
 	}
 	else if (strcmp(serviceName, "sipe") == 0)
 	{
@@ -2265,6 +2258,10 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	}
 
 	password = getField(params, "password");
+	if (!password)
+	{
+		password = "";
+	}
 
 	availability = json_object_get_int(json_object_object_get(params, "availability"));
 
