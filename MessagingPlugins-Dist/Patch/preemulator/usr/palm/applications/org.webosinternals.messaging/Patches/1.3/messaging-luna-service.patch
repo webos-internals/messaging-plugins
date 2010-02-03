@@ -1,5 +1,5 @@
 --- messaging-luna-service.js	Wed Oct 21 17:25:19 2009
-+++ messaging-luna-service.new	Mon Jan 18 05:11:05 2010
++++ messaging-luna-service.new	Thu Jan 28 01:40:07 2010
 @@ -7,6 +7,7 @@
  	displayIdentifier: 'palm://com.palm.display/control',
  	telephonyIdentifier: 'palm://com.palm.telephony',
@@ -8,7 +8,7 @@
  	
  	launchMessaging: function(sceneController, params){
  		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
-@@ -1009,5 +1010,46 @@
+@@ -1009,5 +1010,52 @@
  		  method: 'setSMSCAddressAndEmailGateway',
  		  parameters: {smscAddr:address, emailGateway: gateway}
  	  });
@@ -16,10 +16,10 @@
 +  /************************
 +   * Methods for LibpurpleAdapter
 +   ************************/
-+	setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS,ServerLogin, Proxy) {
++	setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS,ServerLogin, Proxy, UserAgent) {
 +	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
 +	      method: 'setserver',
-+	      parameters: {serviceName:serviceName, ServerName:ServerName, ServerPort:ServerPort, TLS:TLS, ServerLogin:ServerLogin, Proxy:Proxy}
++	      parameters: {serviceName:serviceName, ServerName:ServerName, ServerPort:ServerPort, TLS:TLS, ServerLogin:ServerLogin, Proxy:Proxy, UserAgent:UserAgent}
 +		});  
 +	},
 +	getserver: function(onSuccess, sceneController, serviceName) {
@@ -29,17 +29,23 @@
 +			onSuccess: onSuccess
 +		});   	
 +	},  
++	setpreference: function(sceneController,serviceName, preference, state) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'setpreference',
++	      parameters: {serviceName:serviceName, preference:preference, state:state}
++		});  
++	},
++	getpreference: function(onSuccess, sceneController, serviceName, preference) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'getpreference',
++			parameters: {serviceName:serviceName, preference:preference},
++			onSuccess: onSuccess
++		});   	
++	},
 +	clearserver: function(sceneController,serviceName) {
 +	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
 +	      method: 'clearserver',
 +	      parameters: {serviceName:serviceName}
-+		});  
-+	},
-+	getconnection: function(sceneController,callback) {
-+	    return sceneController.serviceRequest('palm://com.palm.connectionmanager', {
-+	      method: 'getstatus',
-+		  onSuccess: callback,
-+		  onFailure: callback,
 +		});  
 +	},
 +	AccountLogOut: function(sceneController,accountId) {

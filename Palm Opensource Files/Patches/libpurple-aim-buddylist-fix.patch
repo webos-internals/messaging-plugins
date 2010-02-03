@@ -1,0 +1,33 @@
+diff -Naur /libpurple/plugin.c /libpurple/plugin.c
+--- /libpurple/plugin.c	2008-08-30 21:36:20.000000000 -0700
++++ /libpurple/plugin.c	2008-10-14 10:16:52.000000000 -0700
+@@ -1178,6 +1178,8 @@
+ purple_plugins_init(void) {
+ 	void *handle = purple_plugins_get_handle();
+ 
++	purple_debug_info("plugins", "Looking for plugins in %s\n", LIBDIR);
++
+ 	purple_plugins_add_search_path(LIBDIR);
+ 
+ 	purple_signal_register(handle, "plugin-load",
+diff -Naur /libpurple/protocols/oscar/oscar.c /libpurple/protocols/oscar/oscar.c
+--- /libpurple/protocols/oscar/oscar.c	2008-08-30 21:36:26.000000000 -0700
++++ /libpurple/protocols/oscar/oscar.c	2008-10-14 10:13:34.000000000 -0700
+@@ -3767,8 +3767,6 @@
+ 	od->rights.maxpermits = (guint)maxpermits;
+ 	od->rights.maxdenies = (guint)maxdenies;
+ 
+-	purple_connection_set_state(gc, PURPLE_CONNECTED);
+-
+ 	purple_debug_info("oscar", "buddy list loaded\n");
+ 
+ 	aim_srv_clientready(od, conn);
+@@ -5221,6 +5219,8 @@
+ 		} /* End of switch on curitem->type */
+ 	} /* End of for loop */
+ 
++	purple_connection_set_state(gc, PURPLE_CONNECTED);
++
+ 	oscar_set_extendedstatus(gc);
+ 
+ 	/* Activate SSI */

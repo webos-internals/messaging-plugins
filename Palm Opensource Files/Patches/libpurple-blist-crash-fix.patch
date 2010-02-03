@@ -1,0 +1,30 @@
+--- /libpurple/blist.c	2008-08-30 21:36:18.000000000 -0700
++++ /libpurple/blist.c	2009-06-12 20:30:31.000000000 -0700
+@@ -1870,9 +1870,19 @@
+ 	purple_buddy_icon_unref(buddy->icon);
+ 	g_hash_table_destroy(buddy->node.settings);
+ 	purple_presence_destroy(buddy->presence);
+-	g_free(buddy->name);
+-	g_free(buddy->alias);
+-	g_free(buddy->server_alias);
++	
++	if (buddy->name && *buddy->name != '\0')
++	{
++		g_free(buddy->name);
++	}
++	if (buddy->alias && *buddy->alias != '\0')
++	{
++		g_free(buddy->alias);
++	}
++	if (buddy->server_alias && *buddy->server_alias != '\0')
++	{
++		g_free(buddy->server_alias);
++	}
+ 
+ 	PURPLE_DBUS_UNREGISTER_POINTER(buddy);
+ 	g_free(buddy);
+@@ -2812,3 +2822,4 @@
+ 
+ 	purple_signals_unregister_by_instance(purple_blist_get_handle());
+ }
++

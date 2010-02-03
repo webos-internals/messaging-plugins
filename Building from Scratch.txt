@@ -9,6 +9,8 @@ pidgin
 ============
 copy libmeanwhile.so to /root/optware/i686g25/staging/opt/lib and /root/optware/cs08q1armel/staging/opt/lib
 edit blist.c in (void purple_blist_alias_contact(PurpleContact *contact, const char *alias)) comment out last line (gfree...)
+edit blist.c //comment out line 1182 (fix for SIPE)
+edit blist.c //comment out line 1140 (fix for facebook)
 
 libpurpleadapter
 ================

@@ -1,0 +1,13 @@
+--- /libpurple/protocols/jabber/jabber.c	2008-08-30 21:36:23.000000000 -0700
++++ /libpurple/protocols/jabber/jabber.c	2009-04-02 01:58:48.000000000 -0700
+@@ -129,6 +129,10 @@
+ 			}
+ 			if((my_jb = jabber_buddy_find(js, full_jid, TRUE)))
+ 				my_jb->subscription |= JABBER_SUB_BOTH;
++
++			purple_debug(PURPLE_DEBUG_WARNING, "jabber", "setting display_name to %s", full_jid);
++			purple_connection_set_display_name(js->gc, full_jid);
++
+ 			g_free(full_jid);
+ 		}
+ 	} else {

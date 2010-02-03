@@ -64,13 +64,16 @@ fi
 if (cat /var/tmp/webosver | grep -i 1.4); then
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant
 fi
-#Other languages
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/de_de/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/de_de_prefsSetupAccount-scene.patch || CheckPatch de_de_prefsSetupAccount-scene
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/es_es/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/es_es_prefsSetupAccount-scene.patch || CheckPatch es_es_prefsSetupAccount-scene
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/es_us/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/es_us_prefsSetupAccount-scene.patch || CheckPatch es_us_prefsSetupAccount-scene
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/fr_ca/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/fr_ca_prefsSetupAccount-scene.patch || CheckPatch fr_ca_prefsSetupAccount-scene
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/fr_fr/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/fr_fr_prefsSetupAccount-scene.patch || CheckPatch fr_fr_prefsSetupAccount-scene
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/it_it/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/it_it_prefsSetupAccount-scene.patch || CheckPatch it_it_prefsSetupAccount-scene
+
+if [ -f /usr/palm/applications/com.palm.app.messaging/resources/de_de/views/prefsSetupAccount/prefsSetupAccount-scene.html ]; then
+	#Other languages
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/de_de/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/de_de_prefsSetupAccount-scene.patch || CheckPatch de_de_prefsSetupAccount-scene
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/es_es/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/es_es_prefsSetupAccount-scene.patch || CheckPatch es_es_prefsSetupAccount-scene
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/es_us/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/es_us_prefsSetupAccount-scene.patch || CheckPatch es_us_prefsSetupAccount-scene
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/fr_ca/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/fr_ca_prefsSetupAccount-scene.patch || CheckPatch fr_ca_prefsSetupAccount-scene
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/fr_fr/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/fr_fr_prefsSetupAccount-scene.patch || CheckPatch fr_fr_prefsSetupAccount-scene
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/it_it/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/it_it_prefsSetupAccount-scene.patch || CheckPatch it_it_prefsSetupAccount-scene
+fi
 
 #Cleanup Patching Failures
 rm /usr/palm/applications/com.palm.app.messaging/app/models/*.rej
@@ -135,6 +138,7 @@ rm -f /usr/lib/libjabber.so.0
 rm -f /var/tmp/webosver
 rm -f /var/home/root/DebugMP.sh
 rm -f -r $INSTDIR/usr/palm/applications/org.webosinternals.messaging
+rm -f /usr/bin/LibpurpleAdapterExt
 
 #Check for patching errors
 if (echo PATCHEROR | grep -i "YES"); then

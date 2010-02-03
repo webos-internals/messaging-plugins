@@ -1,5 +1,5 @@
---- prefsAccountSummary-assistant.js	Fri Oct 23 13:55:59 2009
-+++ prefsAccountSummary-assistant.new	Mon Jan 18 14:11:24 2010
+--- prefsAccountSummary-assistant.js	Fri Oct 23 13:56:00 2009
++++ prefsAccountSummary-assistant.js.new	Mon Feb  1 02:13:49 2010
 @@ -13,6 +13,13 @@
  		this.notificationSoundToggleChanged = this.notificationSoundToggleChanged.bindAsEventListener(this);
  		this.chooseNotificationRingtone = this.chooseNotificationRingtone.bindAsEventListener(this);
@@ -121,7 +121,7 @@
  	
  	handleAddAccountTap: function() {
  		this.controller.stageController.pushScene('prefsAccountTypeList', this.params);
-@@ -342,4 +437,112 @@
+@@ -342,4 +437,67 @@
        Object.extend(newParams,inputHash);
        this.controller.stageController.pushScene('prefsSetupAccount',newParams);
      }
@@ -135,103 +135,58 @@
 +		this.serviceName = serviceName;
 +		this.username = username;
 +		this.accountID = id;
-+		this.connectiontype;
-+		this.connectionIP;
 +	},
 +	
 +	setup : function(widget) {
 +		this.widget = widget;
 +		this.controller.get('login_button').addEventListener(Mojo.Event.tap, this.loginclick.bindAsEventListener(this));
 +		this.controller.get('cancel_button').addEventListener(Mojo.Event.tap, this.cancelclick.bindAsEventListener(this));
-+		this.controller.document.addEventListener("keydown", this.handlePasswordKeyDown.bind(this),true);
-+		
-+		//Get Connection Data
-+		MessagingMojoService.getconnection(this.controller, this.ConnectionData.bind(this));
 +	},
 +	
-+	ConnectionData: function(data) {
-+		this.ConnectionDataModel = data;
-+	},
-+	
-+	loginclick: function() {
-+		//Did we get connection data?
-+		if (this.ConnectionDataModel != null)
-+		{
-+			Mojo.Log.info("ConnectionDataModel: Available");
-+
-+			//Are we connected to the internet?
-+			if (this.ConnectionDataModel.isInternetConnectionAvailable == true)
-+			{
-+				Mojo.Log.info("Internet Connection: Available");
-+				
-+				//Are we WiFi connected? If so we prefer this
-+				if (this.ConnectionDataModel.wifi.state == "connected")
-+				{
-+					this.connectiontype = "wifi";
-+					this.connectionIP = this.ConnectionDataModel.wifi.ipAddress;
-+				}
-+				else
-+				{
-+					//WiFi not available. Is WAN?
-+					if (this.ConnectionDataModel.wan.state == "connected")
-+					{
-+						this.connectiontype = "wan";
-+						this.connectionIP = this.ConnectionDataModel.wan.ipAddress;
-+					}
-+				}
-+			}
-+			else
-+			{
-+				Mojo.Log.info("Internet Connection: Unavailable");
-+			}
-+		}
-+		else
-+		{
-+			Mojo.Log.info("ConnectionDataModel: Unavailable");
-+		}
-+
-+		Mojo.Log.info("Connection Type: " + this.connectiontype);
-+		Mojo.Log.info("Connection IP: " + this.connectionIP);
-+		
-+		if (this.connectiontype != null && this.connectionIP != null)
-+		{
-+			Mojo.Log.info("Logging in...");
++	loginclick: function() {	
++		Mojo.Log.info("Logging in...");
 +			
-+			//Login
-+			this.controller.serviceRequest('palm://com.palm.messaging', {
-+				method: 'loginToAccount',
-+				parameters: {serviceName: this.serviceName, username: this.username, password: this.sceneAssistant.passwordAttributesmodel.value ,connectionType: this.connectiontype ,ipAddress: this.connectionIP ,accountId: this.accountID}
-+			});
++		//Login
++		if (this.sceneAssistant.passwordAttributesmodel.value != '' || this.serviceName == "irc")
++		{
++			this.updateAccountRequest = MessagingMojoService.updateAccountPassword(this.controller, this.accountID,this.sceneAssistant.passwordAttributesmodel.value,this.accountUpdated.bind(this),this.updateLoginFailed.bind(this));
++		
++			//Remove password from dialog
++			this.sceneAssistant.passwordAttributesmodel.value = '';
++		
++			//Close dialog
++			this.widget.mojo.close();
 +		}
 +		else
 +		{
-+			Mojo.Log.info("Unable to login. No IP or connection type returned.");
++			//Close dialog
++			this.widget.mojo.close();
 +		}
-+	
-+		//Remove password from dialog
-+		this.sceneAssistant.passwordAttributesmodel.value = '';
++	},
 +		
-+		//Close dialog
-+		this.widget.mojo.close();
-+	},
-+	
-+	handlePasswordKeyDown: function(event) {
-+		// If enter is pressed then simulate tapping on "Sign In"
-+		if (event && Mojo.Char.isEnterKey(event.keyCode)) {
-+			if(this.sceneAssistant.passwordAttributesmodel.value != '')
-+			{
-+				this.loginclick();
-+				Event.stop(event);
-+			}
-+		}
-+	},
-+	
 +	cancelclick: function() {
 +		//Remove password from dialog
 +		this.sceneAssistant.passwordAttributesmodel.value = '';
 +		
 +		//Close dialog
 +		this.widget.mojo.close();
++	},
++
++	accountUpdated : function(result) {
++		// do nothing when we encounter a pending status.  If returnValue = true is found, this means
++		// that the user is currently logged in and we have just saved their new credentials.
++		if ((result.status && result.status == "successful") || result.returnValue) {
++			if (this.updateAccountRequest) {
++				this.controller.cancelServiceRequest(this.updateAccountRequest);
++			}
++			// set the last availability selection to online
++			MessagingMojoService.setLastAvailabilitySelection(this.controller, 0);
++		}
++	},
++    
++	updateLoginFailed : function(result){
++		if(this.updateAccountRequest)
++			this.controller.cancelServiceRequest(this.updateAccountRequest);		 
 +	}
  });
 \ No newline at end of file

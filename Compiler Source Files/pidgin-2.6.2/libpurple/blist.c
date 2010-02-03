@@ -1137,7 +1137,8 @@ void purple_blist_alias_buddy(PurpleBuddy *buddy, const char *alias)
 
 	purple_signal_emit(purple_blist_get_handle(), "blist-node-aliased",
 					 buddy, old_alias);
-	g_free(old_alias);
+	//Fix for Facebook
+	//g_free(old_alias);
 }
 
 void purple_blist_server_alias_buddy(PurpleBuddy *buddy, const char *alias)
@@ -1179,7 +1180,8 @@ void purple_blist_server_alias_buddy(PurpleBuddy *buddy, const char *alias)
 
 	purple_signal_emit(purple_blist_get_handle(), "blist-node-aliased",
 					 buddy, old_alias);
-	g_free(old_alias);
+	//Fix for Live Communicator
+	//g_free(old_alias);
 }
 
 /*

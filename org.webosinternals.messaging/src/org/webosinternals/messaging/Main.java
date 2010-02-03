@@ -109,7 +109,7 @@ public class Main {
             }
             if (args[1].equalsIgnoreCase("SIPE"))
             {
-                EnableContactsReadWrite("Office Communicator");
+                EnableContactsReadWrite("Live Communicator");
                 LogEntry ("");
                 return;
             }

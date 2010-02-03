@@ -1,0 +1,91 @@
+diff -Nur /libpurple-baseline/protocols/oscar/libaim.c /libpurple/protocols/oscar/libaim.c
+--- /libpurple-baseline/protocols/oscar/libaim.c	2008-08-30 21:36:26.000000000 -0700
++++ /libpurple/protocols/oscar/libaim.c	2009-07-23 17:48:16.000000000 -0700
+@@ -90,7 +90,7 @@
+ 	oscar_new_xfer,			/* new_xfer */
+ 	oscar_offline_message,	/* offline_message */
+ 	NULL,					/* whiteboard_prpl_ops */
+-	NULL,					/* send_raw */
++	oscar_throttle_presence,		/* send_raw */
+ 	NULL,					/* roomlist_room_serialize */
+ 	NULL,					/* unregister_user */
+ 	NULL,					/* send_attention */
+diff -Nur /libpurple-baseline/protocols/oscar/oscar.c /libpurple/protocols/oscar/oscar.c
+--- /libpurple-baseline/protocols/oscar/oscar.c	2009-07-13 15:34:02.000000000 -0700
++++ /libpurple/protocols/oscar/oscar.c	2009-07-24 10:41:50.000000000 -0700
+@@ -6738,6 +6738,65 @@
+ 	return TRUE;
+ }
+ 
++
++/* This is a custom handler for libaim's send_raw. Palm is using it to tell oscar to throttle 
++ * presence notifications while the device is idle.
++ */
++int
++oscar_throttle_presence(PurpleConnection *gc, const char *buf, int len)
++{
++	int result = 0;
++	OscarData *od = NULL;
++	FlapConnection *conn = NULL;
++	guint16 family = SNAC_FAMILY_BUDDY;
++	guint16 subtype = SNAC_SUBTYPE_BUDDY_REQRIGHTS;
++	GSList *tlvlist = NULL;
++	ByteStream bs;
++	aim_snacid_t snacid;
++
++	if (gc)
++	{
++		od = (OscarData *)gc->proto_data;
++	}
++	else
++	{
++		purple_debug_error("oscar", "oscar_throttle_presence: PurpleConnection is null");
++	}
++	
++	if (od)
++	{
++		conn = flap_connection_findbygroup(od, family);
++	}
++	else
++	{
++		purple_debug_error("oscar", "oscar_throttle_presence: couldn't get OscarData");
++	}
++
++	if (conn == NULL)
++	{
++		purple_debug_error("oscar", "oscar_throttle_presence: couldn't get FlapConnection");
++	}
++	else
++	{
++		guint8 throttle = (buf!=NULL && buf[0] == 't');
++
++		snacid = aim_cachesnac(od, family, subtype, 0x0000, NULL, 0);
++	
++		// TLV=7 for throttle presence updates. Length of 1 byte
++		aim_tlvlist_add_raw(&tlvlist, 0x0007, 1, &throttle);
++		byte_stream_new(&bs, aim_tlvlist_size(tlvlist));
++		aim_tlvlist_write(&bs, &tlvlist);
++		aim_tlvlist_free(tlvlist);
++
++		flap_connection_send_snac(od, conn, family, subtype, 0x0000, snacid, &bs);
++	
++		byte_stream_destroy(&bs);
++		result = 1;
++	}
++
++	return result;
++}
++
+ /* TODO: Find somewhere to put this instead of including it in a bunch of places.
+  * Maybe just change purple_accounts_find() to return anything for the prpl if there is no acct_id.
+  */
+diff -Nur /libpurple-baseline/protocols/oscar/oscarcommon.h /libpurple/protocols/oscar/oscarcommon.h
+--- /libpurple-baseline/protocols/oscar/oscarcommon.h	2008-08-30 21:36:26.000000000 -0700
++++ /libpurple/protocols/oscar/oscarcommon.h	2009-07-16 16:19:08.000000000 -0700
+@@ -88,5 +88,6 @@
+ void oscar_send_file(PurpleConnection *gc, const char *who, const char *file);
+ PurpleXfer *oscar_new_xfer(PurpleConnection *gc, const char *who);
+ gboolean oscar_offline_message(const PurpleBuddy *buddy);
++int oscar_throttle_presence(PurpleConnection *gc, const char *buf, int len);
+ GList *oscar_actions(PurplePlugin *plugin, gpointer context);
+ void oscar_init(PurplePluginProtocolInfo *prpl_info);

@@ -1,6 +1,6 @@
 --- prefsSetupAccount-assistant.js	Mon Nov  2 11:14:47 2009
-+++ prefsSetupAccount-assistant.js.new	Tue Jan 12 17:07:59 2010
-@@ -16,8 +16,76 @@
++++ prefsSetupAccount-assistant.new	Thu Jan 28 03:44:33 2010
+@@ -16,8 +16,136 @@
  		this.handlePasswordKeyUp = this.handlePasswordKeyUp.bindAsEventListener(this);
  		this.removeAccount = this.removeAccount.bindAsEventListener(this);
  		this.confirmRemoveAccount = this.confirmRemoveAccount.bindAsEventListener(this);
@@ -21,12 +21,60 @@
 +			value : false,
 + 			disabled: false
 +		}
++		this.aliasattr = {
++  			trueLabel:  'true' ,
++ 			falseLabel:  'false'
++  		}
++		this.aliasModel = {
++			value : false,
++ 			disabled: this.params.editMode
++		}
++		this.avatarattr = {
++  			trueLabel:  'true' ,
++ 			falseLabel:  'false'
++  		}
++		this.avatarModel = {
++			value : false,
++ 			disabled: false
++		}
 +
 +		this.params.server = '';
 +	       this.params.tls = ''; 
 +		this.params.proxy = '';  
++		this.params.useragent = '';
++		this.params.login = ''
      },
  
++    getAvatarSetting: function(data){
++      this.params.avatar = data.Avatar;
++
++       if (data.Avatar == "false")
++	{
++	      this.avatarModel.value = false;
++	      this.controller.modelChanged(this.avatarModel);
++	}
++      else
++	{
++	      this.avatarModel.value = true;
++	      this.controller.modelChanged(this.avatarModel);
++	}
++    },
++
++    getAliasSetting: function(data){
++      this.params.alias = data.Alias;
++
++       if (data.Alias == "false")
++	{
++	      this.aliasModel.value = false;
++	      this.controller.modelChanged(this.aliasModel);
++	}
++      else
++	{
++	      this.aliasModel.value = true;
++	      this.controller.modelChanged(this.aliasModel);
++	}
++    },
++
 +    getServerSettings: function(data){
 +	
 +      this.params.server = data.ServerName;
@@ -70,6 +118,18 @@
 +		      this.pModel.value = true;
 +		      this.controller.modelChanged(this.pModel);
 +		}
++
++		//Get User Agent
++		this.params.useragent = data.UserAgent;
++		this.useragentModel.original = data.UserAgent;
++      		this.controller.modelChanged(this.useragentModel);
++	}
++
++	if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++		//Get Resource Value
++		this.params.resource = data.Resource;
++		this.resourceModel.original = data.Resource;
++      		this.controller.modelChanged(this.resourceModel);
 +	}
 +
 +    },
@@ -77,10 +137,37 @@
      setup: function(){
          this.accountId;
          this.createAccountRequest;
-@@ -64,9 +132,54 @@
+@@ -64,9 +192,107 @@
  				this.imLinksElement = this.controller.get('im-links');
  				this.imLinksElement.observe(Mojo.Event.tap, this.handleExtraContentTap);
  			}
++
++			var Avatar = Mojo.View.render({object:{}, template:"prefsSetupAccount/Avatar"});				
++			this.controller.get('Avatar').update(Avatar);
++
++			this.controller.setupWidget('AvatarToggle', this.avatarattr,this.avatarModel );
++			this.AvatarToggleChanged = this.AvatarToggleChanged.bindAsEventListener(this);
++			Mojo.Event.listen(this.controller.get('AvatarToggle'),Mojo.Event.propertyChange,this.AvatarToggleChanged);
++
++			//Only show Alias options for Live, XFire and ICQ
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")) {
++				var Alias = Mojo.View.render({object:{}, template:"prefsSetupAccount/Alias"});				
++				this.controller.get('Alias').update(Alias);
++
++				this.controller.setupWidget('AliasToggle', this.aliasattr,this.aliasModel );
++				this.AliasToggleChanged = this.AliasToggleChanged.bindAsEventListener(this);
++				Mojo.Event.listen(this.controller.get('AliasToggle'),Mojo.Event.propertyChange,this.AliasToggleChanged);
++
++				//Load Alias Setting
++				MessagingMojoService.getpreference(this.getAliasSetting.bind(this),this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Alias");
++			}
++
++			//Only show resource options for jabber
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")) {
++				var resource = Mojo.View.render({object:{}, template:"prefsSetupAccount/Jabber"});				
++				this.controller.get('LoginDetails').update(resource);
++			}
++
 +			// Special case for Server Defined Plugins - add extra content below password field
 +			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +				var ServerDetails = Mojo.View.render({object:{}, template:"prefsSetupAccount/ServerDetails"});				
@@ -105,9 +192,35 @@
 +				//Load Server Details
 +				MessagingMojoService.getserver(this.getServerSettings.bind(this),this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className);
 +			}
++
++			//Load Avatar Setting
++			MessagingMojoService.getpreference(this.getAvatarSetting.bind(this),this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Avatar");
  		} else {
  			this.controller.get('prefHeaderText').update($L('Add an account'));
  			this.saveAccountFn = this.saveAccount.bind(this);
++
++			var Avatar = Mojo.View.render({object:{}, template:"prefsSetupAccount/Avatar"});				
++			this.controller.get('Avatar').update(Avatar);
++
++			this.controller.setupWidget('AvatarToggle', this.avatarattr,this.avatarModel );
++			this.AvatarToggleChanged = this.AvatarToggleChanged.bindAsEventListener(this);
++			Mojo.Event.listen(this.controller.get('AvatarToggle'),Mojo.Event.propertyChange,this.AvatarToggleChanged);
++
++			//Only show Alias options for Live, XFire and ICQ
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")) {
++				var Alias = Mojo.View.render({object:{}, template:"prefsSetupAccount/Alias"});				
++				this.controller.get('Alias').update(Alias);
++
++				this.controller.setupWidget('AliasToggle', this.aliasattr,this.aliasModel );
++				this.AliasToggleChanged = this.AliasToggleChanged.bindAsEventListener(this);
++				Mojo.Event.listen(this.controller.get('AliasToggle'),Mojo.Event.propertyChange,this.AliasToggleChanged);
++			}
++
++			//Only show resource options for jabber
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")) {
++				var resource = Mojo.View.render({object:{}, template:"prefsSetupAccount/Jabber"});				
++				this.controller.get('LoginDetails').update(resource);
++			}
 +
 +			// Special case for Server Defined Plugins - add extra content below password field
 +			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
@@ -132,7 +245,7 @@
  		}
  		
          var usernameAttributes = {
-@@ -106,6 +219,49 @@
+@@ -106,6 +332,79 @@
  		}
          this.controller.setupWidget('password', passwordAttributes, this.passwordModel);		
  
@@ -150,6 +263,22 @@
 +        };
 +        this.controller.setupWidget('server', serverAttributes, this.serverModel);
 +
++	if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++		var resourceAttributes = {
++	            textFieldName: "resource",
++	            hintText: '',
++	            modelProperty: 'original',
++	            multiline: false,
++	            focus: false,
++				textReplacement: false
++	        };
++	        this.resourceModel = {
++	            original: this.params.resource || '',
++				disabled: false
++	        };
++	        this.controller.setupWidget('resource', resourceAttributes, this.resourceModel);
++	}
++
 +	if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
 +		var serverLoginAttributes = {
 +	            textFieldName: "login",
@@ -164,6 +293,20 @@
 +				disabled: false
 +	        };
 +	        this.controller.setupWidget('login', serverLoginAttributes, this.serverLoginModel);
++
++		var useragentAttributes = {
++	            textFieldName: "useragent",
++	            hintText: '',
++	            modelProperty: 'original',
++	            multiline: false,
++	            focus: false,
++				textReplacement: false
++	        };
++		 this.useragentModel = {
++	            original: this.params.useragent || '',
++				disabled: false
++	        };
++	        this.controller.setupWidget('useragent', useragentAttributes, this.useragentModel);
 +	 }
 +        var portAttributes = {
 +            textFieldName: "port",
@@ -182,7 +325,19 @@
  		this.saveButton = this.controller.get('saveAccountButton');
  		var saveButtonAttributes = {
  			disabledProperty: 'disabled',
-@@ -129,6 +285,25 @@
+@@ -118,6 +417,11 @@
+ 		};
+ 		this.controller.setupWidget('saveAccountButton', saveButtonAttributes, this.saveButtonModel);
+ 		this.controller.listen('saveAccountButton', Mojo.Event.tap, this.saveAccountFn);
++
++		if (this.params.editMode) {
++			this.saveButtonModel.buttonLabel = $L('Update');
++			this.controller.modelChanged(this.saveButtonModel);
++		}
+     },
+ 	
+ 	ready: function() {
+@@ -129,7 +433,51 @@
  		}
  	},
  	
@@ -205,10 +360,36 @@
 +	//    });
 +	},
 +
++	AliasToggleChanged: function(event) {
++	//	this.controller.showAlertDialog({
++	//	    onChoose: function(value) {},
++	//	    title:"The toggle value changed",
++	//	    message:"Toggle value is now: " + event.value,
++	//	    choices:[ {label:'OK', value:'OK', type:'color'} ]
++	//    });
++	},
++
++	AvatarToggleChanged: function(event) {
++	//	this.controller.showAlertDialog({
++	//	    onChoose: function(value) {},
++	//	    title:"The toggle value changed",
++	//	    message:"Toggle value is now: " + event.value,
++	//	    choices:[ {label:'OK', value:'OK', type:'color'} ]
++	//    });
++	},
++
  	handlePasswordKeyUp: function(event) {
++		if (this.passwordModel.original != PrefsSetupAccountAssistant.kDummyPassword)
++		{
++			if (this.params.editMode) {
++				this.saveButtonModel.buttonLabel = $L('Update/Sign In');
++				this.controller.modelChanged(this.saveButtonModel);
++			}
++		}
  		// If enter is pressed then simulate tapping on "Sign In"
  		if (event && Mojo.Char.isEnterKey(event.keyCode)) {
-@@ -144,6 +319,12 @@
+ 			// If the submit button is enabled then create the account
+@@ -144,6 +492,12 @@
  				this.passwordTapHandler = undefined;
  			}
  		}
@@ -221,7 +402,7 @@
  	},
  	
  	cleanup: function() {
-@@ -184,25 +365,51 @@
+@@ -184,24 +538,69 @@
  	  	statusMessageElement.update($L('Please enter a username'));
  		statusMessageWrapper.show();
  		hasEmptyField = true;
@@ -265,24 +446,51 @@
        accountDetails.domain = this.params.domain;
  
  	  this.startLoginSpinner();
-       this.createAccountRequest = MessagingMojoService.createIMAccount(this.controller, accountDetails,this.accountSaved.bind(this),this.createLoginFailed.bind(this));
++
++	//Set Avatar Setting
++	MessagingMojoService.setpreference(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Avatar",this.avatarModel.value);
++
++	//Set Alias Setting
++	if((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")) {
++		//Set Avatar Setting
++		MessagingMojoService.setpreference(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Alias",this.aliasModel.value);
++	}
 +
 +      //Add new server, port and TLS details
 +      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +            //setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS)
 +
 +	     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
-+	            MessagingMojoService.setserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.login,this.pModel.value);
++	            MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.login,this.pModel.value,accountDetails.useragent);
 +	     }
 +	     else
 +	     {
-+		     MessagingMojoService.setserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,'');
++		     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++Mojo.Log.info ("BLAHHH!!!!!!!!!!!!!!!!!!!")
++Mojo.Log.info (accountDetails.resource)
++Mojo.Log.info ("BLAHHH!!!!!!!!!!!!!!!!!!!")
++		            MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.resource);
++		     }
++		     else
++		     {
++			     MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,'');
++		     }
 +	     }
 +      }
++
+       this.createAccountRequest = MessagingMojoService.createIMAccount(this.controller, accountDetails,this.accountSaved.bind(this),this.createLoginFailed.bind(this));
      },
  	
- 	accountSaved : function(result){
-@@ -250,11 +457,21 @@
+@@ -226,6 +625,8 @@
+ 	},
+ 	
+     createLoginFailed : function(result){
++              MessagingMojoService.clearserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className);
++
+ 		if (this.createAccountRequest) {
+ 			this.controller.cancelServiceRequest(this.createAccountRequest);
+ 			this.createAccountRequest = undefined;
+@@ -250,11 +651,32 @@
  	 * UPDATE ACCOUNT METHODS
  	 */
      updateAccount : function(){
@@ -299,16 +507,27 @@
  	  }
 +	  else
 +	  {
-+		  if (this.passwordModel.original === PrefsSetupAccountAssistant.kDummyPassword) {
++		if((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq"))
++		{
++                if (this.passwordModel.original === PrefsSetupAccountAssistant.kDummyPassword && this.avatarModel.original === this.params.avatar && this.aliasModel.original === this.params.alias) {
 +		  	Mojo.Log.info("updateAccount doing noop b/c password hasn't changed");
 +			this.popScene();
 +		  	return;
 +		  }
++		}
++		else
++		{
++		  if (this.passwordModel.original === PrefsSetupAccountAssistant.kDummyPassword && this.avatarModel.original === this.params.avatar) {
++		  	Mojo.Log.info("updateAccount doing noop b/c password hasn't changed");
++			this.popScene();
++		  	return;
++		  }
++		}
 +	  }
  	  var accountDetails = Mojo.View.serializeMojo(this.controller.get('AccountSetupForm'), true);
  	  var statusMessageElement = this.controller.get('StatusMessage');
  	  var statusMessageWrapper = this.controller.get('StatusMessageWrapper');
-@@ -267,19 +484,46 @@
+@@ -267,19 +689,70 @@
  	  	statusMessageElement.update($L('Please enter a password'));
  		statusMessageWrapper.show();
  		hasEmptyField = true;
@@ -342,23 +561,48 @@
  	  
  	  this.startLoginSpinner();
        this.accountId = this.params.id;
-       this.updateAccountRequest = MessagingMojoService.updateAccountPassword(this.controller, this.params.id,accountDetails.password,this.accountUpdated.bind(this),this.updateLoginFailed.bind(this));
+-      this.updateAccountRequest = MessagingMojoService.updateAccountPassword(this.controller, this.params.id,accountDetails.password,this.accountUpdated.bind(this),this.updateLoginFailed.bind(this));
++
++	//Set Avatar Setting
++	MessagingMojoService.setpreference(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Avatar",this.avatarModel.value);
++
++	//Set Alias Setting
++	if((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")) {
++		//Set Avatar Setting
++		MessagingMojoService.setpreference(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,"Alias",this.aliasModel.value);
++	}
 +
 +      //Update server, port and TLS details
 +      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +            //setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS)
 +	     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
-+	            MessagingMojoService.setserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.login,this.pModel.value);
++	            MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.login,this.pModel.value,accountDetails.useragent);
 +	     }
 +	     else
 +	     {
-+		     MessagingMojoService.setserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,'');
++		     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++		            MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.resource);
++		     }
++		     else
++		     {
++			     MessagingMojoService.setserver(this.controller,this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,'');
++		     }
 +	     }
 +      }
++
++	if (this.passwordModel.original != PrefsSetupAccountAssistant.kDummyPassword)
++	{
++		this.updateAccountRequest = MessagingMojoService.updateAccountPassword(this.controller, this.params.id,accountDetails.password,this.accountUpdated.bind(this),this.updateLoginFailed.bind(this));
++	}
++	else
++	{
++		this.popScene();
++		return;
++	}
      },
  	
      accountUpdated : function(result) {
-@@ -346,7 +590,16 @@
+@@ -346,8 +819,36 @@
  		this.saveButtonModel.disabled = false;
  		this.controller.modelChanged(this.saveButtonModel);	  
  		this.passwordModel.disabled = false;
@@ -372,11 +616,31 @@
 +		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
 +			this.serverLoginModel.disabled = false;
 +			this.controller.modelChanged(this.serverLoginModel);
-+		}	 	
++			this.pModel.disabled = false;
++			this.controller.modelChanged(this.pModel,this);
++			this.useragentModel.disabled = false;
++			this.controller.modelChanged(this.useragentModel);
++		}
++
++		this.tModel.disabled = false;
++		this.controller.modelChanged(this.tModel,this);
++		this.avatarModel.disabled = false;
++		this.controller.modelChanged(this.avatarModel,this); 	
  		
++		if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")){
++			this.aliasModel.disabled = false;
++			this.controller.modelChanged(this.aliasModel,this); 	
++		}
++
++		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++			this.resourceModel.disabled = false;
++			this.controller.modelChanged(this.resourceModel,this); 	
++		}
++
  		// the username field is always disabled in edit mode
  		// the delete account button is only visible in edit mode
-@@ -364,6 +617,15 @@
+ 		if (this.params.editMode) {
+@@ -364,7 +865,35 @@
  		this.controller.modelChanged(this.saveButtonModel);
  		this.passwordModel.disabled = true;
  		this.controller.modelChanged(this.passwordModel);	 
@@ -388,11 +652,31 @@
 +		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
 +			this.serverLoginModel.disabled = true;
 +			this.controller.modelChanged(this.serverLoginModel);
++			this.pModel.disabled = true;
++			this.controller.modelChanged(this.pModel,this);
++			this.useragentModel.disabled = true;
++			this.controller.modelChanged(this.useragentModel);
 +		}
  
++		this.tModel.disabled = true;
++		this.controller.modelChanged(this.tModel,this);
++		this.avatarModel.disabled = true;
++		this.controller.modelChanged(this.avatarModel,this); 	
++		
++		if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "live") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "xfire") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "icq")){
++			this.aliasModel.disabled = true;
++			this.controller.modelChanged(this.aliasModel,this); 	
++		}
++
++		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber"){
++			this.resourceModel.disabled = true;
++			this.controller.modelChanged(this.resourceModel,this); 	
++		}
++
  		// the username field is always disabled in edit mode
  		// the delete account button is only visible in edit mode
-@@ -398,6 +660,12 @@
+ 		if (this.params.editMode) {
+@@ -398,6 +927,12 @@
  	removeAccount: function() {
  		this.startRemoveSpinner();
          MessagingMojoService.removeAccount(this.controller, this.params.id,this.handleRemoveAccountSuccess.bind(this));        

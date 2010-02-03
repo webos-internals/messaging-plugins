@@ -745,6 +745,8 @@ static void
 proxy_connect_none(PurpleProxyConnectData *connect_data, struct sockaddr *addr, socklen_t addrlen)
 {
 	int flags;
+	const char *localIpAddress;
+	struct sockaddr_in local_addr;
 
 	purple_debug_info("proxy", "Connecting to %s:%d with no proxy\n",
 			connect_data->host, connect_data->port);
@@ -762,6 +764,24 @@ proxy_connect_none(PurpleProxyConnectData *connect_data, struct sockaddr *addr, 
 #ifndef _WIN32
 	fcntl(connect_data->fd, F_SETFD, FD_CLOEXEC);
 #endif
+
+	/* 
+	 * Bind to the local IP address specified in the prefs record
+	 * This way we will use the preferred connection (WAN vs WiFi) 
+	 */
+	localIpAddress = purple_prefs_get_string("/purple/network/preferred_local_ip_address");
+	if (localIpAddress != NULL)
+	{
+		memset(&local_addr, 0x00, sizeof(local_addr));
+	    local_addr.sin_family = AF_INET;
+	    local_addr.sin_addr.s_addr = inet_addr(localIpAddress); 
+	    if (bind(connect_data->fd, (const void *)&local_addr, sizeof(local_addr)) == -1)
+	    {
+			purple_proxy_connect_data_disconnect_formatted(connect_data,
+					_("Unable to bind to %s: %s"), localIpAddress, g_strerror(errno));
+			return;
+	    }
+	}
 
 	if (connect(connect_data->fd, addr, addrlen) != 0)
 	{

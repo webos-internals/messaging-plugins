@@ -253,3 +253,26 @@ else
 	sh /root/optware/i686g25/staging/bin/ipkg-build XFire/$BuildType
 }
 fi
+
+#Package Facebook plugin
+echo ""
+echo "Packing Facebook Plugin..."
+if [ "$BuildType" = "prephone" ]
+then
+{
+	#Compile Pixi
+	cp Facebook/control.armv6 Facebook/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build Facebook/$BuildType
+	
+	#Compile Pre
+	cp Facebook/control.armv7 Facebook/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build Facebook/$BuildType
+	
+	#Cleanup
+	rm -f Facebook/prephone/CONTROL/control
+}
+else
+{
+	sh /root/optware/i686g25/staging/bin/ipkg-build Facebook/$BuildType
+}
+fi
