@@ -90,9 +90,16 @@ char *SIPEUserAgent = "";
 char *SametimeServer = "";
 char *SametimeServerPort = "";
 bool SametimeServerTLS = FALSE;
+bool SametimehideID = FALSE;
 char *gwimServer = "";
 char *gwimServerPort = "";
 bool gwimServerTLS = FALSE;
+char *MySpaceServer = "";
+char *MySpaceServerPort = "";
+char *GaduServer = "";
+char *XFireServer = "";
+char *XFireServerPort = "";
+char *XFireversion = "122";
 
 bool GTalkAvatar = FALSE;
 bool AIMAvatar = FALSE;
@@ -106,6 +113,8 @@ bool QQAvatar = FALSE;
 bool SametimeAvatar = FALSE;
 bool XFireAvatar = FALSE;
 bool FacebookAvatar = FALSE;
+bool MySpaceAvatar = FALSE;
+bool GaduAvatar = FALSE;
 
 bool LiveAlias = FALSE;
 bool XFireAlias = FALSE;
@@ -289,18 +298,48 @@ static bool getpluginpreference(const char *serviceName, const char *preference)
 			return TRUE;
 		}
 	}
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
-		if (SametimeAvatar)
+		if (strcmp(preference, "Avatar") == 0)
+		{
+			if (SametimeAvatar)
+			{
+				return TRUE;
+			}
+		}
+		if (strcmp(preference, "Alias") == 0)
 		{
 			return TRUE;
 		}
 	}
 	if (strcmp(serviceName, "gwim") == 0)
 	{
-		if (gwimAvatar)
+		if (strcmp(preference, "Avatar") == 0)
 		{
-			return TRUE;
+			if (gwimAvatar)
+			{
+				return TRUE;
+			}
+		}
+	}
+	if (strcmp(serviceName, "gadu") == 0)
+	{
+		if (strcmp(preference, "Avatar") == 0)
+		{
+			if (GaduAvatar)
+			{
+				return TRUE;
+			}
+		}
+	}
+	if (strcmp(serviceName, "myspace") == 0)
+	{
+		if (strcmp(preference, "Avatar") == 0)
+		{
+			if (MySpaceAvatar)
+			{
+				return TRUE;
+			}
 		}
 	}
 	if (strcmp(serviceName, "icq") == 0)
@@ -415,7 +454,31 @@ static char* getPrplFriendlyUsername(const char *serviceName, const char *userna
 			return transportFriendlyUsername;
 		}
 	}
-	else if (strcmp(serviceName, "sametime") == 0)
+	else if (strcmp(serviceName, "myspace") == 0)
+	{
+		if (strstr(username, "@myspace.com") != NULL)
+		{
+			transportFriendlyUsername = malloc(strlen(username) - strlen("@myspace.com") + 1);
+			char *usernameCopy= alloca(strlen(username) + 1);
+			strcpy(usernameCopy, username);
+			strtok(usernameCopy, "@");
+			strcpy(transportFriendlyUsername, usernameCopy);
+			return transportFriendlyUsername;
+		}
+	}
+	else if (strcmp(serviceName, "gadu") == 0)
+	{
+		if (strstr(username, "@gadu.com") != NULL)
+		{
+			transportFriendlyUsername = malloc(strlen(username) - strlen("@gadu.com") + 1);
+			char *usernameCopy= alloca(strlen(username) + 1);
+			strcpy(usernameCopy, username);
+			strtok(usernameCopy, "@");
+			strcpy(transportFriendlyUsername, usernameCopy);
+			return transportFriendlyUsername;
+		}
+	}
+	else if (strcmp(serviceName, "lcs") == 0)
 	{
 		if (strstr(username, "@sametime.com") != NULL)
 		{
@@ -550,6 +613,14 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 	{
 		g_string_append(javaFriendlyUsername, "@gwim.com");
 	}
+	else if (strcmp(serviceName, "myspace") == 0 && strchr(username, '@') == NULL)
+	{
+		g_string_append(javaFriendlyUsername, "@myspace.com");
+	}
+	else if (strcmp(serviceName, "gadu") == 0 && strchr(username, '@') == NULL)
+	{
+		g_string_append(javaFriendlyUsername, "@gadu.com");
+	}
 	else if (strcmp(serviceName, "xfire") == 0 && strchr(username, '@') == NULL)
 	{
 		g_string_append(javaFriendlyUsername, "@xfire.com");
@@ -563,7 +634,7 @@ static char* getJavaFriendlyUsername(const char *username, const char *serviceNa
 			g_string_erase(javaFriendlyUsername, charsToKeep, -1);
 		}
 	}
-	else if (strcmp(serviceName, "sametime") == 0 && strchr(username, '@') == NULL)
+	else if (strcmp(serviceName, "lcs") == 0 && strchr(username, '@') == NULL)
 	{
 		g_string_append(javaFriendlyUsername, "@sametime.com");
 	}
@@ -635,6 +706,38 @@ static char* getJavaFriendlyErrorCode(PurpleConnectionError type)
 	{
 		javaFriendlyErrorCode = "AcctMgr_Name_In_Use";
 	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_NOT_PROVIDED)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_UNTRUSTED)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_EXPIRED)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_NOT_ACTIVATED)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_HOSTNAME_MISMATCH)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_FINGERPRINT_MISMATCH)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_SELF_SIGNED)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
+	else if (type == PURPLE_CONNECTION_ERROR_CERT_OTHER_ERROR)
+	{
+		javaFriendlyErrorCode = "AcctMgr_Cert_Error";
+	}
 	else
 	{
 		syslog(LOG_INFO, "PurpleConnectionError was %i", type);
@@ -700,15 +803,25 @@ static char* getPrplProtocolIdFromServiceName(const char *serviceName)
 		// Special case for sipe where the java serviceName is "sipe" and the prpl protocol_id is "prpl-sipe"
 		g_string_append(prplProtocolId, "sipe");
 	}
-	else if (strcmp(serviceName, "sametime") == 0)
+	else if (strcmp(serviceName, "lcs") == 0)
 	{
-		// Special case for sametime where the java serviceName is "sametime" and the prpl protocol_id is "prpl-meanwhile"
+		// Special case for sametime where the java serviceName is "lcs" and the prpl protocol_id is "prpl-meanwhile"
 		g_string_append(prplProtocolId, "meanwhile");
 	}
 	else if (strcmp(serviceName, "gwim") == 0)
 	{
 		// Special case for Groupwise where the java serviceName is "gwim" and the prpl protocol_id is "prpl-novell"
 		g_string_append(prplProtocolId, "novell");
+	}
+	else if (strcmp(serviceName, "myspace") == 0)
+	{
+		// Special case for MySpace where the java serviceName is "myspace" and the prpl protocol_id is "prpl-myspace"
+		g_string_append(prplProtocolId, "myspace");
+	}
+	else if (strcmp(serviceName, "gadu") == 0)
+	{
+		// Special case for Gadu Gadu where the java serviceName is "gadu" and the prpl protocol_id is "prpl-gg"
+		g_string_append(prplProtocolId, "gg");
 	}
 	else if (strcmp(serviceName, "qqim") == 0)
 	{
@@ -792,17 +905,17 @@ static char* getServiceNameFromPrplProtocolId(PurpleAccount *prplaccount)
 	}
 	else if (strcmp(serviceName->str, "yahoo") == 0)
 	{
-		// Special case for messenger where the java serviceName is "yahoo" and the prpl protocol_id is "prpl-yahoo"
+		// Special case for yahoo where the java serviceName is "yahoo" and the prpl protocol_id is "prpl-yahoo"
 		serviceName = g_string_new("yahoo");
 	}
 	else if (strcmp(serviceName->str, "icq") == 0)
 	{
-		// Special case for messenger where the java serviceName is "icq" and the prpl protocol_id is "prpl-icq"
+		// Special case for icq where the java serviceName is "icq" and the prpl protocol_id is "prpl-icq"
 		serviceName = g_string_new("icq");
 	}
 	else if (strcmp(serviceName->str, "xfire") == 0)
 	{
-		// Special case for messenger where the java serviceName is "xfire" and the prpl protocol_id is "prpl-xfire"
+		// Special case for xfire where the java serviceName is "xfire" and the prpl protocol_id is "prpl-xfire"
 		serviceName = g_string_new("xfire");
 	}
 	else if (strcmp(serviceName->str, "bigbrownchunx-facebookim") == 0)
@@ -825,10 +938,20 @@ static char* getServiceNameFromPrplProtocolId(PurpleAccount *prplaccount)
 		// Special case for Group Wise where the java serviceName is "gwim" and the prpl protocol_id is "prpl-novell"
 		serviceName = g_string_new("gwim");
 	}
+	else if (strcmp(serviceName->str, "myspace") == 0)
+	{
+		// Special case for MySpace where the java serviceName is "myspace" and the prpl protocol_id is "prpl-myspace"
+		serviceName = g_string_new("myspace");
+	}
+	else if (strcmp(serviceName->str, "gg") == 0)
+	{
+		// Special case for Gadu Gadu where the java serviceName is "gadu" and the prpl protocol_id is "prpl-gg"
+		serviceName = g_string_new("gadu");
+	}
 	else if (strcmp(serviceName->str, "meanwhile") == 0)
 	{
-		// Special case for sametime where the java serviceName is "sametime" and the prpl protocol_id is "prpl-meanwhile"
-		serviceName = g_string_new("sametime");
+		// Special case for sametime where the java serviceName is "lcs" and the prpl protocol_id is "prpl-meanwhile"
+		serviceName = g_string_new("lcs");
 	}
 	else if (strcmp(serviceName->str, "qq") == 0)
 	{
@@ -2034,14 +2157,7 @@ static void incoming_message_cb(PurpleConversation *conv, const char *who, const
 		}
 		else
 		{
-			if (strcmp(serviceName, "jabber") == 0)
-			{
-				usernameFromStripped = (char *)usernameFrom;
-			}
-			else
-			{
-				usernameFromStripped = stripResourceFromGtalkUsername(usernameFrom);
-			}
+			usernameFromStripped = stripResourceFromGtalkUsername(usernameFrom);
 		}
 
 		LSError lserror;
@@ -2276,6 +2392,30 @@ static void loadserver(const char *serviceName)
 			printf("%s server resource: %s\n",serviceName, Resource);
 		}
 
+		if (strcmp(serviceName, "xfire") == 0)
+		{
+			Resource = strtok(NULL,":");
+
+			if(Resource == NULL)
+			{
+				Resource = "";
+			}
+
+			printf("%s server version: %s\n",serviceName, Resource);
+		}
+
+		if (strcmp(serviceName, "lcs") == 0)
+		{
+			Resource = strtok(NULL,":");
+
+			if(Resource == NULL)
+			{
+				Resource = "";
+			}
+
+			printf("%s server hide ID: %s\n",serviceName, Resource);
+		}
+
 		if (strcmp(serviceName, "sipe") == 0)
 		{
 			ServerLogin = strtok(NULL,":");
@@ -2395,7 +2535,7 @@ static void loadserver(const char *serviceName)
 				SIPEUserAgent = "";
 			}
 		}
-		if (strcmp(serviceName, "sametime") == 0)
+		if (strcmp(serviceName, "lcs") == 0)
 		{
 			//Set Sametime Server
 			SametimeServer = (char *)calloc(strlen(Server) + 1,sizeof(char));
@@ -2409,6 +2549,12 @@ static void loadserver(const char *serviceName)
 			if (strcmp(ServerTLS, "true") == 0)
 			{
 				SametimeServerTLS = TRUE;
+			}
+
+			//Set Sametime Hide Client ID?
+			if (strcmp(Resource, "true") == 0)
+			{
+				SametimehideID = TRUE;
 			}
 		}
 		if (strcmp(serviceName, "gwim") == 0)
@@ -2426,6 +2572,36 @@ static void loadserver(const char *serviceName)
 			{
 				gwimServerTLS = TRUE;
 			}
+		}
+		if (strcmp(serviceName, "myspace") == 0)
+		{
+			//Set MySapce Server
+			MySpaceServer = (char *)calloc(strlen(Server) + 1,sizeof(char));
+			strcat(MySpaceServer, Server);
+			
+			//Set MySpace Server Port
+			MySpaceServerPort = (char *)calloc(strlen(ServerPort) + 1,sizeof(char));
+			strcat(MySpaceServerPort, ServerPort);
+		}
+		if (strcmp(serviceName, "gadu") == 0)
+		{
+			//Set Gadu Gadu Server
+			GaduServer = (char *)calloc(strlen(Server) + 1,sizeof(char));
+			strcat(GaduServer, Server);
+		}
+		if (strcmp(serviceName, "xfire") == 0)
+		{
+			//Set XFire Server
+			XFireServer = (char *)calloc(strlen(Server) + 1,sizeof(char));
+			strcat(XFireServer, Server);
+			
+			//Set XFire Server Port
+			XFireServerPort = (char *)calloc(strlen(ServerPort) + 1,sizeof(char));
+			strcat(XFireServerPort, ServerPort);
+
+			//Set XFire Version
+			XFireversion = (char *)calloc(strlen(Resource) + 1,sizeof(char));
+			strcat(XFireversion, Resource);
 		}
 	}
 
@@ -2490,13 +2666,21 @@ static void loadpreference(const char *serviceName, const char *preference)
 		{
 			JabberAvatar = FALSE;
 		}
-		if (strcmp(serviceName, "sametime") == 0)
+		if (strcmp(serviceName, "lcs") == 0)
 		{
 			SametimeAvatar = FALSE;
 		}
 		if (strcmp(serviceName, "gwim") == 0)
 		{
 			gwimAvatar = FALSE;
+		}
+		if (strcmp(serviceName, "myspace") == 0)
+		{
+			MySpaceAvatar = FALSE;
+		}
+		if (strcmp(serviceName, "gadu") == 0)
+		{
+			GaduAvatar = FALSE;
 		}
 		if (strcmp(serviceName, "icq") == 0)
 		{
@@ -2563,13 +2747,21 @@ static void loadpreference(const char *serviceName, const char *preference)
 		{
 			JabberAvatar = TRUE;
 		}
-		if (strcmp(serviceName, "sametime") == 0)
+		if (strcmp(serviceName, "lcs") == 0)
 		{
 			SametimeAvatar = TRUE;
 		}
 		if (strcmp(serviceName, "gwim") == 0)
 		{
 			gwimAvatar = TRUE;
+		}
+		if (strcmp(serviceName, "myspace") == 0)
+		{
+			MySpaceAvatar = TRUE;
+		}
+		if (strcmp(serviceName, "gadu") == 0)
+		{
+			GaduAvatar = TRUE;
 		}
 		if (strcmp(serviceName, "icq") == 0)
 		{
@@ -2710,28 +2902,34 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 		loadserver ("sipe");
 		loadpreference ("sipe", "Avatar");
 	}
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
-		loadserver ("sametime");
-		loadpreference ("sametime", "Avatar");
+		loadserver ("lcs");
+		loadpreference ("lcs", "Avatar");
 	}
 	if (strcmp(serviceName, "gwim") == 0)
 	{
 		loadserver ("gwim");
 		loadpreference ("gwim", "Avatar");
 	}
-	if (strcmp(serviceName, "icq") == 0)
+	if (strcmp(serviceName, "myspace") == 0)
 	{
-		loadpreference ("icq", "Avatar");
+		loadserver ("myspace");
+		loadpreference ("myspace", "Avatar");
 	}
-	if (strcmp(serviceName, "yahoo") == 0)
+	if (strcmp(serviceName, "gadu") == 0)
 	{
-		loadpreference ("yahoo", "Avatar");
+		loadserver ("gadu");
+		loadpreference ("gadu", "Avatar");
 	}
 	if (strcmp(serviceName, "icq") == 0)
 	{
 		loadpreference ("icq", "Avatar");
 		loadpreference ("icq", "Alias");
+	}
+	if (strcmp(serviceName, "yahoo") == 0)
+	{
+		loadpreference ("yahoo", "Avatar");
 	}
 	if (strcmp(serviceName, "live") == 0)
 	{
@@ -2742,6 +2940,7 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 	{
 		loadpreference ("xfire", "Avatar");
 		loadpreference ("xfire", "Alias");
+		loadserver ("xfire");
 	}
 	if (strcmp(serviceName, "qqim") == 0)
 	{
@@ -2964,7 +3163,12 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 		if (strcmp(serviceName, "gmail") == 0)
 		{
 			//Don't load chat history
-			purple_account_get_bool(account, "facebook_show_history", FALSE);
+			purple_account_set_bool(account, "facebook_show_history", FALSE);
+		}
+		if (strcmp(serviceName, "gadu") == 0)
+		{
+			//Set connect server
+			purple_account_set_string(account, "gg_server", GaduServer);
 		}
 		if (strcmp(prplProtocolId, "prpl-msn") == 0 && g_str_has_suffix(transportFriendlyUserName, "@hotmail.com")
 				== FALSE)
@@ -3048,6 +3252,7 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 			purple_account_set_string(account, "server", SametimeServer);
 			purple_account_set_int(account, "port", atoi(SametimeServerPort));
 			purple_account_set_bool(account, "require_tls", SametimeServerTLS);
+			purple_account_set_bool(account, "fake_client_id", SametimehideID);
 		}
 		if (strcmp(prplProtocolId, "prpl-novell") == 0 && gwimServer != NULL)
 		{
@@ -3072,8 +3277,9 @@ static bool login(LSHandle* lshandle, LSMessage *message, void *ctx)
 			/*
 			 * Special case for XFire... Set XFire Server Version
 			 */
-			printf("Setting XFire Version to 119\n");
-			purple_account_set_int(account, "version", 119);
+			purple_account_set_int(account, "version", atoi(XFireversion));
+			purple_account_set_string(account, "server", XFireServer);
+			purple_account_set_int(account, "port", atoi(XFireServerPort));
 		}
 
 		syslog(LOG_INFO, "Logging in...");
@@ -3377,6 +3583,92 @@ static bool setMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
 		g_string_append(jsonResponse, username);
 		g_string_append(jsonResponse, "\",  \"availability\":");
 		g_string_append(jsonResponse, availabilityString);
+		g_string_append(jsonResponse, ", \"returnValue\":true}");
+		LSError lserror;
+		LSErrorInit(&lserror);
+		retVal = LSMessageReturn(lshandle, message, jsonResponse->str, &lserror);
+		if (!retVal)
+		{
+			LSErrorPrint(&lserror, stderr);
+		}
+		g_string_free(jsonResponse, TRUE);
+	}
+
+	error: if (!retVal)
+	{
+		syslog(LOG_INFO, "%s: sending response failed", __FUNCTION__);
+	}
+	LSErrorFree(&lserror);
+	return TRUE;
+}
+
+static bool getMyAvailability(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+//	bool success = TRUE;
+	LSError lserror;
+	LSErrorInit(&lserror);
+
+	/* Passed parameters */
+	const char *serviceName = "";
+	const char *username = "";
+
+	syslog(LOG_INFO, "%s called.", __FUNCTION__);
+
+	// get the message's payload (json object)
+	json_t *object = LSMessageGetPayloadJSON(message);
+
+	if (!object)
+	{
+		//success = FALSE;
+		goto error;
+	}
+
+	retVal = json_get_string(object, "serviceName", &serviceName);
+	if (!retVal)
+	{
+		//success = FALSE;
+		goto error;
+	}
+
+	retVal = json_get_string(object, "username", &username);
+	if (!retVal)
+	{
+		//success = FALSE;
+		goto error;
+	}
+
+	char *accountKey = getAccountKey(username, serviceName);
+
+	PurpleAccount *account = g_hash_table_lookup(onlineAccountData, accountKey);
+
+	if (account == NULL)
+	{
+		//this should never happen based on MessagingService's logic
+		syslog(LOG_INFO, "getMyAvailability was called on an account that wasn't logged in. serviceName: %s",serviceName);
+		retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":false}", &lserror);
+		if (!retVal)
+		{
+			LSErrorPrint(&lserror, stderr);
+		}
+		//success = FALSE;
+		goto error;
+	}
+	else
+	{
+		//Get current status for account
+		PurpleStatus *AccountStatus = purple_account_get_active_status(account);
+		int CurrentStatus = purple_status_type_get_primitive(purple_status_get_type(AccountStatus));
+
+		char StatusString[2];
+		sprintf(StatusString, "%i", CurrentStatus);
+
+		GString *jsonResponse = g_string_new("{\"serviceName\":\"");
+		g_string_append(jsonResponse, serviceName);
+		g_string_append(jsonResponse, "\",  \"username\":\"");
+		g_string_append(jsonResponse, username);
+		g_string_append(jsonResponse, "\",  \"status\":");
+		g_string_append(jsonResponse, StatusString);
 		g_string_append(jsonResponse, ", \"returnValue\":true}");
 		LSError lserror;
 		LSErrorInit(&lserror);
@@ -4110,6 +4402,8 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	const char *payloadServerTLS = NULL;
 	const char *payloadServerProxy = NULL;
 	const char *payloadServerLogin = NULL;
+	const char *payloadversion = NULL;
+	const char *payloadhideID = NULL;
 	const char *payloadUserAgent = NULL;
 	const char *serviceName = NULL;
 
@@ -4163,6 +4457,14 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	if (strcmp(serviceName, "jabber") == 0)
 	{
 		payloadServerLogin = getField(params, "ServerLogin"); //Jabber Resource
+	}
+	if (strcmp(serviceName, "xfire") == 0)
+	{
+		payloadversion = getField(params, "ServerLogin"); //Xfire version
+	}
+	if (strcmp(serviceName, "lcs") == 0)
+	{
+		payloadhideID = getField(params, "ServerLogin"); //Hide ID?
 	}
 
 	//Set Filename
@@ -4274,7 +4576,7 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 			strcat(SIPEUserAgent, payloadUserAgent);
 		}
 	}
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
 		//Set Sametime Server
 		SametimeServer = (char *)calloc(strlen(payloadServer) + 1,sizeof(char));
@@ -4292,6 +4594,16 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		else
 		{
 			SametimeServerTLS = FALSE;
+		}
+
+		//Set hide ID
+		if (payloadhideID == "true")
+		{
+			SametimehideID = TRUE;
+		}
+		else
+		{
+			SametimehideID = FALSE;
 		}
 	}
 	if (strcmp(serviceName, "gwim") == 0)
@@ -4312,6 +4624,44 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		else
 		{
 			gwimServerTLS = FALSE;
+		}
+	}
+	if (strcmp(serviceName, "myspace") == 0)
+	{
+		//Set MySpace Server
+		MySpaceServer = (char *)calloc(strlen(payloadServer) + 1,sizeof(char));
+		strcat(MySpaceServer, payloadServer);
+		
+		//Set MySpace Server Port
+		MySpaceServerPort = (char *)calloc(strlen(payloadServerPort) + 1,sizeof(char));
+		strcat(MySpaceServerPort, payloadServerPort);
+	}
+	if (strcmp(serviceName, "gadu") == 0)
+	{
+		//Set Gadu Gadu Server
+		GaduServer = (char *)calloc(strlen(payloadServer) + 1,sizeof(char));
+		strcat(GaduServer, payloadServer);
+	}
+	if (strcmp(serviceName, "xfire") == 0)
+	{
+		//Set XFire Server
+		XFireServer = (char *)calloc(strlen(payloadServer) + 1,sizeof(char));
+		strcat(XFireServer, payloadServer);
+		
+		//Set XFire Server Port
+		XFireServerPort = (char *)calloc(strlen(payloadServerPort) + 1,sizeof(char));
+		strcat(XFireServerPort, payloadServerPort);
+
+		//Set XFire version
+		if (payloadversion == NULL || strcmp(payloadversion, "") == 0)
+		{
+			XFireversion = (char *)calloc(strlen(payloadversion) + 1,sizeof(char));
+			strcat(XFireversion, "122");
+		}
+		else
+		{
+			XFireversion = (char *)calloc(strlen(payloadversion) + 1,sizeof(char));
+			strcat(XFireversion, payloadversion);
 		}
 	}
 
@@ -4348,9 +4698,29 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 			}
 			else
 			{
-				printf("Setting %s server address to: %s:%s\n", serviceName, payloadServer, payloadServerPort);
-				printf("Setting %s server TLS to: %s\n", serviceName,payloadServerTLS);
-				fprintf(hFile, "%s:%s:%s", payloadServer, payloadServerPort, payloadServerTLS);
+				if (strcmp(serviceName, "lcs") == 0)
+				{
+					printf("Setting %s server address to: %s:%s\n", serviceName, payloadServer, payloadServerPort);
+					printf("Setting %s server TLS to: %s\n", serviceName,payloadServerTLS);
+					printf("Setting %s server hideID to: %s\n", serviceName,payloadhideID);
+					fprintf(hFile, "%s:%s:%s:%s", payloadServer, payloadServerPort, payloadServerTLS, payloadhideID);
+				}
+				else
+				{
+					if (strcmp(serviceName, "xfire") == 0)
+					{
+						printf("Setting %s server address to: %s:%s\n", serviceName, payloadServer, payloadServerPort);
+						printf("Setting %s server TLS to: %s\n", serviceName,payloadServerTLS);
+						printf("Setting %s server version to: %s\n", serviceName,payloadversion);
+						fprintf(hFile, "%s:%s:%s:%s", payloadServer, payloadServerPort, payloadServerTLS, payloadversion);
+					}
+					else
+					{
+						printf("Setting %s server address to: %s:%s\n", serviceName, payloadServer, payloadServerPort);
+						printf("Setting %s server TLS to: %s\n", serviceName,payloadServerTLS);
+						fprintf(hFile, "%s:%s:%s", payloadServer, payloadServerPort, payloadServerTLS);
+					}
+				}
 			}
 		}
 
@@ -4400,6 +4770,16 @@ static bool setserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		}
 	}
 
+	//Set XFire version Variable Correctly
+	if (strcmp(serviceName, "xfire") == 0)
+	{
+		//Default to 122
+		if (strcmp(XFireversion, "$$BLANK$$") == 0)
+		{
+			XFireversion = "122";
+		}
+	}
+
 	return true;
 
 	error:
@@ -4424,6 +4804,7 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 	const char *serviceName = NULL;
 	char *ServerTLS = "false";
 	char *ServerProxy = "false";
+	char *hideID = "false";
 
 	if (!payload)
 	{
@@ -4473,6 +4854,19 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		json_object_object_add(responsePayload, "Resource", json_object_new_string(JabberResource));
 		printf("%s server resource: %s\n",serviceName, JabberResource);
 	}
+	//Is this XFire?
+	if (strcmp(serviceName, "xfire") == 0)
+	{
+		printf("%s server address: %s\n",serviceName, XFireServer);
+		printf("%s server port: %s\n",serviceName, XFireServerPort);
+
+		json_object_object_add(responsePayload, "ServerName", json_object_new_string(XFireServer));
+		json_object_object_add(responsePayload, "ServerPort", json_object_new_string(XFireServerPort));
+		
+		//Version?
+		json_object_object_add(responsePayload, "version", json_object_new_string(XFireversion));
+		printf("%s server version: %s\n",serviceName, XFireversion);
+	}
 	//Is this SIPE?
 	if (strcmp(serviceName, "sipe") == 0)
 	{
@@ -4505,7 +4899,7 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		json_object_object_add(responsePayload, "ServerProxy", json_object_new_string(ServerProxy));
 	}
 	//Is this sametime?
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
 		printf("%s server address: %s\n",serviceName, SametimeServer);
 		printf("%s server port: %s\n",serviceName, SametimeServerPort);
@@ -4521,6 +4915,15 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 		printf("%s server TLS: %s\n",serviceName, ServerTLS);
 		json_object_object_add(responsePayload, "ServerTLS", json_object_new_string(ServerTLS));
+
+		//Set Sametime Hide ID?
+		if (SametimehideID)
+		{
+			hideID = "true";
+		}
+
+		printf("%s server TLS: %s\n",serviceName, hideID);
+		json_object_object_add(responsePayload, "hideID", json_object_new_string(hideID));
 	}
 	//Is this Group Wise?
 	if (strcmp(serviceName, "gwim") == 0)
@@ -4539,6 +4942,22 @@ static bool getserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 
 		printf("%s server TLS: %s\n",serviceName, ServerTLS);
 		json_object_object_add(responsePayload, "ServerTLS", json_object_new_string(ServerTLS));
+	}
+	//Is this MySpace?
+	if (strcmp(serviceName, "myspace") == 0)
+	{
+		printf("%s server address: %s\n",serviceName, MySpaceServer);
+		printf("%s server port: %s\n",serviceName, MySpaceServerPort);
+
+		json_object_object_add(responsePayload, "ServerName", json_object_new_string(MySpaceServer));
+		json_object_object_add(responsePayload, "ServerPort", json_object_new_string(MySpaceServerPort));
+	}
+	//Is this Gadu Gadu?
+	if (strcmp(serviceName, "gadu") == 0)
+	{
+		printf("%s server address: %s\n",serviceName, GaduServer);
+
+		json_object_object_add(responsePayload, "ServerName", json_object_new_string(GaduServer));
 	}
 
 	//Return information
@@ -4621,12 +5040,13 @@ static bool clearserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		SIPEServerLogin = "";
 		SIPEUserAgent = "";
 	}
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
 		//Clear Sametime Server Details
 		SametimeServer = "";
 		SametimeServerPort = "";
 		SametimeServerTLS = "";
+		SametimehideID = "";
 	}
 	if (strcmp(serviceName, "gwim") == 0)
 	{
@@ -4634,6 +5054,24 @@ static bool clearserver(LSHandle* lshandle, LSMessage *message, void *ctx)
 		gwimServer = "";
 		gwimServerPort = "";
 		gwimServerTLS = "";
+	}
+	if (strcmp(serviceName, "myspace") == 0)
+	{
+		//Clear MySpace Server Details
+		MySpaceServer = "";
+		MySpaceServerPort = "";
+	}
+	if (strcmp(serviceName, "gadu") == 0)
+	{
+		//Clear Gadu Gadu Server Details
+		GaduServer = "";
+	}
+	if (strcmp(serviceName, "xfire") == 0)
+	{
+		//Clear XFire Server Details
+		XFireServer = "";
+		XFireServerPort = "";
+		XFireversion = "";
 	}
 	return true;
 
@@ -4873,6 +5311,34 @@ static bool getpreference(LSHandle* lshandle, LSMessage *message, void *ctx)
 		}
 		json_object_object_add(responsePayload, preference, json_object_new_string((char*)Avatar));
 	}
+	//Is this MySpace?
+	if (strcmp(serviceName, "myspace") == 0)
+	{
+		//Load Avatars?
+		if (MySpaceAvatar)
+		{
+			Avatar = "true";
+		}
+		else
+		{
+			Avatar = "false";
+		}
+		json_object_object_add(responsePayload, preference, json_object_new_string((char*)Avatar));
+	}
+	//Is this Gadu Gadu?
+	if (strcmp(serviceName, "gadu") == 0)
+	{
+		//Load Avatars?
+		if (GaduAvatar)
+		{
+			Avatar = "true";
+		}
+		else
+		{
+			Avatar = "false";
+		}
+		json_object_object_add(responsePayload, preference, json_object_new_string((char*)Avatar));
+	}
 	//Is this Yahoo?
 	if (strcmp(serviceName, "yahoo") == 0)
 	{
@@ -5008,7 +5474,7 @@ static bool getpreference(LSHandle* lshandle, LSMessage *message, void *ctx)
 		json_object_object_add(responsePayload, preference, json_object_new_string((char*)Avatar));
 	}
 	//Is this sametime?
-	if (strcmp(serviceName, "sametime") == 0)
+	if (strcmp(serviceName, "lcs") == 0)
 	{
 		//Load Avatars?
 		if (SametimeAvatar)
@@ -5075,6 +5541,150 @@ static bool getpreference(LSHandle* lshandle, LSMessage *message, void *ctx)
 	free (payload);
 	return true;
 }
+
+static bool AcceptBadCert(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+	LSError lserror;
+	LSErrorInit(&lserror);
+	char *payload = strdup(LSMessageGetPayload(message));
+
+	if (!payload)
+	{
+		printf("ERROR, No payload.\n");
+		goto error;
+	}
+
+	struct json_object *params = json_tokener_parse(payload);
+	if (is_error(params))
+	{
+		printf("ERROR, Parameters not specified correctly.\n");
+		goto error;
+	}
+
+	free (payload);
+
+	if (libpurpleInitialized == FALSE)
+	{
+		initializeLibpurple();
+	}
+
+	purple_prefs_remove("/purple/acceptbadcert");
+	purple_prefs_add_string("/purple/acceptbadcert", "true");
+
+	return true;
+
+	error:
+	retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":false}", &lserror);
+
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+	LSErrorFree(&lserror);
+	free (payload);
+	return true;
+}
+
+static bool RejectBadCert(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+	LSError lserror;
+	LSErrorInit(&lserror);
+	char *payload = strdup(LSMessageGetPayload(message));
+
+	if (!payload)
+	{
+		printf("ERROR, No payload.\n");
+		goto error;
+	}
+
+	struct json_object *params = json_tokener_parse(payload);
+	if (is_error(params))
+	{
+		printf("ERROR, Parameters not specified correctly.\n");
+		goto error;
+	}
+
+	free (payload);
+
+	if (libpurpleInitialized == FALSE)
+	{
+		initializeLibpurple();
+	}
+
+	purple_prefs_remove("/purple/acceptbadcert");
+
+	return true;
+
+	error:
+	retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":false}", &lserror);
+
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+	LSErrorFree(&lserror);
+	free (payload);
+	return true;
+}
+
+static bool GetAcceptBadCertSetting(LSHandle* lshandle, LSMessage *message, void *ctx)
+{
+	bool retVal = FALSE;
+	LSError lserror;
+	LSErrorInit(&lserror);
+	char *payload = strdup(LSMessageGetPayload(message));
+
+	if (!payload)
+	{
+		printf("ERROR, No payload.\n");
+		goto error;
+	}
+
+	struct json_object *params = json_tokener_parse(payload);
+	if (is_error(params))
+	{
+		printf("ERROR, Parameters not specified correctly.\n");
+		goto error;
+	}
+
+	struct json_object *responsePayload = json_object_new_object();
+
+	const char *acceptbadcert;
+	acceptbadcert = purple_prefs_get_string("/purple/acceptbadcert");
+
+	if (acceptbadcert != NULL)
+	{
+		json_object_object_add(responsePayload, "Setting", json_object_new_string("Accept"));
+	}
+	else
+	{
+		json_object_object_add(responsePayload, "Setting", json_object_new_string("Reject"));
+	}
+
+	//Return information
+	retVal = LSMessageReply(serviceHandle, message, json_object_to_json_string(responsePayload),&lserror);
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+
+	free (payload);
+	return true;
+
+	error:
+	retVal = LSMessageReturn(lshandle, message, "{\"returnValue\":false}", &lserror);
+
+	if (!retVal)
+	{
+		LSErrorPrint(&lserror, stderr);
+	}
+	LSErrorFree(&lserror);
+	free (payload);
+	return true;
+}
+
 /*
  * End of service methods
  */
@@ -5091,6 +5701,7 @@ static LSMethod methods[] =
 { "sendMessage", sendMessage },
 { "setMyAvailability", setMyAvailability },
 { "setMyCustomMessage", setMyCustomMessage },
+{ "getMyAvailability", getMyAvailability },
 { "deviceConnectionClosed", deviceConnectionClosed },
 { "enable", enable },
 { "disable", disable },
@@ -5101,6 +5712,9 @@ static LSMethod methods[] =
 { "EnableContactsReadWrite", EnableContactsReadWrite },
 { "setpreference", setpreference },
 { "getpreference", getpreference },
+{ "AcceptBadCert", AcceptBadCert },
+{ "GetAcceptBadCertSetting", GetAcceptBadCertSetting },
+{ "RejectBadCert", RejectBadCert},
 { }, 
 };
 

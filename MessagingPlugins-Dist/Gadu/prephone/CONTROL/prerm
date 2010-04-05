@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin gadu
+
+#Remove files from main source
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.la
+
+exit 0

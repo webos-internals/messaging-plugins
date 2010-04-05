@@ -25,8 +25,8 @@
 +		displayName: $L('Novell Groupwise'),
 +		secondaryDisplayName: $L('Groupwise')
 +      },
-+	  'sametime': {
-+        className: 'sametime',
++	  'lcs': {
++        className: 'lcs',
 +        smallIcon: 'images/transports/sametime_transport_splitter.png',
 +        largeIcon: 'images/transports/sametime-logo.png',
 +		displayName: $L('Sametime'),

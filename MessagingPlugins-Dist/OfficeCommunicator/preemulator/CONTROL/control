@@ -6,5 +6,5 @@ Description: Messaging Plugins Office Communicator
 Section: Services and Plugins
 Priority: optional
 Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
-Depends: org.webosinternals.messaging
+Depends: org.webosinternals.messagingpatch
 Source: {"Type":"Plugin"}

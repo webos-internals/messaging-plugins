@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException, ActiveRecordException {
         LogEntry("Messaging Plugins");
-        LogEntry("Version: 2.0.0");
+        LogEntry("Version: 2.3.0");
         LogEntry("By Greg Roll 2009");
         LogEntry("");
 
@@ -48,7 +48,7 @@ public class Main {
         //Check for plugin name
         if (!(args.length == 2))
         {
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace and Facebook.");
             LogEntry ("");
             System.exit(1);
         }
@@ -84,7 +84,7 @@ public class Main {
             //Check for plugin name
             if (!(args.length == 2))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace and Facebook.");
                 LogEntry ("");
                 System.exit(1);
             }
@@ -161,6 +161,18 @@ public class Main {
                 LogEntry ("");
                 return;
             }
+            if (args[1].equalsIgnoreCase("gadu"))
+            {
+                EnableContactsReadWrite("Gadu Gadu");
+                LogEntry ("");
+                return;
+            }
+            if (args[1].equalsIgnoreCase("myspace"))
+            {
+                EnableContactsReadWrite("MySpace");
+                LogEntry ("");
+                return;
+            }
 
             EnableContactsReadWrite(args[1]);
 
@@ -186,7 +198,7 @@ public class Main {
 
             if (PluginName.equalsIgnoreCase(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace and Facebook.");
                 return;
             }
 
@@ -266,7 +278,7 @@ public class Main {
             if (PluginName.equalsIgnoreCase("Sametime"))
                 {
                 try {
-                    AddPluginToDataBase ("Sametime","sametime","{\"32x32\":\"images/accounts/sametime-32x32.png\",\"48x48\":\"images/accounts/sametime-48x48.png\"}","9913","9914");
+                    AddPluginToDataBase ("Sametime","lcs","{\"32x32\":\"images/accounts/sametime-32x32.png\",\"48x48\":\"images/accounts/sametime-48x48.png\"}","9913","9914");
                 } catch (ActiveRecordException ex) {
                     LogEntry("Sametime Plugin Installation Error");
                     LogEntry(ex.toString());
@@ -310,6 +322,30 @@ public class Main {
                 return;
             }
 
+            //Should we install the Gadu Gadu Plugin?
+            if (PluginName.equalsIgnoreCase("Gadu"))
+                {
+                try {
+                    AddPluginToDataBase ("Gadu Gadu","gadu","{\"32x32\":\"images/accounts/gadu-32x32.png\",\"48x48\":\"images/accounts/gadu-48x48.png\"}","9921","9922");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("Gadu Gadu Plugin Installation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            //Should we install the MySpace Plugin?
+            if (PluginName.equalsIgnoreCase("MySpace"))
+                {
+                try {
+                    AddPluginToDataBase ("MySpace","myspace","{\"32x32\":\"images/accounts/myspace-32x32.png\",\"48x48\":\"images/accounts/myspace-48x48.png\"}","9923","9924");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("MySpace Plugin Installation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
             //Should we install the Yahoo Plugin?
             if (PluginName.equalsIgnoreCase("Palm"))
                 {
@@ -322,7 +358,7 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire and Facebook.");
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace and Facebook.");
             return;
         }
 
@@ -333,7 +369,7 @@ public class Main {
 
             if (PluginName.equals(""))
             {
-                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Palm1.2, Palm1.3 and Facebook.");
+                LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace, Palm1.2, Palm1.3 and Facebook.");
                 return;
             }
 
@@ -479,7 +515,31 @@ public class Main {
                 return;
             }
 
-            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Palm1.2, Palm1.3 and Facebook.");
+            //Should we uninstall the Gadu Gadu Plugin?
+            if (PluginName.equalsIgnoreCase("Gadu"))
+                {
+                try {
+                    RemovePluginFromDataBase ("Gadu Gadu");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("Gadu Plugin uninstallation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            //Should we uninstall the MySpace Plugin?
+            if (PluginName.equalsIgnoreCase("MySpace"))
+                {
+                try {
+                    RemovePluginFromDataBase ("MySpace");
+                } catch (ActiveRecordException ex) {
+                    LogEntry("MySpace Plugin uninstallation Error");
+                    LogEntry(ex.toString());
+                }
+                return;
+            }
+
+            LogEntry("PluginName: Must be specified. Options are: Live, Yahoo, ICQ, Jabber, SIPE, IRC, Sametime, Groupwise, QQ, XFire, Gadu, MySpace, Palm1.2, Palm1.3 and Facebook.");
             System.exit(1);
         }
 

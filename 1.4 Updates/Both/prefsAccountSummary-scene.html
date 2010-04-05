@@ -1,0 +1,123 @@
+<div id="preferences-account-summary">
+  <div class="palm-page-header multi-line">
+	<div class="palm-page-header-wrapper">
+      <div class="icon messaging-app"></div>
+      <div id="prefHeaderText" class="title" x-mojo-loc=''>Preferences &amp; Accounts</div>
+    </div>
+  </div>
+
+	<div class="palm-group">
+		<div class="palm-group-title" x-mojo-loc=''>
+			New message
+		</div>
+		<div class="palm-list">
+			<div class="palm-row first">
+				<div class="palm-row-wrapper">                    
+					<div id="notificationToggle" x-mojo-element="ToggleButton"></div>
+					<div class="title capitalize" x-mojo-loc=''>
+						Show notifications
+					</div>                                                               
+				</div> 
+			</div>                
+			<div id="notificationSoundContainer">   
+				<!-- <div class="palm-row-divider"></div> -->
+				<div id="soundselectrow" class="palm-row" x-mojo-tap-highlight="momentary">
+					<div class="palm-row-wrapper">
+						<div id="notificationSoundSelector" x-mojo-element="ListSelector"></div>
+					</div>
+				</div>
+				<div id="currentringtonerow" class="palm-row" x-mojo-tap-highlight="momentary">
+					<div class="palm-row-wrapper">
+						<div class="label" x-mojo-loc=''>Ringtone</div>
+		            	<div id='currentringtone' class="title"></div>
+		            </div>
+	            </div>
+			</div>
+			<div id="autoDownloadToggleRow" class="palm-row last">
+				<div class="palm-row-wrapper">                    
+					<div id="autoDownloadToggle" x-mojo-element="ToggleButton"></div>
+					<div id="autoDownloadLabel" class="title capitalize" x-mojo-loc=''>
+						Auto-download MMS
+					</div>                                                               
+				</div> 
+			</div>                
+	
+		</div>
+	</div>
+	<div class="palm-group">
+		<div class="palm-group-title" x-mojo-loc=''>Accounts</div>      
+	    <div class="palm-list">                              
+	
+			<!-- This needs to move into the List model below -->
+			<div class="palm-row first disabled">
+				<div class="palm-row-wrapper">                                               
+					<div class="icon left" style="width:60px">
+						<img src="images/serviceicon-sms.png" style="padding:6px 12px;">
+					</div>                                                                     
+					<div class="number-text" id="phoneNumber"></div>
+				</div>
+			</div>
+			<!-- /This needs to move into the List model below -->
+			                                                      
+			<div id="preferences-accounts" name="preferences-accounts" x-mojo-element="List"></div>    
+			
+		 </div>
+	</div>
+	<div id="addAccountButton" class="palm-button" x-mojo-loc=''>Add IM Account</div>
+	<!--
+	<div class="palm-group" style="margin-top: 5px">
+		<div class="palm-group-title" x-mojo-loc=''>SMS/MMS settings</div>
+		<div class="palm-list">
+			<div class='palm-row first'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">   	
+						<div class="label" x-mojo-loc=''>SMSC Address</div>		
+						<div id="smscAddress" name="smscAddress" x-mojo-element="TextField">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class='palm-row'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">   	
+						<div class="label" x-mojo-loc=''>E-Mail Gateway</div>		
+						<div id="emailGateway" name="emailGateway" x-mojo-element="TextField">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class='palm-row'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">   	
+						<div class="label" x-mojo-loc=''>MMSC Address</div>			
+						<div id="mmscAddress" name="mmscAddress" x-mojo-element="TextField">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class='palm-row last'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">   	
+						<div class="label" x-mojo-loc=''>MMSC Proxy</div>			
+						<div id="mmscProxy" name="mmscProxy" x-mojo-element="TextField">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<div class="palm-row single">
+		<div class="palm-row-wrapper">
+			<div x-mojo-element="CheckBox" id="useSettings" style="display:inline;"></div>
+			<div class="title truncating-text" x-mojo-loc=''>Use MMS settings</div>
+		</div>                          
+	</div>                          
+	<div>
+		<div id="savePrefs" class="palm-button" x-mojo-loc=''>Save preferences</div>
+	</div>
+	-->
+</div>

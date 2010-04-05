@@ -276,3 +276,49 @@ else
 	sh /root/optware/i686g25/staging/bin/ipkg-build Facebook/$BuildType
 }
 fi
+
+#Package Gadu Gadu plugin
+echo ""
+echo "Packing Gadu Gadu Plugin..."
+if [ "$BuildType" = "prephone" ]
+then
+{
+	#Compile Pixi
+	cp Gadu/control.armv6 Gadu/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build Gadu/$BuildType
+	
+	#Compile Pre
+	cp Gadu/control.armv7 Gadu/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build Gadu/$BuildType
+	
+	#Cleanup
+	rm -f Gadu/prephone/CONTROL/control
+}
+else
+{
+	sh /root/optware/i686g25/staging/bin/ipkg-build Gadu/$BuildType
+}
+fi
+
+#Package MySpace plugin
+echo ""
+echo "Packing MySpace Plugin..."
+if [ "$BuildType" = "prephone" ]
+then
+{
+	#Compile Pixi
+	cp MySpace/control.armv6 MySpace/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build MySpace/$BuildType
+	
+	#Compile Pre
+	cp MySpace/control.armv7 MySpace/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build MySpace/$BuildType
+	
+	#Cleanup
+	rm -f MySpace/prephone/CONTROL/control
+}
+else
+{
+	sh /root/optware/i686g25/staging/bin/ipkg-build MySpace/$BuildType
+}
+fi

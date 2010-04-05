@@ -1,10 +1,10 @@
 Package: org.webosinternals.messagingfacebook
-Version: 2.0.0
+Version: 2.0.1
 Architecture: armv7
 Maintainer: Greg Roll
 Description: Messaging Plugins Facebook
 Section: Services and Plugins
 Priority: optional
 Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
-Depends: org.webosinternals.messaging
+Depends: org.webosinternals.messagingpatchpatch
 Source: {"Type":"Plugin"}

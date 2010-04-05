@@ -29,7 +29,7 @@
 +		        tls: 'false'	
 +	        };
 +			
-+			if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "sametime") {
++			if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "lcs") {
 +		    //Custom server entries for sametime
 +            this.ServerParams = {
 +                server: '',

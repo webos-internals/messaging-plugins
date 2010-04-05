@@ -11,7 +11,7 @@ fi
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin XFire
 
 #Remove files from main source
-rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/xfire.so
-rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/xfire.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.la
 
 exit 0

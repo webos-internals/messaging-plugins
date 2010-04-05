@@ -22,10 +22,10 @@
 +.palm-account-icon.irc.medium {
 +  background: url(../images/accounts/irc-48x48.png) center center no-repeat;
 +}
-+.palm-account-icon.sametime {
++.palm-account-icon.lcs {
 +  background: url(../images/accounts/sametime-32x32.png) center center no-repeat;
 +}
-+.palm-account-icon.sametime.medium {
++.palm-account-icon.lcs.medium {
 +  background: url(../images/accounts/sametime-48x48.png) center center no-repeat;
 +}
 +.palm-account-icon.live {

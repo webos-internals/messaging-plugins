@@ -1,0 +1,24 @@
+<div id="#{id}" class="palm-row accountRow" x-mojo-tap-highlight="momentary">
+  	<div class="palm-row-wrapper">                                                        
+	
+		<!-- This should be converted into a div with class="icon left #{serviceName}" -->
+		<div class="icon left" style="width:60px">
+			<img class="serviceIcon" style="padding:4px 10px; position:absolute;" src="#{serviceIcon}" />
+			<img class="serviceIconAvailability" style="padding:2px 2px; position:absolute;" src="#{serviceIconAvailability}" />
+		</div>
+		<!-- /This should be converted into a div with class="icon left #{serviceName}" -->
+
+		<div class="text-group">
+		  <div class="domain-text">#{accountDisplayName}</div>
+		  <div class="login-text truncating-text">#{username}</div>
+		</div>
+		<input type="hidden" name="id" value="#{id}" />
+		<input type="hidden" name="username" value="#{username}" />
+		<input type="hidden" name="password" value="#{password}" />
+		<input type="hidden" name="accountTypeId" value="#{accountTypeId}" />
+		<input type="hidden" name="isLoggedIn" value="#{isLoggedIn}" />
+		<input type="hidden" name="domain" value="#{domain}" />
+		<input type="hidden" name="serviceIcon" value="#{serviceIcon}" />
+		<input type="hidden" name="Availability" value="#{Availability}" />
+	</div>
+</div>

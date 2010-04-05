@@ -1,0 +1,19 @@
+--- accountsRow.html	Wed Sep  2 15:08:50 2009
++++ accountsRow.new	Mon Mar  1 00:39:03 2010
+@@ -3,7 +3,8 @@
+ 	
+ 		<!-- This should be converted into a div with class="icon left #{serviceName}" -->
+ 		<div class="icon left" style="width:60px">
+-			<img src="#{serviceIcon}" style="padding:4px 10px;">
++			<img class="serviceIcon" style="padding:4px 10px; position:absolute;" src="#{serviceIcon}" />
++			<img class="serviceIconAvailability" style="padding:2px 2px; position:absolute;" src="#{serviceIconAvailability}" />
+ 		</div>
+ 		<!-- /This should be converted into a div with class="icon left #{serviceName}" -->
+ 
+@@ -18,5 +19,6 @@
+ 		<input type="hidden" name="isLoggedIn" value="#{isLoggedIn}" />
+ 		<input type="hidden" name="domain" value="#{domain}" />
+ 		<input type="hidden" name="serviceIcon" value="#{serviceIcon}" />
++		<input type="hidden" name="Availability" value="#{Availability}" />
+ 	</div>
+ </div>

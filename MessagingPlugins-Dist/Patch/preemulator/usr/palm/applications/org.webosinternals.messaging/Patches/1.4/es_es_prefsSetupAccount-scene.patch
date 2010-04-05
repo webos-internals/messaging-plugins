@@ -1,0 +1,13 @@
+--- prefsSetupAccount-scene.html	Tue Jan 26 15:16:16 2010
++++ prefsSetupAccount-scene.new	Sun Feb 14 03:52:19 2010
+@@ -23,6 +23,10 @@
+ 				</div>
+ 			</div>
+ 		</div>
++		<div id="LoginDetails"></div>
++		<div id="ServerDetails"></div>
++		<div id="Alias"></div>
++		<div id="Avatar"></div>
+ 		<div class='palm-group'>
+ 			<div class="palm-group-title">
+ 				Contraseña

@@ -1,0 +1,1004 @@
+/* Copyright 2009 Palm, Inc.  All rights reserved. */
+
+var MessagingMojoService = {
+	identifier: 'palm://com.palm.messaging',
+	identifierSMS: 'palm://com.palm.messaging/sms',
+	contactsIdentifier: 'palm://com.palm.contacts',
+	displayIdentifier: 'palm://com.palm.display/control',
+	telephonyIdentifier: 'palm://com.palm.telephony',
+	systemManagerIdentifier: 'palm://com.palm.systemmanager',
+	
+	launchMessaging: function(sceneController, params){
+		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
+			method: 'launch',
+			parameters: {
+				id: "com.palm.app.messaging",
+				params: params
+			}
+		});
+	},
+  
+	launchBrowser: function(url){
+		var openParams = {
+			scene: 'page',
+			url: url
+		};
+		return new Mojo.Service.Request('palm://com.palm.applicationManager', {
+			method: 'launch',
+			parameters: {
+				id: 'com.palm.app.browser',
+				params: openParams
+			}
+		});
+	},
+	
+	launchHelp: function(url) {
+		return new Mojo.Service.Request("palm://com.palm.applicationManager", {
+			method: "launch",
+			parameters: {
+				id: 'com.palm.app.help',
+				params: {
+					target: url
+				}
+			}
+		});
+	},
+	
+	launchFile: function(controller, mimetype, url) {
+		var errorHandler = function() {
+			Mojo.Log.error("Messaging - Attachment can't be opened! mimetype=%s, %s", mimetype, url);
+			controller.showAlertDialog({
+				onChoose: Mojo.doNothing,
+				message: $L("Cannot find an application which can open this file."),
+				choices: [{
+					label: $L('OK'),
+					value: 'dismiss',
+					type: 'alert'
+				}]
+			});
+		};
+		controller.serviceRequest('palm://com.palm.applicationManager', {
+			method: 'open',
+			parameters: {mime: mimetype, target: url},
+			onSuccess: Mojo.doNothing,
+			onFailure: errorHandler
+		});
+	},
+  
+  getDisplayStatus: function(callback) {
+    return new Mojo.Service.Request(MessagingMojoService.displayIdentifier, {
+  	  method: 'status', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: callback,
+  	  onFailure: function() {	
+        Mojo.Log.error("Messaging - failed to get display on/off status");	
+  	  }
+    }, true);  	
+  },
+  
+  getPlatformType: function(callback) {
+    return new Mojo.Service.Request(MessagingMojoService.telephonyIdentifier, {
+  	  method: 'platformQuery', 
+  	  onSuccess: callback,
+  	  onFailure: function() {	
+        Mojo.Log.error("Messaging - failed to retrieve platform type");	
+  	  }
+    });   	
+  },
+  
+  registerForIncomingMessages: function(params) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForIncomingMessages', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: params.onSuccess,
+  	  onFailure: params.onFailure
+    }, true);
+  },
+  
+  registerForConnectionFailures: function(callback) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForConnectionFailures', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: callback,
+  	  onFailure: function(msg) {
+        Mojo.Log.warn("Error - Messaging Failure Notification - failed to observe new message");	
+  	  }
+    }, true);    
+  },
+  
+  registerForSendFailures: function(callback) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForSendFailures', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: callback,
+  	  onFailure: function(msg) {
+        Mojo.Log.warn("Error - Messaging Failure Notification - failed to observe send message failures");	
+  	  }
+    }, true);    
+  },    
+  
+  getReminder : function(personId, callback){
+  	return new Mojo.Service.Request(MessagingMojoService.contactsIdentifier,{
+      method: 'getReminder',
+      onSuccess: callback,
+      parameters : {
+        personId : personId
+      }
+    });
+  }, 
+  
+  registerForDebugMessages: function(callback) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForDebugMessages', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: callback,
+  	  onFailure: function(msg) {
+        Mojo.Log.warn("Error - Messaging Failure - failed to observe debug messages");	
+  	  }
+    }, true);    
+  },
+  
+  registerForReminders: function(onSuccess, onFailure) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForReminders', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: onSuccess,
+  	  onFailure: onFailure
+    }, true);
+  },  
+  
+  registerForAirplaneModeNotifications: function(onSuccess, onFailure) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+  	  method: 'registerForAirplaneModeNotifications', 
+  	  parameters: {subscribe:true},
+  	  onSuccess: onSuccess,
+  	  onFailure: onFailure
+    }, true);    
+  },   
+
+  isFirstLaunch: function(onSuccess,onFailure) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+    	method: 'isFirstUse',
+    	onSuccess: onSuccess,
+		onFailure: onFailure
+		
+    });    
+  },
+  
+  getAllMessagingPreferences: function(params) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+    	method: 'getAllMessagingPreferences',
+        parameters: {subscribe: true},
+    	onSuccess: params.onSuccess,
+		onFailure: params.onFailure
+    }, true);    
+  },  
+  
+  setPlatformType: function(platformType) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+    	method: 'setPlatformType',
+        parameters: {platformType: platformType}
+    }); 
+  },
+  
+  setFirstLaunchToFalse: function(sceneController,onSuccess) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+    	method: 'setFirstUseToFalse',
+    	onSuccess: onSuccess
+    });    
+  },
+  
+	// this should probably be re-named to hasAccount
+  isLoggedIn: function(sceneController,onSuccess,onFailure) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+    	method: 'isLoggedIn',
+    	parameters: {subscribe: true},
+    	onSuccess: onSuccess,
+    	onFailure: onFailure
+    }, true);
+  },
+  
+	getHistoryList: function(sceneController, callback, filter) {
+      return sceneController.serviceRequest(MessagingMojoService.identifier, {
+        method: 'getChatsForHistoryView',
+        parameters: {
+          subscribe: true,
+          filter: filter
+        },
+        onSuccess: callback
+      }, true);
+	},
+  
+  getHistoryBigList: function(sceneController, filter, callback, subscriberId, offset, limit) {
+  	var keepSubscribed = false;
+    var params = {};
+    var callbackFn = callback;
+    if (!subscriberId) {
+	  keepSubscribed = true;
+      params.subscribe = true;
+    } else {
+      params.subscriberId = subscriberId;
+      callbackFn = function(result){};
+    }
+    if(filter)
+      params.filter = filter;
+    if(offset != undefined)
+      params.offset = offset;
+    if(limit != undefined)
+      params.limit = limit;
+    
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getChatsForHistoryView',
+      parameters: params,
+      onSuccess: callbackFn
+    }, keepSubscribed);
+  },
+  
+  getGroups: function(sceneController, callback, subscriberId) {
+  	var keepSubscribed = false;
+    var params = {};
+    if (!subscriberId) {
+		keepSubscribed = true;
+		params.subscribe = true;
+	} else {
+		params.subscriberId = subscriberId;
+	}
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getGroups',
+      parameters: params,        
+      onSuccess: function(data){
+        callback(data);
+      }
+    }, keepSubscribed);
+  },  
+  
+  getGroupsWithChats: function(sceneController, callback) {
+  	var params = {
+      method: 'getGroupsWithChats',   
+	  parameters: {'returnStrings':true},
+      onSuccess: callback
+    };
+	
+	if (sceneController) {
+		return sceneController.serviceRequest(MessagingMojoService.identifier, params);
+	} else {
+		return new Mojo.Service.Request(MessagingMojoService.identifier, params);
+	}  
+  },   
+  
+  getChatsForGroup: function(sceneController, groupId, callback, subscriberId, filter) {
+  	var keepSubscribed = false;
+    var params = {groupId: groupId};
+    if (!subscriberId) {
+		keepSubscribed = true;
+		params.subscribe = true;
+	} else {
+		params.subscriberId = subscriberId;
+	}
+    
+    if (filter) {
+      params.filter = filter;      
+    }
+    
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getChatsForGroup',
+      parameters: params,
+      onSuccess: callback.curry(groupId)
+    }, keepSubscribed);
+  }, 
+	
+  getChatsOrderedByGroup: function(sceneController, filter, excludeGroups, callback, subscriberId, offset, limit) {
+  	var keepSubscribed = false;
+    var params = {};
+    var callbackFn = callback;
+    if (!subscriberId) {
+	  keepSubscribed = true;
+      params.subscribe = true;
+    } else {
+      params.subscriberId = subscriberId;
+      callbackFn = function(result){};
+    }
+    if(filter)
+      params.filter = filter;
+    if(excludeGroups)
+      params.excludeGroups = excludeGroups;
+      
+    if(offset != undefined)
+      params.offset = offset;
+    if(limit != undefined)
+      params.limit = limit;
+    
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getChatsOrderedByGroup',
+      parameters: params,
+      onSuccess: callbackFn
+    }, keepSubscribed);
+  },	
+	
+ 	getBuddyList: function(sceneController, filter, callback, isSubscribed, subscriberId, reset, offset, limit) {
+		var keepSubscribed = false;
+		var params = {};
+		var callbackFn = callback;
+		if (isSubscribed) {
+			if (!subscriberId) {
+				keepSubscribed = true;
+				params.subscribe = true;
+			} else {
+				params.subscriberId = subscriberId;
+				callbackFn = function(result){};
+			}
+		}
+		if(filter)
+			params.filter = filter;
+		
+		if(offset != undefined)
+			params.offset = offset;
+		if(limit != undefined)
+			params.limit = limit;
+		if(reset)
+			params.reset = reset;
+		
+		var serviceRequestParams = {
+			method: 'getBuddyList',
+			parameters: params,
+			onSuccess: callbackFn
+		};
+		
+	    if (sceneController) {
+			return sceneController.serviceRequest(MessagingMojoService.identifier, serviceRequestParams, keepSubscribed);
+		} else {	
+			return new Mojo.Service.Request(MessagingMojoService.identifier, serviceRequestParams, keepSubscribed);
+		}   		
+ 	},
+	
+	getBuddyListCount: function(sceneController, filter, callback) {
+		var params = {};
+		if(filter) {
+			params.filter = filter;
+		}
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'getBuddyListCount',
+			parameters: params,
+			onSuccess: callback
+		});
+	},	
+	
+	isOfflineGroupCollapsed: function(sceneController, callback) {
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'isOfflineGroupCollapsed',
+			onSuccess: callback
+		});		
+	},
+	
+	expandGroup: function(sceneController,groupNameLowerCase, offlineGroup) {
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'expandGroup',
+			parameters: {groupNameLowerCase:groupNameLowerCase, offlineGroup:offlineGroup}
+		});		
+	},
+	
+	collapseGroup: function(sceneController,groupNameLowerCase, offlineGroup) {
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'collapseGroup',
+			parameters: {groupNameLowerCase:groupNameLowerCase, offlineGroup:offlineGroup}
+		});		
+	},	
+
+ 	getConversationList: function(sceneController, filter, callback, isSubscribed, subscriberId, reset, offset, limit) {
+		var keepSubscribed = false;
+		var params = {};
+		var callbackFn = callback;
+		if (isSubscribed) {
+			if (!subscriberId) {
+				keepSubscribed = true;
+				params.subscribe = true;
+			} else {
+				params.subscriberId = subscriberId;
+				callbackFn = function(result){
+				};
+			}
+		}
+		if(filter)
+			params.filter = filter;
+		
+		if(offset != undefined)
+			params.offset = offset;
+		if(limit != undefined)
+			params.limit = limit;
+		if(reset)
+			params.reset = reset;
+				
+		var serviceRequestParams = {
+			method: 'getConversationList',
+			parameters: params,
+			onSuccess: callbackFn
+		};
+		
+	    if (sceneController) {
+			return sceneController.serviceRequest(MessagingMojoService.identifier, serviceRequestParams, keepSubscribed);
+		} else {	
+			return new Mojo.Service.Request(MessagingMojoService.identifier, serviceRequestParams, keepSubscribed);
+		}   		
+ 	},
+	
+	getConversationListCount: function(sceneController, filter, callback) {
+		var params = {};
+		if(filter) {
+			params.filter = filter;
+		}		
+
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'getConversationCount',
+			parameters: params,
+			onSuccess: callback
+		});
+	},
+	/*
+	getMe: function(sceneController, callback) {
+		return callback(MockData.buddyMeData); // TODO: unmock this
+	},
+	*/
+	
+	getChat: function(sceneController, chatThreadId, callback, subscriberId, offset, limit) {
+		var keepSubscribed = false;
+		var params = {chatThreadId: chatThreadId};
+		var callbackFn = callback;
+		if (!subscriberId) {
+			keepSubscribed = true;
+			params.subscribe = true;
+		} else {
+			params.subscriberId = subscriberId;
+			callbackFn = function(result){};
+		}
+		if(offset != undefined)
+			params.offset = offset;
+		if(limit != undefined)
+			params.limit = limit;    
+    
+		return sceneController.serviceRequest(MessagingMojoService.identifier, {
+			method: 'messageList',
+			parameters: params,
+			onSuccess: callbackFn
+		}, keepSubscribed);
+	},
+  
+  getChatNew: function(sceneController, chatThreadId, callback, reset, subscriberId, cacheSize, offset, limit) {
+    var params = {chatThreadId: chatThreadId};
+	var keepSubscribed = false;
+    var callbackFn = callback;
+    if (!subscriberId) {
+      params.subscribe = true;
+	  keepSubscribed = true;
+	  if(cacheSize)
+	  	params.cacheSize = cacheSize;
+    } else {
+      params.subscriberId = subscriberId;
+      callbackFn = function(result){};
+    }
+    if(offset != undefined)
+      params.offset = offset;
+    if(limit != undefined)
+      params.limit = limit;    
+	  
+	if(reset != undefined) {
+		params.reset = reset;
+	}
+    
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'newMessageList',
+      parameters: params,
+      onSuccess: callbackFn
+    }, keepSubscribed);
+  },	
+	
+  getChatCount: function(sceneController, chatThreadId, callback, reset) {
+  	var params = {chatThreadId: chatThreadId};
+	if(reset != undefined) {
+		params.reset = reset;
+	}  	
+	
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'newMessageListCount',
+      parameters: params,
+      onSuccess: callback
+    });
+  },	
+	
+  setPresence: function(sceneController, newPresence, onFailure) {
+     var serviceRequestParams = {
+      method: 'setMyAvailability',
+      parameters: {availability: newPresence},
+	  onFailure: onFailure
+    };
+    if(sceneController)
+      return sceneController.serviceRequest(MessagingMojoService.identifier,serviceRequestParams);
+    else
+      return new Mojo.Service.Request(MessagingMojoService.identifier,serviceRequestParams);    
+  },
+  
+  setCustomMessage: function(sceneController, newMessage){
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'setMyCustomMessage',
+      parameters: {
+        customMessage: newMessage
+      }
+    });
+  },
+  
+  getChatDetails : function(sceneController, chatThreadId, callback){
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getChatThread',
+      parameters: {
+        chatThreadId: chatThreadId,
+        subscribe:true
+      },
+	  onSuccess : callback
+    }, true);
+  },
+  
+  /**
+   * Send a message from the chat view
+   * 
+   * @param {Object} sceneController
+   * @param {Object} params = {
+   *   chatThreadId:, 
+   *   recipient:, 
+   *   summary:,        
+   *   messageText:,
+   *   attachment:,
+   *   serviceName          
+   *   }
+   */
+  sendMessageFromChat : function(sceneController, params) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'sendMessageFromChat',
+      parameters: params
+    });
+  },
+
+  saveClass0Message : function(sceneController, params) {
+  	var url = MessagingMojoService.identifier + '/sms' ;
+    return sceneController.serviceRequest(url, {
+      method: 'saveClass0Message',
+      parameters: params
+    });
+  },
+
+  /**
+   * Send a message from the compose view
+   * 
+   * @param {Object} sceneController
+   * @param {Object} params = {
+   *   recipientJSONArray:, // array of recipients (generated by the addressing widget)
+   *   summary:, 
+   *   messageText:,        
+   *   attachment:,         // full system path to attachment
+   *   onSuccess:           // onSuccess callback
+   *   }
+   */
+  sendMessageFromCompose: function(sceneController, params) {   
+    params = $H(params);
+    var onSuccess = params.get('onSuccess');
+    // strip out data that does not need to go across the bus
+    params.unset('onSuccess');
+      
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'sendMessageFromCompose',
+      parameters: params,
+      onSuccess: onSuccess
+    });      
+  },
+
+  // this service method does not use the scene controller because it needs to 
+  // survive after the chatview has been popped and cleanup() has been called
+  setChatToReadAndSetDraftText: function(sceneController, chatThreadId, draftText, deleteTransientMessages) {
+    return new Mojo.Service.Request(MessagingMojoService.identifier, {
+      method: 'setChatToReadAndSetDraftText',
+      parameters: {
+        chatThreadId: chatThreadId,
+        draftText: draftText,
+		deleteTransientMessages: deleteTransientMessages
+      }
+    });    
+  },
+  
+  /*
+  getPreferences: function(sceneController,callback) {
+    callback(MockData.preferencesData);
+  },
+  */
+ /*
+  * Returns the list of my set up accounts
+  */
+
+  getIMAccounts: function(params) {
+  	var requestParams =  {
+	  method: 'getAccountList',
+      parameters: {subscribe: true},
+      onSuccess: params.onSuccess,
+	  onFailure: params.onFailure
+	}
+	if(params.sceneController)
+    	return params.sceneController.serviceRequest(MessagingMojoService.identifier, requestParams, true);
+	else
+		return new Mojo.Service.Request(MessagingMojoService.identifier, requestParams, true);
+  },
+  
+  setIMAccountEnabled: function(sceneController,isEnabled,callback) {
+    return;
+  },
+  /*
+  getMyPhoneNumber: function(sceneController,callback) {
+    return callback(MockData.myPhoneNumber);
+  },
+  */
+  /*
+   * Returns the list of available IM Transports
+   */
+  getAccountTypes : function(sceneController, callback){
+  	var params = {
+      method: 'getAllAccountTypesForIM',
+      parameters: {},
+      onSuccess: callback
+	}
+	if(sceneController)
+    	return sceneController.serviceRequest(MessagingMojoService.identifier, params);
+	else
+		return new Mojo.Service.Request(MessagingMojoService.identifier, params);
+  },
+  /*
+   * Creates an IMAccount
+   * accountData = {
+   *   username : 'myusername',
+   *   password : 'mypass'
+   * }
+   */
+  createIMAccount : function(sceneController, accountData, onSuccess, onFailure) {
+  	accountData.createRelatedAccounts = true;
+    accountData.subscribe = true;
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'createAccountAndLogin',
+      parameters: accountData,
+      onSuccess: onSuccess,
+      onFailure: onFailure
+    }, true);   
+  },
+  
+  updateAccountPassword : function(sceneController, accountId, password, onSuccess, onFailure) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'updateAccountPassword',
+      parameters: {accountId: accountId, password: password, subscribe: true},
+      onSuccess: onSuccess,
+      onFailure: onFailure
+    }, true);   
+  },
+    
+  
+  getOwnPhoneNumber : function(sceneController, callback) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getOwnPhoneNumber',
+      onSuccess: callback
+    });   
+  },
+  
+  getTransportTypes : function(sceneController, personId, callback){
+  	return sceneController.serviceRequest(MessagingMojoService.contactsIdentifier,{
+      method: 'listContactPoints',
+      onSuccess: callback,
+      parameters : {
+        id : personId,
+        includePhones: true,
+        includeIMs: true
+      }
+    });
+  },
+  
+  reverseLookup : function(sceneController, address, onSuccess, onFailure){
+  	return sceneController.serviceRequest(MessagingMojoService.contactsIdentifier,{
+      method: 'reverseLookup',
+      onSuccess: onSuccess,
+	  onFailure: onFailure,
+      parameters : {
+        value: address
+      }
+    });
+  },  
+  
+  observeIMAddress: function(sceneController, address, serviceName, callback) {
+ 	  return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'observeIMAddress',
+      onSuccess: callback,
+      parameters : {
+        address : address,
+        serviceName : serviceName, 
+        subscribe: true
+      }
+    }, true);    
+  },
+  
+  // This method will send the service request via the sceneController if it is specified
+  // Otherwise it will send the request with Mojo.Service.Request (this is used for notifications)
+  getMMSParts : function(sceneController, messageId, callback){
+    var serviceRequestParams = {
+      method: 'getAttachments',
+      onSuccess: callback,
+      parameters : {
+        messageId : messageId
+      }
+    };
+    if(sceneController)
+      return sceneController.serviceRequest(MessagingMojoService.identifier,serviceRequestParams);
+    else
+      return new Mojo.Service.Request(MessagingMojoService.identifier,serviceRequestParams);
+  },
+  
+  getMmsMessage : function(sceneController, messagePath, callback) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'getMmsMessage',
+      onSuccess: callback,
+      parameters : {
+        messagePath : messagePath
+      }
+    });    
+  },  
+  
+  reFetch : function(sceneController, messageId) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'reFetch',
+      parameters : {
+        messageId : messageId
+      }
+    }); 	
+  },
+  
+  saveAttachment : function(sceneController, path, onSuccess, onFailure) {
+	return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'saveAttachment',
+	  onSuccess: onSuccess,
+	  onFailure: onFailure,
+      parameters : {
+        uri : path
+      }	  
+    });
+  },
+  
+  getChatThreadId : function(contactId, contactPointId, callback) {
+      return new Mojo.Service.Request(MessagingMojoService.identifier, {
+		method: 'getChatId', // another example, if not done in the URL
+        parameters : {
+          personId : contactId,
+		  contactPointId : contactPointId
+        },
+		onSuccess: callback
+	});   
+  },
+
+	fixChatWithBadPersonId: function(sceneController, chatThreadId, personId, serviceName, chatAddress, callback) {
+		return sceneController.serviceRequest(MessagingMojoService.identifier,{
+			method: 'fixChatWithBadPersonId',
+			parameters: {
+				chatThreadId: chatThreadId,
+				personId: personId,
+				serviceName: serviceName,
+				chatAddress: chatAddress
+			},
+			onSuccess: callback
+		});
+	},
+
+  createChatForAddress : function(address, serviceName, callback) {
+      return new Mojo.Service.Request(MessagingMojoService.identifier, {
+		method: 'createChatForAddress',
+        parameters : {
+          address: address,
+		  serviceName: serviceName
+        },
+		onSuccess: callback
+	});   
+  }, 
+
+  launchAddContact : function(sceneController, type, address) {
+    var params = {
+  		launchType:"addToContacts",
+  		points:[{
+  			type: type,
+  			value: address
+  		}]
+	  };
+	  return sceneController.serviceRequest('palm://com.palm.applicationManager',{
+      method: 'launch',
+      parameters : {
+	  	target : "opencontact://" + Object.toJSON(params)
+
+      }
+    });    
+  },  
+  
+  getTestMMSImagePath : function(sceneController,image,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'getTestMMSImagePath',
+      parameters: {image:image},
+      onSuccess: callback
+    });        
+  },
+  
+  removeAccount: function(sceneController,accountId,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'removeAccount',
+      parameters: {
+        accountId:accountId
+      },
+      onSuccess: callback
+    });      
+  },
+  
+  getInvitationsFromChat: function(sceneController,chatThreadId,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'getInvitationsFromChat',
+      parameters: {
+        chatThreadId:chatThreadId
+      },
+      onSuccess: callback
+    });      
+  },
+  
+  getGroupsForInvitation: function(sceneController,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'getGroupsForInvitation',
+      onSuccess: callback
+    });     
+  },
+  
+  acceptBuddy: function(sceneController,chatThreadId,messageId,address,groupId,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'acceptBuddy',
+      parameters: {
+        chatThreadId:chatThreadId,
+        messageId:messageId,
+        groupId:groupId,
+        address:address
+      },
+      onSuccess: callback
+    });     
+  },
+  
+  rejectBuddy: function(sceneController,chatThreadId,messageId,address,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'rejectBuddy',
+      parameters: {
+        chatThreadId:chatThreadId,
+        messageId:messageId,
+        address:address
+      },
+      onSuccess: callback
+    });     
+  },
+  
+  blockBuddy: function(sceneController,chatThreadId,block,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'blockBuddy',
+      parameters: {
+        chatThreadId:chatThreadId,
+	  	block:block
+      },
+      onSuccess: callback
+    });     
+  },
+  
+  deleteChatThread: function(sceneController,chatThreadId) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'deleteChatThread',
+      parameters: {chatThreadId:chatThreadId}
+    });     
+  },
+  
+  deleteMessage: function(sceneController,messageId) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'deleteMessage',
+      parameters: {messageId:messageId}
+    });     
+  },
+  
+  getNotificationPreferences: function(sceneController, callback){
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'getNotificationPreferences',
+      onSuccess: callback
+    });
+  },
+  
+  setNotificationPreferences: function(sceneController, params, callback) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'setNotificationPreferences',
+      parameters: params,
+      onSuccess: callback
+    });
+  },
+  
+  setIsHistoryViewSelected: function(sceneController,isHistoryViewSelected) {
+  	var params = {
+      method: 'setIsHistoryViewSelected',
+      parameters: {isHistoryViewSelected: isHistoryViewSelected}
+    };
+    if(sceneController)
+      return sceneController.serviceRequest(MessagingMojoService.identifier,params);
+    else
+      return new Mojo.Service.Request(MessagingMojoService.identifier,params);    
+  },
+  
+  setLastAvailabilitySelection: function(sceneController,availabilitySelection) {
+    return sceneController.serviceRequest(MessagingMojoService.identifier, {
+      method: 'setLastAvailabilitySelection',
+      parameters: {availabilitySelection: availabilitySelection}
+    });    
+  },  
+  
+	getMessageDetails: function(sceneController, messageId, callback) {
+		return sceneController.serviceRequest(MessagingMojoService.identifierSMS,{
+			method: 'getMessageDetails',
+			parameters: {messageId:messageId},
+			onSuccess: callback
+		});   	
+	},
+
+	downloadDelayedMessage: function(sceneController, messageId, callback, errorHandler) {
+		Mojo.Log.info("downloadDelayedMessage %i", messageId);
+		sceneController.serviceRequest(MessagingMojoService.identifier,{
+			method: 'downloadDelayedMessage',
+			parameters: {messageId:messageId},
+			onSuccess: callback,
+			onFailure: errorHandler
+		});   	
+	},
+
+  getMessageErrorInfo: function(sceneController,messageId,flags,callback) {
+   return sceneController.serviceRequest(MessagingMojoService.identifier,{
+      method: 'getMessageErrorInfo',
+      parameters: {messageId:messageId, flags:flags},
+      onSuccess: callback
+    });      
+  },
+
+	getLockStatus: function(sceneController, callback) {
+		return sceneController.serviceRequest(MessagingMojoService.systemManagerIdentifier,{
+			method: 'getLockStatus',
+			parameters: {subscribe: true},
+			onSuccess: callback
+		});
+	},
+
+  /************************
+   * Methods for IOT/GCF
+   ************************/
+  
+	getSMSCAddressAndEmailGateway: function(onSuccess, sceneController) {
+		var url = MessagingMojoService.identifier + '/sms' ;
+  		return sceneController.serviceRequest(url, {
+  		method: 'getSMSCAddressAndEmailGateway',
+  		onSuccess: onSuccess
+  	});
+  },  
+  
+  getMMSSettings: function(onSuccess, sceneController) {
+		var url = MessagingMojoService.identifier + '/mms' ;
+  		return sceneController.serviceRequest(url, {
+  		  method: 'getMMSSettings',
+  		  onSuccess: onSuccess
+	    });
+	},
+	
+	setMMSSettings: function(mmsc, proxy, useSettings, sceneController) {
+		var url = MessagingMojoService.identifier + '/mms' ;
+	  	return sceneController.serviceRequest(url, {
+		  method: 'setMMSSettings',
+		  parameters: {mmsc:mmsc, proxy:proxy, useMmscProxyPrefs:useSettings}
+	  });
+	},
+  
+	setSMSCAddressAndEmailGateway: function(address, gateway, sceneController) {
+		var url = MessagingMojoService.identifier + '/sms' ;
+	  	return sceneController.serviceRequest(url, {
+		  method: 'setSMSCAddressAndEmailGateway',
+		  parameters: {smscAddr:address, emailGateway: gateway}
+	  });
+	}
+};

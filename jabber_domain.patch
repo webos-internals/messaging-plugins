@@ -1,0 +1,13 @@
+diff --git a/Compiler Source Files/pidgin-2.6.2/libpurple/protocols/jabber/roster.c b/Compiler Source Files/pidgin-2.6.2/libpurple/protocols/jabber/roster.c
+index e13df65..39f86c8 100644
+--- a/Compiler Source Files/pidgin-2.6.2/libpurple/protocols/jabber/roster.c 
++++ b/Compiler Source Files/pidgin-2.6.2/libpurple/protocols/jabber/roster.c 
+@@ -206,6 +206,9 @@ void jabber_roster_parse(JabberStream *js, const char *from,
+if(!jid)
+continue;
+
++ if((strchr(jid, '@')) == NULL)
++ continue;
++
+if(!(jb = jabber_buddy_find(js, jid, TRUE)))
+continue;

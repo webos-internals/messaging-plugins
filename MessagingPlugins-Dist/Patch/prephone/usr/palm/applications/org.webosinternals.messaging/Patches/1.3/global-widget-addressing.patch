@@ -20,7 +20,7 @@
 +  background: url(../images/accounts/irc-32x32.png) center left no-repeat;
 +}
 +
-+.addressing-widget .icon.sametime {                    
++.addressing-widget .icon.lcs {                    
 +  background: url(../images/accounts/sametime-32x32.png) center left no-repeat;
 +}
 +

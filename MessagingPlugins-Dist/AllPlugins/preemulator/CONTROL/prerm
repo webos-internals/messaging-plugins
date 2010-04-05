@@ -17,6 +17,9 @@ sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin Groupwise
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin QQ
 sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin XFire
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin facebook
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin gadu
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR RemovePlugin myspace
 
 #Remove files from main source
 rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libnovell.so
@@ -33,6 +36,12 @@ rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple
 rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.la
 rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.so
 rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libfacebook.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libfacebook.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.la
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmyspace.so
+rm -f $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmyspace.la
 
 #Remove Jabber sym links
 rm -f /usr/lib/libjabber.so

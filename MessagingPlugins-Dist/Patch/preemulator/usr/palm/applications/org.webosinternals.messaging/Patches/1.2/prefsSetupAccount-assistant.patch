@@ -56,7 +56,7 @@
  			}
 +
 +			// Special case for Server Defined Plugins - add extra content below password field
-+			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs")  || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +				var ServerDetails = Mojo.View.render({object:{}, template:"prefsSetupAccount/ServerDetails"});				
 +				this.controller.get('ServerDetails').update(ServerDetails);
 +
@@ -78,7 +78,7 @@
  			this.saveAccountFn = this.saveAccount.bind(this);
 +
 +			// Special case for Server Defined Plugins - add extra content below password field
-+			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +				var ServerDetails = Mojo.View.render({object:{}, template:"prefsSetupAccount/ServerDetails"});				
 +				this.controller.get('ServerDetails').update(ServerDetails);
 +
@@ -172,7 +172,7 @@
  		}
 +		
 +		// Special case for Server Defined Plugins
-+		if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim"))
++		if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim"))
 +		{
 +			Mojo.Event.stopListening(this.controller.get('TLSToggle'),Mojo.Event.propertyChange,this.TLSToggleChanged);
 +		}
@@ -195,7 +195,7 @@
 +        statusMessageElement.update($L('Please enter a password'));
 +        statusMessageWrapper.show();
 +        hasEmptyField = true;
-+	  } else if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++	  } else if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +		    if(this.Messaging.transports.getTransportByName(this.params.domain).className != "sipe"){
 +				if(!accountDetails.port) {
 +					statusMessageElement.update($L('Please enter a port'));
@@ -228,7 +228,7 @@
        this.createAccountRequest = MessagingMojoService.createIMAccount(this.controller, accountDetails,this.accountSaved.bind(this),this.createLoginFailed.bind(this));
 +      
 +      //Add new server, port and TLS details
-+      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +            //setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS)
 +
 +	     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
@@ -251,7 +251,7 @@
 -		this.popScene();
 -	  	return;
 +
-+	  if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++	  if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +		  if (this.passwordModel.original === PrefsSetupAccountAssistant.kDummyPassword && this.serverModel.original === this.params.server && this.portModel.original === this.params.port && this.tModel.value === this.params.tls) {
 +		  	Mojo.Log.info("updateAccount doing noop b/c password hasn't changed");
 +			this.popScene();
@@ -277,7 +277,7 @@
 -	  	statusMessageElement.update('');
 -	    statusMessageWrapper.hide();
 -	  }	  
-+	  } else if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++	  } else if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +		if(this.Messaging.transports.getTransportByName(this.params.domain).className != "sipe"){
 +				if(!accountDetails.port) {
 +					statusMessageElement.update($L('Please enter a port'));
@@ -307,7 +307,7 @@
        this.updateAccountRequest = MessagingMojoService.updateAccountPassword(this.controller, this.params.id,accountDetails.password,this.accountUpdated.bind(this),this.updateLoginFailed.bind(this));
 +      
 +      //Update server, port and TLS details
-+      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++      if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +            //setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS)
 +	     if (this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe"){
 +	            MessagingMojoService.setserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className,accountDetails.server,accountDetails.port,this.tModel.value,accountDetails.login);
@@ -363,7 +363,7 @@
 +        MessagingMojoService.removeAccount(this.controller, this.params.id,this.handleRemoveAccountSuccess.bind(this));
 +        
 +        //Remove server, port and TLS config
-+        if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "sametime") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
++        if((this.Messaging.transports.getTransportByName(this.params.domain).className == "sipe") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "lcs") || (this.Messaging.transports.getTransportByName(this.params.domain).className == "gwim")) {
 +            //clearserver: function(sceneController,serviceName)
 +            MessagingMojoService.clearserver(this.controller, this.Messaging.transports.getTransportByName(this.params.domain).className);
 +        }
