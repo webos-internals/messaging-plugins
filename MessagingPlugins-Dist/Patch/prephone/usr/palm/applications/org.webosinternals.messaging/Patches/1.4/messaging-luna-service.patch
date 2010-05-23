@@ -1,5 +1,5 @@
---- messaging-luna-service.js	Wed Dec  9 14:38:34 2009
-+++ messaging-luna-service.new	Mon Mar  1 00:35:51 2010
+--- messaging-luna-service.js	Wed Dec  9 14:38:33 2009
++++ messaging-luna-service.new	Tue Apr 27 04:51:04 2010
 @@ -7,6 +7,7 @@
  	displayIdentifier: 'palm://com.palm.display/control',
  	telephonyIdentifier: 'palm://com.palm.telephony',
@@ -8,10 +8,11 @@
  	
  	launchMessaging: function(sceneController, params){
  		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
-@@ -1000,5 +1001,81 @@
+@@ -1000,5 +1001,87 @@
  		  method: 'setSMSCAddressAndEmailGateway',
  		  parameters: {smscAddr:address, emailGateway: gateway}
  	  });
+-	}
 +	},
 +  /************************
 +   * Methods for LibpurpleAdapter
@@ -88,6 +89,12 @@
 +	      method: 'EnableContactsReadWrite',
 +	      parameters: {PluginName:PluginName}
 +		});  
- 	}
++	},
++	refreshBuddyList: function(sceneController,serviceName,username) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'getBuddyList',
++	      parameters: {serviceName:serviceName, username:username, subscribe:true}
++		});  
++	},
  };
 \ No newline at end of file

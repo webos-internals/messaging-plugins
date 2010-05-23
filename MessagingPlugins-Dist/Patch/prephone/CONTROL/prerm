@@ -89,11 +89,21 @@ $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/view
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch || CheckPatch prefsAccountTypeList-assistant >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch || CheckPatch prefsSetupAccount-assistant >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch || CheckPatch compose-assistant >> $PATCH_LOG
+
+if (grep  -i "pv_notification_repeat_interval_value" /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html) ; then
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.repeatpatch || CheckPatch listview-assistant >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-scene.repeatpatch || CheckPatch prefsAccountSummary-scene >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.repeatpatch || CheckPatch prefsAccountSummary-assistant >> $PATCH_LOG
+else
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.patch || CheckPatch listview-assistant >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-scene.patch || CheckPatch prefsAccountSummary-scene >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant >> $PATCH_LOG
+fi
+
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/stylesheets/messaging.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging.patch || CheckPatch messaging >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-iconography.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch || CheckPatch global-iconography >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-widget-addressing.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch || CheckPatch global-widget-addressing >> $PATCH_LOG
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/accountsRow.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/accountsRow.patch || CheckPatch accountsRow >> $PATCH_LOG
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-scene.patch || CheckPatch prefsAccountSummary-scene >> $PATCH_LOG
 
 if [ -f /usr/palm/applications/com.palm.app.messaging/resources/de_de/views/prefsSetupAccount/prefsSetupAccount-scene.html ]; then
 	#Other languages
@@ -114,6 +124,10 @@ if [ -f /usr/palm/applications/com.palm.app.messaging/resources/de_de/views/pref
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/fr_fr/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/fr_fr_prefsAccountSummary-scene.patch || CheckPatch fr_fr_prefsAccountSummary-scene >> $PATCH_LOG
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/resources/it_it/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/it_it_prefsAccountSummary-scene.patch || CheckPatch it_it_prefsAccountSummary-scene >> $PATCH_LOG
 fi
+
+#Contacts App
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.contacts/app/models/edit-rules.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/edit-rules.patch || CheckPatch edit-rules >> $PATCH_LOG
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.contacts/app/models/im-model.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/im-model.patch || CheckPatch im-model >> $PATCH_LOG
 
 #Cleanup Patching Failures
 rm /usr/palm/applications/com.palm.app.messaging/app/models/*.rej
@@ -166,6 +180,7 @@ rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/qq*.png
 rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/xfire*.png
 rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/gadu*.png
 rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/accounts/myspace*.png
+rm -f /usr/palm/frameworks/mojo/submissions/$SUBVER/images/menu-icon-refresh.png
 rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/OfficeCommunicator.html
 rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/ServerDetails.html
 rm -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/Alias.html

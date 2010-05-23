@@ -1,9 +1,15 @@
---- global-iconography.css	Mon Jan 18 01:46:14 2010
-+++ global-iconography.new	Mon Jan 18 01:50:05 2010
-@@ -88,6 +88,54 @@
+--- global-iconography.css	Thu Jul  2 18:06:28 2009
++++ global-iconography.new	Sat May  1 22:50:16 2010
+@@ -88,6 +88,60 @@
    float: left;
  }
  
++.palm-account-icon.gadu {
++  background: url(../images/accounts/gadu-32x32.png) center center no-repeat;
++}
++.palm-account-icon.gadu.medium {
++  background: url(../images/accounts/gadu-48x48.png) center center no-repeat;
++}
 +.palm-account-icon.xfire {
 +  background: url(../images/accounts/xfire-32x32.png) center center no-repeat;
 +}

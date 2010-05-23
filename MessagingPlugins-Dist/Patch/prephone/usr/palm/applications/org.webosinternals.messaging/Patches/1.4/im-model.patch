@@ -1,0 +1,84 @@
+--- im-model.js	Wed Oct  7 12:07:25 2009
++++ im-model.new	Thu Apr 29 06:32:42 2010
+@@ -44,9 +44,9 @@
+     label: $L('Google'),
+     command: 'gmail'
+ }, {
+-    value: 'msn',
+-    label: $L('MSN'),
+-    command: 'msn'
++    value: 'live',
++    label: $L('Live'),
++    command: 'live'
+ }, {
+     value: 'jabber',
+     label: $L('Jabber'),
+@@ -60,18 +60,42 @@
+     label: $L('IRC'),
+     command: 'irc'
+ }, {
+-    value: 'qq',
++    value: 'qqim',
+     label: $L('QQ'),
+-    command: 'qq'
++    command: 'qqim'
+ }, {
+     value: 'yjp',
+     label: $L('Y! Japan'),
+     command: 'yjp'
+ }, {
+     value: 'lcs',
+-    label: $L('LCS'),
++    label: $L('Sametime'),
+     command: 'lcs'
+ }, {
++    value: 'sipe',
++    label: $L('Office Communicator'),
++    command: 'sipe'
++}, {
++    value: 'facebook',
++    label: $L('Facebook'),
++    command: 'facebook'
++}, {
++    value: 'xfire',
++    label: $L('XFire'),
++    command: 'xfire'
++}, {
++    value: 'myspace',
++    label: $L('MySpace'),
++    command: 'myspace'
++}, {
++    value: 'gadu',
++    label: $L('Gadu Gadu'),
++    command: 'gadu'
++}, {
++    value: 'gwim',
++    label: $L('Groupwise'),
++    command: 'gwim'
++}, {
+     value: 'skype',
+     label: $L('Skype'),
+     command: 'skype'
+@@ -81,13 +105,19 @@
+     'aol': 'AIM',
+     'yahoo': 'Yahoo!',
+     'gmail': 'Google',
+-    'msn': 'MSN',
++    'live': 'MSN',
+     'jabber': 'Jabber',
+     'icq': 'ICQ',
+     'irc': 'IRC',
+-    'qq': 'QQ',
++    'qqim': 'QQ',
+     'skype': 'Skype',
+     'yjp': 'Y! Japan',
+-    'lcs': 'LCS',
++    'lcs': 'Sametime',
++    'sipe': 'Office Communicator',
++    'facebook': 'Facebook',
++    'xfire': 'XFire',
++    'myspace': 'MySpace',
++    'gadu': 'Gadu Gadu',
++    'gwim': 'Groupwise',
+     'noDomain': 'IM'
+ };

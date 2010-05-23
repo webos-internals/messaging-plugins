@@ -1,0 +1,13 @@
+--- messaging.css	Thu Jan 28 16:56:40 2010
++++ messaging.new	Sat May  1 22:54:22 2010
+@@ -367,6 +367,10 @@
+     background-image: url(../images/menu-icon-newchat.png);
+ }
+ 
++.palm-menu-icon.refresh {
++    background-image: url(../images/menu-icon-refresh.png);
++}
++
+ .status-and-direction.icon {
+ 	padding-top: 5px;
+ 	width:31px;

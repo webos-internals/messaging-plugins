@@ -1,9 +1,13 @@
---- global-widget-addressing.css	Mon Jan 18 01:46:14 2010
-+++ global-widget-addressing.new	Mon Jan 18 01:46:06 2010
-@@ -253,6 +253,46 @@
+--- global-widget-addressing.css	Sun Dec 13 12:41:36 2009
++++ global-widget-addressing.new	Sat May  1 22:49:56 2010
+@@ -259,6 +259,50 @@
  	margin: 0px 4px 0px 16px;
  }
  
++.addressing-widget .icon.gadu {                    
++  background: url(../images/accounts/gadu-32x32.png) center left no-repeat;
++}
++
 +.addressing-widget .icon.xfire {                    
 +  background: url(../images/accounts/xfire-32x32.png) center left no-repeat;
 +}

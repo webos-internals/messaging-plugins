@@ -184,6 +184,26 @@ else
 	sh /root/optware/i686g25/staging/bin/ipkg-build OfficeCommunicator/$BuildType
 }
 fi
+echo "Packing Office Communicator V2 Plugin..."
+if [ "$BuildType" = "prephone" ]
+then
+{
+	#Compile Pixi
+	cp OfficeCommunicatorV2/control.armv6 OfficeCommunicatorV2/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build OfficeCommunicatorV2/$BuildType
+	
+	#Compile Pre
+	cp OfficeCommunicatorV2/control.armv7 OfficeCommunicatorV2/prephone/CONTROL/control
+	sh /root/optware/i686g25/staging/bin/ipkg-build OfficeCommunicatorV2/$BuildType
+	
+	#Cleanup
+	rm -f OfficeCommunicatorV2/prephone/CONTROL/control
+}
+else
+{
+	sh /root/optware/i686g25/staging/bin/ipkg-build OfficeCommunicatorV2/$BuildType
+}
+fi
 
 #Package QQ plugin
 echo ""
