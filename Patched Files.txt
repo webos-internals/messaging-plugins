@@ -5,3 +5,8 @@
 /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js
 /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js
 /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js
+/usr/palm/applications/com.palm.app.messaging/stylesheets/messaging.css
+/usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-iconography.css
+/usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-widget-addressing.css
+
+Where $SUBVER is the latest version in "/usr/palm/frameworks/mojo/submissions"

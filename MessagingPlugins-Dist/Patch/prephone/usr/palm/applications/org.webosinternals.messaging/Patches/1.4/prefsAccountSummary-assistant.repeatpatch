@@ -1,5 +1,5 @@
---- prefsAccountSummary-assistant.js	Mon May  3 04:27:08 2010
-+++ prefsAccountSummary-assistant.new	Tue May  4 04:43:35 2010
+--- prefsAccountSummary-assistant.js	Fri Jul  2 22:11:54 2010
++++ prefsAccountSummary-assistant.new	Fri Jul  2 22:54:26 2010
 @@ -6,6 +6,7 @@
          this.Messaging = this.appController.Messaging;      
          this.params = params || {}
@@ -8,7 +8,7 @@
  		
  		this.handleAccountListTap = this.handleAccountListTap.bindAsEventListener(this);
  		this.handleAddAccountTap = this.handleAddAccountTap.bindAsEventListener(this);
-@@ -13,9 +14,61 @@
+@@ -13,10 +14,29 @@
  		this.notificationSoundToggleChanged = this.notificationSoundToggleChanged.bindAsEventListener(this);
  		this.chooseNotificationRingtone = this.chooseNotificationRingtone.bindAsEventListener(this);
  		this.autoDownloadToggleChanged = this.autoDownloadToggleChanged.bindAsEventListener(this);
@@ -34,61 +34,31 @@
      },
   
      setup: function(){
-+		//get notification repeat interval and max repeat values from cookie
-+		this.notificationCookie = new Mojo.Model.Cookie("com.palm.app.messaging.notificationrepeat");
-+
-+		if (this.notificationCookie) 
-+		{
-+			var notificationCookie = this.notificationCookie.get();
-+
-+			if (notificationCookie) 
-+			{			
-+				if(notificationCookie.notificationRepeatInterval)
-+				{
-+					this.notificationRepeatInterval = notificationCookie.notificationRepeatInterval;
-+				}
-+				else
-+				{
-+					//set default value to 2 minutes
-+					this.notificationRepeatInterval = '2';
-+				}
-+				
-+				if(notificationCookie.notificationMaxRepeat)
-+				{
-+					this.notificationMaxRepeat = notificationCookie.notificationMaxRepeat;
-+				}
-+				else
-+				{
-+					//set default value to unlimited
-+					this.notificationMaxRepeat = '99999';
-+				}
-+			}
-+		}
-+		
-+		this.renderNotificationRepeatValues(this.getCurrentNotificationRepeatIntervalString(), this.getCurrentNotificationMaxRepeatString());
-+		
-       this.preferencesAccountsModel = {items: []};
- 	  this.controller.setupWidget('preferences-accounts', {itemTemplate:'prefsAccountSummary/accountsRow'}, this.preferencesAccountsModel);
+-		//get notification repeat interval and max repeat values from cookie
++	//get notification repeat interval and max repeat values from cookie
+ 		this.notificationCookie = new Mojo.Model.Cookie("com.palm.app.messaging.notificationrepeat");
  
-@@ -35,9 +88,69 @@
+ 		if (this.notificationCookie) 
+@@ -68,16 +88,60 @@
        this.controller.listen('addAccountButton',Mojo.Event.tap, this.handleAddAccountTap);   
     
        this.controller.listen('currentringtonerow',Mojo.Event.tap, this.chooseNotificationRingtone);
-+	  
-+		//repeat notification handlers
-+		this.notificationRepeatIntervalClickHandler = this.handleNotificationRepeatIntervalClick.bindAsEventListener(this);
-+		this.controller.get('pv_notification_repeat_interval').observe('mojo-tap', this.notificationRepeatIntervalClickHandler);
-+		this.notificationMaxRepeatClickHandler = this.handleNotificationMaxRepeatClick.bindAsEventListener(this);
-+		this.controller.get('pv_notification_max_repeat').observe('mojo-tap', this.notificationMaxRepeatClickHandler);
-+
+-	  
++	  	  
+ 		//repeat notification handlers
+ 		this.notificationRepeatIntervalClickHandler = this.handleNotificationRepeatIntervalClick.bindAsEventListener(this);
+ 		this.controller.get('pv_notification_repeat_interval').observe('mojo-tap', this.notificationRepeatIntervalClickHandler);
+ 		this.notificationMaxRepeatClickHandler = this.handleNotificationMaxRepeatClick.bindAsEventListener(this);
+ 		this.controller.get('pv_notification_max_repeat').observe('mojo-tap', this.notificationMaxRepeatClickHandler);
++		
 +	  //Password Dialog
 +	  this.controller.setupWidget('password', this.passwordAttributes, this.passwordAttributesmodel);
 +	  
 +	  //Bad Cert Setting
 +      this.controller.setupWidget('BadCertToggle', this.badcertcattr, this.badcertModel);
 +	  MessagingMojoService.getbadcertsetting(this.getBadCertSetting.bind(this),this.controller);
-+     },
-+ 	
+     },
+ 	
 +    getBadCertSetting: function(data){
 +		this.params.BadCertSetting = data.Setting;
 +
@@ -102,9 +72,8 @@
 +			  this.badcertModel.value = false;
 +			  this.controller.modelChanged(this.badcertModel);
 +		}
-     },
- 	
--	cleanup: function() {
++    },
++	
 +	//Password Dialog
 +	passwordAttributes: {
 +		textReplacement: false,
@@ -127,32 +96,24 @@
 +		});
 +	},
 +	
-+ 	cleanup: function() {
-+		
-+		//save notification repeat preferences
-+		if (this.notificationCookie)
-+		{
-+			this.notificationCookie.put({
-+										notificationRepeatInterval: this.notificationRepeatInterval,
-+										notificationMaxRepeat: this.notificationMaxRepeat
-+										});
-+		}
-+		
- 		this.controller.stopListening('preferences-accounts',Mojo.Event.listTap, this.handleAccountListTap);
- 		this.controller.stopListening('addAccountButton',Mojo.Event.tap, this.handleAddAccountTap);
- 		if (this.saveSMSPrefs) {
-@@ -46,14 +159,166 @@
-       this.controller.stopListening('notificationToggle',Mojo.Event.propertyChange,this.notificationToggleChanged);
+ 	cleanup: function() {
+-		
++	
+ 		//save notification repeat preferences
+ 		if (this.notificationCookie)
+ 		{
+@@ -96,16 +160,161 @@
        this.controller.stopListening('notificationSoundSelector',Mojo.Event.propertyChange,this.notificationSoundToggleChanged);		
        this.controller.stopListening('autoDownloadToggle',Mojo.Event.propertyChange,this.autoDownloadToggleChanged);
-+	  
-+		//stop observing notification repeat controls
-+		this.controller.get('pv_notification_repeat_interval').stopObserving('mojo-tap', this.notificationRepeatIntervalClickHandler);
-+		this.notificationRepeatIntervalClickHandler = undefined;
-+		this.controller.get('pv_notification_max_repeat').stopObserving('mojo-tap', this.notificationMaxRepeatClickHandler);
-+		this.notificationMaxRepeatClickHandler = undefined;
+ 	  
+-		//stop observing notification repeat controls
++	  //stop observing notification repeat controls
+ 		this.controller.get('pv_notification_repeat_interval').stopObserving('mojo-tap', this.notificationRepeatIntervalClickHandler);
+ 		this.notificationRepeatIntervalClickHandler = undefined;
+ 		this.controller.get('pv_notification_max_repeat').stopObserving('mojo-tap', this.notificationMaxRepeatClickHandler);
+ 		this.notificationMaxRepeatClickHandler = undefined;
 +		
-+		this.controller.stopListening('BadCertSelector',Mojo.Event.propertyChange,this.BadCertToggleChanged);
++	  this.controller.stopListening('BadCertSelector',Mojo.Event.propertyChange,this.BadCertToggleChanged);	
  	},
  
  	handleAccountListTap: function(e) {
@@ -164,8 +125,8 @@
 +			items: this.availabilities
 +		});
  	},
- 	
-+		getAvailability: function(accountitem){
++
++	getAvailability: function(accountitem){
 +		//Get Target Row
 +		var targetRow = this.controller.get(accountitem.originalEvent.target);
 +		if (!targetRow.hasClassName('accountRow')) {
@@ -302,17 +263,22 @@
 +			return;
 +		}
 +	},
-+	
+ 	
  	handleAddAccountTap: function() {
  		this.controller.stageController.pushScene('prefsAccountTypeList', this.params);
-+		this.controller.listen('BadCertToggle',Mojo.Event.propertyChange,this.BadCertToggleChanged);
- 	},
-     
-     autoSignonChange : function(prop){
-@@ -267,6 +532,16 @@
-         MessagingMojoService.setNotificationPreferences(this.controller,params);		
- 	},
+@@ -306,6 +515,7 @@
+ 		}
+ 	  }
+       this.controller.listen('autoDownloadToggle',Mojo.Event.propertyChange,this.autoDownloadToggleChanged);
++	  this.controller.listen('BadCertToggle',Mojo.Event.propertyChange,this.BadCertToggleChanged);
+     },
  	
+ 	notificationToggleChanged: function(event) {
+@@ -365,6 +575,16 @@
+ 	    Mojo.FilePicker.pickFile(params,this.controller.stageController);
+ 		//this.handleRingtoneSelect.bind(this, {"fullPath": "/media/internal/ringtones/Discreet.mp3", "name": "Discreet"}).delay(1);
+ 	},
++	
 +	BadCertToggleChanged: function(event) {
 +       	if(event.value == true)
 +		{
@@ -322,25 +288,32 @@
 +			MessagingMojoService.RejectBadCert(this.controller);
 +		}    		
 +	},
-+	
- 	autoDownloadToggleChanged: function(event) {
-         MessagingMojoService.setNotificationPreferences(this.controller, { isImmediateMmsRetrieval: event.value });		
+ 
+ 	handleRingtoneSelect: function(file) {
+ 		Mojo.Log.info("handleRingtoneSelect %j", file);
+@@ -375,18 +595,45 @@
+ 		MessagingMojoService.setNotificationPreferences(this.controller, params);
+ 		this.controller.get('currentringtone').update(file.name);
  	},
-@@ -327,11 +602,39 @@
+-	
+     renderAccountsList: function(data){   
+       var that = this;  
+       data.list.each(function(item){
  	  	var transport = that.Messaging.transports.getTransportByName(item.domain);
          item.serviceIcon = transport.largeIcon;    
  		item.accountDisplayName = transport.displayName;
-+		
-+		// make the service call that will populate this list
-+		MessagingMojoService.getstatus(that.renderAvailability.bind(that),item.domain,item.username)
-       });      
+-      });      
++
++      // make the service call that will populate this list
++      MessagingMojoService.getstatus(that.renderAvailability.bind(that),item.domain,item.username)
++      });
        
        this.preferencesAccountsModel.items = data.list;
 -      this.controller.modelChanged(this.preferencesAccountsModel, this);     
 +      this.controller.modelChanged(this.preferencesAccountsModel, this);
      },
-+	renderAvailability: function(data){
-+		this.preferencesAccountsModel.items.each(function(listitem){
++    renderAvailability: function(data){
++	this.preferencesAccountsModel.items.each(function(listitem){
 +		if (listitem.domain == data.serviceName)
 +			{
 +				listitem.serviceIconAvailability = 'images/status-offline-dark.png';
@@ -367,130 +340,13 @@
      editAccount: function(targetRow){
        // iterate through hidden inputs
        var inputHash = {};
-@@ -342,5 +645,208 @@
- 	  Object.extend(newParams,this.params);
-       Object.extend(newParams,inputHash);
-       this.controller.stageController.pushScene('prefsSetupAccount',newParams);
--    }
-+    },
-+	
-+	//notification repat settings section
-+	renderNotificationRepeatValues: function(notificationRepeatIntervalStr, notificationMaxRepeatStr) {
-+		//Mojo.Log.info('prefs-assistant: renderNotificationRepeatValues');
-+		var obj = {};
-+		
-+		// Notification Repeat Interval
-+		this.controller.get('pv_notification_repeat_interval_value').update(notificationRepeatIntervalStr);
-+		
-+		// Notification Max Repeat
-+		this.controller.get('pv_notification_max_repeat_value').update(notificationMaxRepeatStr);
-+	},
-+	
-+	getCurrentNotificationRepeatIntervalString: function() {
-+		var index = 0;
-+		for (index = 0; index < this.notificationRepeatIntervals.size(); index++) {
-+			if (this.notificationRepeatIntervals[index].command == this.notificationRepeatInterval)
-+				return this.notificationRepeatIntervals[index].label;
-+		}
-+	},
-+	
-+	getCurrentNotificationMaxRepeatString: function() {
-+		var index = 0;
-+		for (index = 0; index < this.notificationMaxRepeats.size(); index++) {
-+			if (this.notificationMaxRepeats[index].command == this.notificationMaxRepeat)
-+				return this.notificationMaxRepeats[index].label;
-+		}
-+	},
-+	
-+	notificationRepeatIntervalChoose: function(value) {
-+		//Mojo.Log.info('prefs-assistant: defaultNotificationRepeatIntervalChoose');
-+		
-+		if (value != undefined && value != this.notificationRepeatInterval) {
-+			this.notificationRepeatInterval = value;
-+			this.renderNotificationRepeatValues(this.getCurrentNotificationRepeatIntervalString(), this.getCurrentNotificationMaxRepeatString());
-+			this.dirty = true;
-+		}
-+	},
-+	
-+	handleNotificationRepeatIntervalClick: function(event) {
-+		//Mojo.Log.info('prefs-assistant: handleNotificationRepeatIntervalClick');
-+
-+		Event.stop(event);
-+		this.controller.popupSubmenu({
-+				onChoose: this.notificationRepeatIntervalChoose.bind(this),
-+				toggleCmd: this.notificationRepeatInterval,
-+				items: this.notificationRepeatIntervals
-+			});
-+	},
-+	
-+	notificationMaxRepeatChoose: function(value) {
-+		//Mojo.Log.info('prefs-assistant: notificationMaxRepeatChoose');
-+		
-+		if (value != undefined && value != this.notificationMaxRepeat) {
-+			this.notificationMaxRepeat = value;
-+			this.renderNotificationRepeatValues(this.getCurrentNotificationRepeatIntervalString(), this.getCurrentNotificationMaxRepeatString());
-+			this.dirty = true;
-+		}
-+	},
-+	
-+	handleNotificationMaxRepeatClick: function(event) {
-+		//Mojo.Log.info('prefs-assistant: handleNotificationMaxRepeatClick');
-+
-+		Event.stop(event);
-+		this.controller.popupSubmenu({
-+				onChoose: this.notificationMaxRepeatChoose.bind(this),
-+				toggleCmd: this.notificationMaxRepeat,
-+				items: this.notificationMaxRepeats
-+			});
-+	},
-+	
-+	notificationRepeatIntervals: [
-+		{label:$L('Disabled'), command:'0'},
-+		{label:$L('5 Seconds'), command:'.083'},
-+		{label:$L('10 Seconds'), command:'.167'},
-+		{label:$L('15 Seconds'), command:'.25'},
-+		{label:$L('20 Seconds'), command:'.333'},
-+		{label:$L('25 Seconds'), command:'.417'},
-+		{label:$L('30 Seconds'), command:'.5'},
-+		{label:$L('1 Minutes'), command:'1'},
-+		{label:$L('2 Minutes'), command:'2'},
-+		{label:$L('3 Minutes'), command:'3'},
-+		{label:$L('4 Minutes'), command:'4'},
-+		{label:$L('5 Minutes'), command:'5'},
-+		{label:$L('10 Minutes'), command:'10'},
-+		{label:$L('15 Minutes'), command:'15'}
-+	],
-+	
-+	notificationMaxRepeats: [
-+		{label:$L('Unlimited'), command:'99999'}, //this should be a large enough value to be conisdered unlimited for our purpose.
-+		{label:$L('1'), command:'1'},
-+		{label:$L('2'), command:'2'},
-+		{label:$L('3'), command:'3'},
-+		{label:$L('4'), command:'4'},
-+		{label:$L('5'), command:'5'},
-+		{label:$L('10'), command:'10'},
-+		{label:$L('15'), command:'15'},
-+		{label:$L('20'), command:'20'},
-+		{label:$L('25'), command:'25'},
-+		{label:$L('30'), command:'30'},
-+		{label:$L('35'), command:'35'},
-+		{label:$L('40'), command:'40'},
-+		{label:$L('45'), command:'45'},
-+		{label:$L('50'), command:'50'},
-+		{label:$L('55'), command:'55'},
-+		{label:$L('60'), command:'60'},
-+		{label:$L('65'), command:'65'},
-+		{label:$L('70'), command:'70'},
-+		{label:$L('75'), command:'75'},
-+		{label:$L('80'), command:'80'},
-+		{label:$L('85'), command:'85'},
-+		{label:$L('90'), command:'90'},
-+		{label:$L('95'), command:'95'},
-+		{label:$L('100'), command:'100'}
-+	]
+@@ -513,4 +760,92 @@
+ 		{label:$L('95'), command:'95'},
+ 		{label:$L('100'), command:'100'}
+ 	]
 +});
 +
-+	var PasswordDialogAssistant = Class.create({
++var PasswordDialogAssistant = Class.create({
 +	
 +	initialize: function(sceneAssistant,serviceName,username,id,status) {
 +		this.sceneAssistant = sceneAssistant;

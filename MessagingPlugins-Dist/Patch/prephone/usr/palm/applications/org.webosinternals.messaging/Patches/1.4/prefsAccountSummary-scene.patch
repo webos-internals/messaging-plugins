@@ -1,5 +1,5 @@
---- prefsAccountSummary-scene.html	Wed Oct  7 14:04:04 2009
-+++ prefsAccountSummary-scene.new	Mon Mar  1 00:39:21 2010
+--- prefsAccountSummary-scene.html	Wed Oct  7 14:04:03 2009
++++ prefsAccountSummary-scene.new	Fri Jul  2 23:31:14 2010
 @@ -16,6 +16,12 @@
  					<div id="notificationToggle" x-mojo-element="ToggleButton"></div>
  					<div class="title capitalize" x-mojo-loc=''>

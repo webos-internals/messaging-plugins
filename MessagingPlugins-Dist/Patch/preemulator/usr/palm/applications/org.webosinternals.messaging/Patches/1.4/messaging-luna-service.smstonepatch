@@ -1,173 +1,18 @@
---- messaging-luna-service.js	Wed Dec  9 14:38:33 2009
-+++ messaging-luna-service.new	Tue May  4 04:30:53 2010
-@@ -1000,5 +1000,250 @@
- 		  method: 'setSMSCAddressAndEmailGateway',
- 		  parameters: {smscAddr:address, emailGateway: gateway}
- 	  });
+--- messaging-luna-service.js	Fri Jul  2 23:00:15 2010
++++ messaging-luna-service.new	Fri Jul  2 23:02:26 2010
+@@ -7,6 +7,7 @@
+ 	displayIdentifier: 'palm://com.palm.display/control',
+ 	telephonyIdentifier: 'palm://com.palm.telephony',
+ 	systemManagerIdentifier: 'palm://com.palm.systemmanager',
++	MessagingPlugins: 'palm://im.libpurpleext.greg',
+ 	
+ 	launchMessaging: function(sceneController, params){
+ 		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
+@@ -1155,5 +1156,97 @@
+ 		contact.lookupPending = false;
+ 		if (lookupWasPending) 
+ 			callback(contact);
 +	},
-+	
-+		isNumberValid: function(number) {
-+		return !(number === undefined
-+			|| number == null
-+			|| number == "" 
-+			|| number == "unknown" 
-+			|| number == "unknown caller"
-+			|| number == "blocked caller") 
-+	},
-+	
-+	// use contacts service and carrier book to perform reverse lookup on number.  stores results in passed contact object.
-+	// runs callback when done.
-+	// if the number isn't valid, marks contact lookup complete 
-+	// if there's already one happening, or one already completed, just fires callback
-+	// if there's a lateCallback provided, calls that if the result comes much later
-+	rLookup: function(number, contact, callback, lateCallback){
-+		
-+		//Reset contact to always get the tone
-+		contact = {};	
-+		Mojo.Log.error("Current contact value: %j",contact);
-+		Mojo.Log.error("SMS ID: %j",number);
-+		
-+		// bail if the number is invalid
-+		if (!(this.isNumberValid(number))) {
-+				this.finishLookup(contact, callback);
-+				return;
-+		}
-+		
-+		if (contact.lookupComplete) {
-+			callback(contact);	
-+			return;
-+		}
-+		
-+		if (contact.lookupPending) {
-+			callback(contact);	
-+			return;
-+		}
-+		
-+		
-+		// use contacts service to perform lookup.
-+		// if contact already has an id in it, use person lookup
-+		// instead of doing reverse lookup on number
-+		contact.lookupPending = true;
-+		var method, params;
-+		if (contact.initialId) {
-+			method = 'basicDetails'
-+			params =  {'id' : contact.initialId}
-+			delete contact.initialId;
-+		} else {
-+			method = 'reverseLookup'
-+			params = {
-+                'value': number,
-+            }
-+		}
-+		this.lastRequest = new Mojo.Service.Request('palm://com.palm.contacts', {
-+			'method': method,
-+            parameters: params,
-+            onSuccess: this.onLookup.bind(this, number, contact, callback, lateCallback),
-+			onFailure: function() {
-+				// cancel previous lookup, so this doesn't fire on a service crash
-+				if (this.lastRequest) {
-+					this.lastRequest.cancel();
-+					this.lastRequest = undefined;
-+				}
-+				
-+				this.carrierBookLookup(number,contact);
-+				this.finishLookup(contact, callback);
-+			}.bind(this)
-+        });
-+		
-+		// timeout if lookup hasn't completed in 4 seconds
-+		this.lookupTimeout = setTimeout(this.onLookupTimeout.bind(this, contact, callback, lateCallback), 4000);
-+    },
-+	
-+	// when contact lookup returns, check for valid result
-+	// if valid result, grab name, ringtone; if there's a picture, start loading and set callback to measure it
-+	// if no valid result, look in carrier book
-+	// fire callback when done
-+    onLookup: function(number, contact, callback, lateCallback, result){
-+        Mojo.Log.info( "PhoneApp: Contact::onLookup CALLER ID LOOKUP %s RETURNED %j" , number , result);
-+		var statusChange = "";
-+		
-+		// cancel previous lookup, so this doesn't fire on a service crash
-+		if (this.lastRequest) {
-+			this.lastRequest.cancel();
-+			this.lastRequest = undefined;
-+		}
-+		
-+		if (result.record) {
-+			/*		
-+			// don't match if the number we get back is different than the number
-+			// we passed in (provided the lengths are the same)
-+			if (!(result.record.number)
-+				|| ( (result.record.number) && ( (result.record.number.length !== number.length) 
-+					|| (result.record.number.length === number.length 
-+						 && result.record.number === number)))) {
-+			*/
-+			contact.id = result.record.id;
-+			
-+	
-+			contact.ringtoneLoc = result.record.messagingRingtoneLoc;
-+			Mojo.Log.error("MSGTone: %j",contact.ringtoneLoc);			
-+
-+		}
-+		
-+		this.finishLookup(contact, callback, lateCallback);
-+    },
-+	
-+	
-+
-+	// mark complete; cancel timeout; fire callback if it hasn't fired yet
-+	finishLookup: function(contact, callback, lateCallback) {
-+		contact.lookupPending = false;
-+		
-+		// cancel lookup timeout
-+		clearTimeout(this.lookupTimeout); 
-+		this.lookupTimeout = undefined;
-+		
-+		if (!(contact.lookupComplete)) {
-+			contact.lookupComplete = true;
-+			callback(contact);
-+		// if we have a late return, and we got a contact result, call
-+		// the late return update 
-+		} else if (lateCallback && contact.doLateCallback && contact.id) {
-+			contact.doLateCallback = false;
-+			lateCallback.delay(5, contact);
-+		} else {
-+		}
-+		
-+	},
-+	
-+	// flag lookup as done; proceed with callback
-+	onLookupTimeout: function(contact, callback, lateCallback) {
-+		
-+		if (lateCallback) {
-+			contact.doLateCallback = true;
-+		} else if (this.lastRequest && !lateCallback) {
-+			// cancel previous lookup, so this doesn't fire on a service crash
-+			this.lastRequest.cancel();
-+			this.lastRequest = undefined;
-+		}
-+		
-+		// clear timeout
-+		this.lookupTimeout = undefined;
-+		
-+		// flag done; fire callback if it hasn't yet
-+		contact.lookupComplete = true;
-+		var lookupWasPending = contact.lookupPending;
-+		contact.lookupPending = false;
-+		if (lookupWasPending) 
-+			callback(contact);
-+	},
-+	
-+	getMessagetone:  function(callback) {
-+  		var request = new Mojo.Service.Request('palm://com.palm.systemservice', {
-+  			method: 'getPreferences',
-+  			parameters: {"keys":["messagetone"]},
-+  			onSuccess: callback,
-+  			onFailure: callback
-+  		});
-+  		return request;
-+	},
-+	
 +  /************************
 +   * Methods for LibpurpleAdapter
 +   ************************/
@@ -249,6 +94,16 @@
 +	      method: 'getBuddyList',
 +	      parameters: {serviceName:serviceName, username:username, subscribe:true}
 +		});  
- 	}
++	},
++	EnableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'EnableFBHistory'
++		});  
++	},
++	DisableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'DisableFBHistory'
++		});  
+ 	},
  };
 \ No newline at end of file

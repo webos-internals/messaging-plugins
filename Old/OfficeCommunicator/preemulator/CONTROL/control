@@ -1,6 +1,6 @@
 Package: org.webosinternals.messagingofficecommunicator
-Version: 2.5.0
-Architecture: armv7
+Version: 2.0.0
+Architecture: i686
 Maintainer: Greg Roll
 Description: Messaging Plugins Office Communicator
 Section: Services and Plugins

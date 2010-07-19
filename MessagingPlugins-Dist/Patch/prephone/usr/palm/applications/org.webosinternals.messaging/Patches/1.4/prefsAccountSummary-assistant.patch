@@ -1,5 +1,5 @@
 --- prefsAccountSummary-assistant.js	Tue Jan 12 17:28:26 2010
-+++ prefsAccountSummary-assistant.new	Sun Mar  7 19:12:54 2010
++++ prefsAccountSummary-assistant.new	Fri Jul  2 22:29:38 2010
 @@ -6,6 +6,7 @@
          this.Messaging = this.appController.Messaging;      
          this.params = params || {}

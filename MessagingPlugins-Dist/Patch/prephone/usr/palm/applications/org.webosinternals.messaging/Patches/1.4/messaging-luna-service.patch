@@ -1,5 +1,5 @@
 --- messaging-luna-service.js	Wed Dec  9 14:38:33 2009
-+++ messaging-luna-service.new	Tue Apr 27 04:51:04 2010
++++ messaging-luna-service.new	Fri Jul  2 22:04:27 2010
 @@ -7,6 +7,7 @@
  	displayIdentifier: 'palm://com.palm.display/control',
  	telephonyIdentifier: 'palm://com.palm.telephony',
@@ -8,7 +8,7 @@
  	
  	launchMessaging: function(sceneController, params){
  		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
-@@ -1000,5 +1001,87 @@
+@@ -1000,5 +1001,97 @@
  		  method: 'setSMSCAddressAndEmailGateway',
  		  parameters: {smscAddr:address, emailGateway: gateway}
  	  });
@@ -94,6 +94,16 @@
 +	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
 +	      method: 'getBuddyList',
 +	      parameters: {serviceName:serviceName, username:username, subscribe:true}
++		});  
++	},
++	EnableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'EnableFBHistory'
++		});  
++	},
++	DisableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'DisableFBHistory'
 +		});  
 +	},
  };

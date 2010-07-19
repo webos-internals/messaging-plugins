@@ -1,5 +1,5 @@
---- compose-assistant.js	Tue Feb  9 14:02:15 2010
-+++ compose-assistant.new	Fri Jul  2 22:29:38 2010
+--- compose-assistant.js	Fri Jul  2 22:44:07 2010
++++ compose-assistant.new	Fri Jul  2 22:48:19 2010
 @@ -230,6 +230,11 @@
  						});
  						return;

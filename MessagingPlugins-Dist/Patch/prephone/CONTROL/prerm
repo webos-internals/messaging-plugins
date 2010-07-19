@@ -15,28 +15,16 @@ WEBOSVER=1.4
 PATCH_LOG=/media/internal/webos-patches.log
 SUBVER=`ls /usr/palm/frameworks/mojo/submissions -lrt | awk '/^d/ {f=$NF }; END{ print f }'`
 
-if (cat /var/tmp/webosver | grep -i 1.2); then
-	WEBOSVER=1.2
-	if [ "$SUBVER" == "" ]; then
-		SUBVER=200.18
-	fi
-fi
-if (cat /var/tmp/webosver | grep -i 1.3.1); then
-	WEBOSVER=1.3
-	if [ "$SUBVER" == "" ]; then
-		SUBVER=200.47
-	fi
-fi
-if (cat /var/tmp/webosver | grep -i 1.3.5); then
-	WEBOSVER=1.3
-	if [ "$SUBVER" == "" ]; then
-		SUBVER=200.72
-	fi
-fi
 if (cat /var/tmp/webosver | grep -i 1.4); then
 	WEBOSVER=1.4
 	if [ "$SUBVER" == "" ]; then
 		SUBVER=330
+	fi
+fi
+if (cat /var/tmp/webosver | grep -i 1.4.5); then
+	WEBOSVER=1.4
+	if [ "$SUBVER" == "" ]; then
+		SUBVER=347
 	fi
 fi
 
@@ -82,24 +70,29 @@ kill `ps -ef | grep LibpurpleAdapter | grep -v grep | awk '{print $2}'`
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-constants.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-constants.patch || CheckPatch messaging-constants >> $PATCH_LOG
 if (grep  -i "isNumberValid" /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js) ; then
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-luna-service.smstonepatch || CheckPatch messaging-luna-service >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.smstonepatch || CheckPatch listview-assistant >> $PATCH_LOG
 else
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/models/messaging-luna-service.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging-luna-service.patch || CheckPatch messaging-luna-service >> $PATCH_LOG
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.patch || CheckPatch listview-assistant >> $PATCH_LOG
 fi
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-scene.patch || CheckPatch prefsSetupAccount-scene >> $PATCH_LOG
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch || CheckPatch prefsAccountTypeList-assistant >> $PATCH_LOG
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch || CheckPatch prefsSetupAccount-assistant >> $PATCH_LOG
-$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch || CheckPatch compose-assistant >> $PATCH_LOG
 
 if (grep  -i "pv_notification_repeat_interval_value" /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html) ; then
-	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.repeatpatch || CheckPatch listview-assistant >> $PATCH_LOG
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-scene.repeatpatch || CheckPatch prefsAccountSummary-scene >> $PATCH_LOG
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.repeatpatch || CheckPatch prefsAccountSummary-assistant >> $PATCH_LOG
 else
-	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/listview-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/listview-assistant.patch || CheckPatch listview-assistant >> $PATCH_LOG
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsAccountSummary/prefsAccountSummary-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-scene.patch || CheckPatch prefsAccountSummary-scene >> $PATCH_LOG
 	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountSummary-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountSummary-assistant.patch || CheckPatch prefsAccountSummary-assistant >> $PATCH_LOG
 fi
 
+if (grep  -i "enterSubmits: false" /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js) ; then
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.enterpatch || CheckPatch compose-assistant >> $PATCH_LOG
+else
+	$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/compose-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/compose-assistant.patch || CheckPatch compose-assistant >> $PATCH_LOG
+fi
+
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/views/prefsSetupAccount/prefsSetupAccount-scene.html -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-scene.patch || CheckPatch prefsSetupAccount-scene >> $PATCH_LOG
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsAccountTypeList-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsAccountTypeList-assistant.patch || CheckPatch prefsAccountTypeList-assistant >> $PATCH_LOG
+$INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/app/controllers/prefsSetupAccount-assistant.js -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/prefsSetupAccount-assistant.patch || CheckPatch prefsSetupAccount-assistant >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/applications/com.palm.app.messaging/stylesheets/messaging.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/messaging.patch || CheckPatch messaging >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-iconography.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-iconography.patch || CheckPatch global-iconography >> $PATCH_LOG
 $INSTDIR/usr/bin/patch -f /usr/palm/frameworks/mojo/submissions/$SUBVER/stylesheets/global-widget-addressing.css -R -d / < $INSTDIR/usr/palm/applications/org.webosinternals.messaging/Patches/$WEBOSVER/global-widget-addressing.patch || CheckPatch global-widget-addressing >> $PATCH_LOG

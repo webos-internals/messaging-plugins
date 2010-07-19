@@ -1,5 +1,5 @@
---- prefsAccountSummary-scene.html	Wed Oct  7 14:04:03 2009
-+++ prefsAccountSummary-scene.new	Tue May  4 04:50:01 2010
+--- prefsAccountSummary-scene.html	Fri Jul  2 22:11:54 2010
++++ prefsAccountSummary-scene.new	Sat Jul  3 06:02:53 2010
 @@ -16,6 +16,12 @@
  					<div id="notificationToggle" x-mojo-element="ToggleButton"></div>
  					<div class="title capitalize" x-mojo-loc=''>
@@ -13,30 +13,10 @@
  					</div>                                                               
  				</div> 
  			</div>                
-@@ -44,6 +50,26 @@
- 	
- 		</div>
+@@ -140,4 +146,4 @@
+ 		<div id="savePrefs" class="palm-button" x-mojo-loc=''>Save preferences</div>
  	</div>
-+	
-+	<div id='pv_notificationrepeat_div' class="palm-group">
-+		<div class="palm-group-title" x-mojo-loc="">Notification Repeat</div>
-+	 	<div class="palm-list">
-+			<div id="pv_notification_repeat_interval" class="palm-row">
-+				<div class="palm-row-wrapper">
-+		 			<div class="label" x-mojo-loc="">Repeat Interval</div>
-+		 			<div id="pv_notification_repeat_interval_value" class="title"></div>
-+				</div>
-+			</div>
-+			
-+			<div id="pv_notification_max_repeat" class="palm-row">
-+				<div class="palm-row-wrapper">
-+		 			<div class="label" x-mojo-loc="">Max Repeats</div>
-+		 			<div id="pv_notification_max_repeat_value" class="title"></div>
-+				</div>
-+			</div>
-+		</div>
-+	</div>
-+	
- 	<div class="palm-group">
- 		<div class="palm-group-title" x-mojo-loc=''>Accounts</div>      
- 	    <div class="palm-list">                              
+ 	-->
+-</div>
+\ No newline at end of file
++</div>

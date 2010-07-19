@@ -1,6 +1,6 @@
 --- prefsSetupAccount-assistant.js	Mon Nov  2 11:14:47 2009
-+++ prefsSetupAccount-assistant.new	Mon Mar 15 03:58:38 2010
-@@ -16,8 +16,160 @@
++++ prefsSetupAccount-assistant.new	Fri Jul  2 21:54:41 2010
+@@ -16,8 +16,167 @@
  		this.handlePasswordKeyUp = this.handlePasswordKeyUp.bindAsEventListener(this);
  		this.removeAccount = this.removeAccount.bindAsEventListener(this);
  		this.confirmRemoveAccount = this.confirmRemoveAccount.bindAsEventListener(this);
@@ -42,6 +42,14 @@
 + 			falseLabel:  'false'
 +  		}
 +		this.sametimeModel = {
++			value : false,
++ 			disabled: false
++		}
++		this.facebookattr = {
++  			trueLabel:  'true' ,
++ 			falseLabel:  'false'
++  		}
++		this.facebookModel = {
 +			value : false,
 + 			disabled: false
 +		}
@@ -155,13 +163,12 @@
 +		this.sametimeModel.original = data.hideID;
 +      		this.controller.modelChanged(this.sametimeModel);
 +	}
-+
 +    },
 +
      setup: function(){
          this.accountId;
          this.createAccountRequest;
-@@ -64,9 +216,162 @@
+@@ -64,9 +223,182 @@
  				this.imLinksElement = this.controller.get('im-links');
  				this.imLinksElement.observe(Mojo.Event.tap, this.handleExtraContentTap);
  			}
@@ -194,6 +201,16 @@
 +				this.controller.setupWidget('SametimeToggle', this.sametimeattr,this.sametimeModel );
 +				this.SametimeToggleChanged = this.SametimeToggleChanged.bindAsEventListener(this);
 +				Mojo.Event.listen(this.controller.get('SametimeToggle'),Mojo.Event.propertyChange,this.SametimeToggleChanged);
++			}
++
++			//Facebook History
++			if (this.Messaging.transports.getTransportByName(this.params.domain).className == "facebook") {
++				var facebook = Mojo.View.render({object:{}, template:"prefsSetupAccount/Facebook"});				
++				this.controller.get('LoginDetails').update(facebook);
++
++				this.controller.setupWidget('FacebookToggle', this.facebookattr,this.facebookModel );
++				this.FacebookToggleChanged = this.FacebookToggleChanged.bindAsEventListener(this);
++				Mojo.Event.listen(this.controller.get('FacebookToggle'),Mojo.Event.propertyChange,this.FacebookToggleChanged);
 +			}
 +
 +			//Only show resource options for jabber
@@ -277,6 +294,16 @@
 +				Mojo.Event.listen(this.controller.get('SametimeToggle'),Mojo.Event.propertyChange,this.SametimeToggleChanged);
 +			}
 +
++			//Facebook History
++			if (this.Messaging.transports.getTransportByName(this.params.domain).className == "facebook") {
++				var facebook = Mojo.View.render({object:{}, template:"prefsSetupAccount/Facebook"});				
++				this.controller.get('LoginDetails').update(facebook);
++
++				this.controller.setupWidget('FacebookToggle', this.facebookattr,this.facebookModel );
++				this.FacebookToggleChanged = this.FacebookToggleChanged.bindAsEventListener(this);
++				Mojo.Event.listen(this.controller.get('FacebookToggle'),Mojo.Event.propertyChange,this.FacebookToggleChanged);
++			}
++
 +			//Only show resource options for jabber
 +			if ((this.Messaging.transports.getTransportByName(this.params.domain).className == "jabber")) {
 +				var resource = Mojo.View.render({object:{}, template:"prefsSetupAccount/Jabber"});				
@@ -324,7 +351,7 @@
  		}
  		
          var usernameAttributes = {
-@@ -106,6 +411,95 @@
+@@ -106,6 +438,95 @@
  		}
          this.controller.setupWidget('password', passwordAttributes, this.passwordModel);		
  
@@ -420,7 +447,7 @@
  		this.saveButton = this.controller.get('saveAccountButton');
  		var saveButtonAttributes = {
  			disabledProperty: 'disabled',
-@@ -118,6 +512,11 @@
+@@ -118,6 +539,11 @@
  		};
  		this.controller.setupWidget('saveAccountButton', saveButtonAttributes, this.saveButtonModel);
  		this.controller.listen('saveAccountButton', Mojo.Event.tap, this.saveAccountFn);
@@ -432,7 +459,7 @@
      },
  	
  	ready: function() {
-@@ -129,7 +528,36 @@
+@@ -129,7 +555,46 @@
  		}
  	},
  	
@@ -455,6 +482,16 @@
 +	SametimeToggleChanged: function(event) {
 +	},
 +
++	FacebookToggleChanged: function(event) {
++		if(event.value == true)
++		{
++			MessagingMojoService.EnableFBHistory(this.controller);
++		} else
++		{
++			MessagingMojoService.DisableFBHistory(this.controller);
++		}  
++	},
++
 +	AvatarToggleChanged: function(event) {
 +	},
 +
@@ -469,7 +506,7 @@
  		// If enter is pressed then simulate tapping on "Sign In"
  		if (event && Mojo.Char.isEnterKey(event.keyCode)) {
  			// If the submit button is enabled then create the account
-@@ -144,6 +572,12 @@
+@@ -144,6 +609,12 @@
  				this.passwordTapHandler = undefined;
  			}
  		}
@@ -482,7 +519,7 @@
  	},
  	
  	cleanup: function() {
-@@ -184,24 +618,86 @@
+@@ -184,24 +655,86 @@
  	  	statusMessageElement.update($L('Please enter a username'));
  		statusMessageWrapper.show();
  		hasEmptyField = true;
@@ -578,7 +615,7 @@
        this.createAccountRequest = MessagingMojoService.createIMAccount(this.controller, accountDetails,this.accountSaved.bind(this),this.createLoginFailed.bind(this));
      },
  	
-@@ -226,6 +722,8 @@
+@@ -226,6 +759,8 @@
  	},
  	
      createLoginFailed : function(result){
@@ -587,7 +624,7 @@
  		if (this.createAccountRequest) {
  			this.controller.cancelServiceRequest(this.createAccountRequest);
  			this.createAccountRequest = undefined;
-@@ -250,11 +748,32 @@
+@@ -250,11 +785,32 @@
  	 * UPDATE ACCOUNT METHODS
  	 */
      updateAccount : function(){
@@ -624,7 +661,7 @@
  	  var accountDetails = Mojo.View.serializeMojo(this.controller.get('AccountSetupForm'), true);
  	  var statusMessageElement = this.controller.get('StatusMessage');
  	  var statusMessageWrapper = this.controller.get('StatusMessageWrapper');
-@@ -267,19 +786,89 @@
+@@ -267,19 +823,89 @@
  	  	statusMessageElement.update($L('Please enter a password'));
  		statusMessageWrapper.show();
  		hasEmptyField = true;
@@ -718,7 +755,7 @@
      },
  	
      accountUpdated : function(result) {
-@@ -346,8 +935,41 @@
+@@ -346,8 +972,46 @@
  		this.saveButtonModel.disabled = false;
  		this.controller.modelChanged(this.saveButtonModel);	  
  		this.passwordModel.disabled = false;
@@ -758,10 +795,15 @@
 +			this.controller.modelChanged(this.sametimeModel,this); 	
 +		}
 +
++		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "facebook"){
++			this.facebookModel.disabled = false;
++			this.controller.modelChanged(this.facebookModel,this); 	
++		}
++
  		// the username field is always disabled in edit mode
  		// the delete account button is only visible in edit mode
  		if (this.params.editMode) {
-@@ -364,7 +986,40 @@
+@@ -364,7 +1028,45 @@
  		this.controller.modelChanged(this.saveButtonModel);
  		this.passwordModel.disabled = true;
  		this.controller.modelChanged(this.passwordModel);	 
@@ -799,10 +841,15 @@
 +			this.controller.modelChanged(this.sametimeModel,this); 	
 +		}
 +
++		if (this.Messaging.transports.getTransportByName(this.params.domain).className == "facebook"){
++			this.facebookModel.disabled = true;
++			this.controller.modelChanged(this.facebookModel,this); 	
++		}
++
  		// the username field is always disabled in edit mode
  		// the delete account button is only visible in edit mode
  		if (this.params.editMode) {
-@@ -398,6 +1053,12 @@
+@@ -398,6 +1100,12 @@
  	removeAccount: function() {
  		this.startRemoveSpinner();
          MessagingMojoService.removeAccount(this.controller, this.params.id,this.handleRemoveAccountSuccess.bind(this));        

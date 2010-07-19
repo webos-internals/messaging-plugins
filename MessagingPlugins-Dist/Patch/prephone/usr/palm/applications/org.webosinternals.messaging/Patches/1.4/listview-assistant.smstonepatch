@@ -1,5 +1,5 @@
---- listview-assistant.js	Thu Jan  7 14:45:51 2010
-+++ listview-assistant.new	Fri Jul  2 22:29:38 2010
+--- listview-assistant.js	Fri Jul  2 22:26:53 2010
++++ listview-assistant.new	Fri Jul  2 22:58:09 2010
 @@ -35,6 +35,7 @@
  	
  		this.COMMAND_MENU = {
@@ -18,16 +18,7 @@
  		];
  
  		this.availabilities = [
-@@ -426,7 +428,7 @@
- 		// if we are in the history view and the screen is on, do not display a banner + dashboard, just play a notification sound
- 		if (this.isScreenOn) {
- 			if (data.notificationType == this.Messaging.notificationTypes.newMessage && this.currentListView == this.Messaging.Views.HISTORY) {
--				data = {playSoundOnly:true};
-+				Object.extend(data, {playSoundOnly:true});
- 			}
- 		}
- 		return data;
-@@ -1299,6 +1301,28 @@
+@@ -1300,6 +1302,28 @@
  		}
  	},
  	
@@ -56,7 +47,7 @@
  	loadComposeView: function(params) {
  		this.controller.stageController.pushScene('compose', params);
  	},
-@@ -1387,6 +1411,12 @@
+@@ -1388,6 +1412,12 @@
  		} else {
  			this.setAvailabilityIndicator(selectedValue);
  		}
