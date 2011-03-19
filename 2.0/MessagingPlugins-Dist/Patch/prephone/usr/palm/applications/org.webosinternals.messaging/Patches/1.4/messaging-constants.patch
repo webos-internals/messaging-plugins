@@ -1,0 +1,127 @@
+--- messaging-constants.js	Mon Feb  8 16:02:38 2010
++++ messaging-constants.new	Sun Mar  7 19:18:51 2010
+@@ -40,7 +40,8 @@
+ 				"AcctMgr_Acct_Not_Created": $L("Sign in failed. Try again."), 
+ 				"AcctMgr_Name_In_Use": $L("You have been signed out because you are signed in at another location."), 
+ 				"AcctMgr_No_Setup_Service": $L("Sign in failed."), // pop immediately
+-				"AcctMgr_Single_Account_Only": $L("You can only create one messaging account of this type.")
++				"AcctMgr_Single_Account_Only": $L("You can only create one messaging account of this type."),
++				"AcctMgr_Cert_Error": $L("Invalid security certificate.")
+ 	   		};
+ 			return function(errorCode) {
+ 				if(errorCode && data[errorCode])
+@@ -270,6 +271,114 @@
+ 		title: $L('Yahoo'),
+ 		displayName: $L('Yahoo'),
+ 		secondaryDisplayName: $L('Yahoo!')
++      },
++	  'qqim': {
++        className: 'qqim',
++        iconPath: 'images/transports/transport-qq-32x32.png',
++        smallIcon: 'images/transports/qq_transport_splitter.png',
++        largeIcon: 'images/transports/qq-logo.png',
++		title: $L('QQ'),
++		displayName: $L('QQ'),
++		secondaryDisplayName: $L('QQ')
++      },
++	  'irc': {
++        className: 'irc',
++        iconPath: 'images/transports/transport-irc-32x32.png',
++        smallIcon: 'images/transports/irc_transport_splitter.png',
++        largeIcon: 'images/transports/irc-logo.png',
++		title: $L('IRC'),
++		displayName: $L('IRC'),
++		secondaryDisplayName: $L('IRC')
++      },
++	  'gwim': {
++        className: 'gwim',
++        iconPath: 'images/transports/transport-novell-32x32.png',
++        smallIcon: 'images/transports/novell_transport_splitter.png',
++        largeIcon: 'images/transports/novell-logo.png',
++		title: $L('Novell Groupwise'),
++		displayName: $L('Novell Groupwise'),
++		secondaryDisplayName: $L('Groupwise')
++      },
++	  'lcs': {
++        className: 'lcs',
++        iconPath: 'images/transports/transport-sametime-32x32.png',
++        smallIcon: 'images/transports/sametime_transport_splitter.png',
++        largeIcon: 'images/transports/sametime-logo.png',
++		title: $L('Sametime'),
++		displayName: $L('Sametime'),
++		secondaryDisplayName: $L('Sametime')
++      },
++	  'sipe': {
++        className: 'sipe',
++        iconPath: 'images/transports/transport-sipe-32x32.png',
++        smallIcon: 'images/transports/sipe_transport_splitter.png',
++        largeIcon: 'images/transports/sipe-logo.png',
++		title: $L('Office Communicator'),
++		displayName: $L('Office Communicator'),
++		secondaryDisplayName: $L('SIPE')
++      },
++	  'jabber': {
++        className: 'jabber',
++        iconPath: 'images/transports/transport-jabber-32x32.png',
++        smallIcon: 'images/transports/jabber_transport_splitter.png',
++        largeIcon: 'images/transports/jabber-logo.png',
++		title: $L('Jabber'),
++		displayName: $L('Jabber'),
++		secondaryDisplayName: $L('Jabber')
++      },
++	  'facebook': {
++        className: 'facebook',
++        iconPath: 'images/transports/transport-facebook-32x32.png',
++        smallIcon: 'images/transports/facebook_transport_splitter.png',
++        largeIcon: 'images/transports/facebook-logo.png',
++		title: $L('Facebook Chat'),
++		displayName: $L('Facebook Chat'),
++		secondaryDisplayName: $L('Facebook')
++      },
++	  'icq': {
++        className: 'icq',
++        iconPath: 'images/transports/transport-icq-32x32.png',
++        smallIcon: 'images/transports/icq_transport_splitter.png',
++        largeIcon: 'images/transports/icq-logo.png',
++		title: $L('ICQ'),
++		displayName: $L('ICQ'),
++		secondaryDisplayName: $L('ICQ')
++      },
++	'xfire': {
++        className: 'xfire',
++        iconPath: 'images/transports/transport-xfire-32x32.png',
++        smallIcon: 'images/transports/xfire_transport_splitter.png',
++        largeIcon: 'images/transports/xfire-logo.png',
++		title: $L('XFire'),
++		displayName: $L('XFire'),
++		secondaryDisplayName: $L('XFire')
++      },
++      'live': {
++        className: 'live',
++        iconPath: 'images/transports/transport-messenger-32x32.png',
++        smallIcon: 'images/transports/messenger_transport_splitter.png',
++        largeIcon: 'images/transports/messenger-logo.png',
++		title: $L('Live Messenger'),
++		displayName: $L('Live Messenger'),
++		secondaryDisplayName: $L('Messenger')
++      },
++      'myspace': {
++        className: 'myspace',
++        iconPath: 'images/transports/transport-myspace-32x32.png',
++        smallIcon: 'images/transports/myspace_transport_splitter.png',
++        largeIcon: 'images/transports/myspace-logo.png',
++		title: $L('MySpace'),
++		displayName: $L('MySpace'),
++		secondaryDisplayName: $L('MySpace')
++      },
++      'gadu': {
++        className: 'gadu',
++        iconPath: 'images/transports/transport-gadu-32x32.png',
++        smallIcon: 'images/transports/gadu_transport_splitter.png',
++        largeIcon: 'images/transports/gadu-logo.png',
++		title: $L('Gadu Gadu'),
++		displayName: $L('Gadu Gadu'),
++		secondaryDisplayName: $L('Gadu Gadu')
+       },
+ 	  'icq': {
+         className: 'icq',

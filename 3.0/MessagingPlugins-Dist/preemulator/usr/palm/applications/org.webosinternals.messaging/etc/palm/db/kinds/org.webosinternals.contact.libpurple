@@ -1,0 +1,15 @@
+{
+    "id": "org.webosinternals.contact.libpurple:1",
+    "extends": ["com.palm.contact:1"],
+    "owner": "org.webosinternals.imlibpurple",
+    "indexes": [
+        {
+            "name": "byAccountId",
+            "props": [{"name": "accountId"}]
+        },
+        {
+            "name": "byUsernameAndServiceName",
+            "props": [{"name": "ims.type"},{"name": "ims.value"}]
+        }
+    ]
+}

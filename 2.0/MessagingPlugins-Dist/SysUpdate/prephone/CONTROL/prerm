@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+             
+#Cleanup Sym-Links and files
+rm -f /usr/lib/libtasn1.so.3
+rm -f /usr/lib/libgnutls.so.26
+rm -f /usr/lib/libjson-glib-1.0.so.0
+
+exit 0

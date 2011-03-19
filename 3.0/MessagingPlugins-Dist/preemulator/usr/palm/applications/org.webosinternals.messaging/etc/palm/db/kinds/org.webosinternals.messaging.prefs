@@ -1,0 +1,11 @@
+{
+    "id": "org.webosinternals.messaging.prefs:1",
+    "owner": "com.palm.live",
+    "sync": true,
+    "indexes": [
+        {
+            "name": "templateId",
+            "props": [{"name": "templateId"},{"name": "UserName"}]
+        }
+    ]
+}

@@ -1,0 +1,73 @@
+[
+	{
+		"capabilityProviders": [
+		{
+			"capability": "MESSAGING",
+			"capabilitySubtype": "IM",
+			"dbkinds": {
+				"imcommand": "org.webosinternals.imcommand.libpurple:1",
+				"immessage": "org.webosinternals.immessage.libpurple:1"
+			},
+			"icon": {
+				"splitter": "images/live-32x32.png"
+			},
+			"id": "org.webosinternals.messaging.live",
+			"implementation": "palm://org.webosinternals.imlibpurple/",
+			"loc_shortName": "LIVE",
+			"onEnabled": "palm://org.webosinternals.imlibpurple/onEnabled",
+			"readOnlyData": true,
+			"serviceName": "type_live"
+		}
+		],
+		"hidden": false,
+		"icon": {
+			"loc_32x32": "images/live-32x32.png",
+			"loc_48x48": "images/live-48x48.png"
+		},
+		"loc_name": "Live Messenger",
+		"loc_subheader": "Kontoeinstellungen",
+		"templateId": "org.webosinternals.messaging.live",
+		"validator": {
+			"address": "palm://org.webosinternals.imaccountvalidator/checkCredentials",
+			"customUI": {
+				"appId": "com.palm.webosinternals.messaging",
+				"name": "wizard"
+			}
+		},
+		"loc_usernameLabel": "E-Mail Adresse",
+		"loc_explainLabel": "username@live.com",
+		"loc_passwordLabel": "Passwort",
+		"loc_ServerSetup": {
+			"Display": "Server-Setup",
+			"ServerName":{
+				"Display": "Server-Name",
+				"Value": "messenger.hotmail.com"
+			},
+			"ServerPort":{
+				"Display": "Server-Port",
+				"Value": "1863"
+			},
+			"ServerTLS":{
+				"Display":"Aktivieren Server TLS",
+				"Explain": "Aktivieren oder Deaktivieren von TLS für diesen Server. Erkundigen Sie sich bei der Server-Administrator für weitere Hilfe.",
+				"Value":false
+			},
+			"ServerTimeout": "Server-Timeout (in Sekunden)",
+			"ServerBuddyList": "Sekunden warten Buddy-Liste",
+			"Warning": "Diese Einstellungen können nicht geändert werden, sobald dieses Konto erstellt werden."
+		},
+		"loc_AccountOptions": {
+			"Display": "Konto-Optionen",
+			"Alias": {"Display": "Show Kumpel Aliase","Explain": "Wählen Sie 'Ja' zu deinen Freunden Alias anstelle der Login / E-Mail Adresse zu zeigen.","Show": true,"Value": true},
+			"Avatar": {"Display": "Show Kumpel Avatare","Explain": "Wählen Sie 'Ja' für Avatare (Anzeige Bildern) von Ihren Freunden.","Show": true,"Value": true},
+			"BadCert": {"Display": "Akzeptieren Ungültige Cert","Explain": "Wählen Sie 'Ja' zu vertrauen ungültig, abgelaufen oder nicht vertrauenswürdigen Server-Zertifikate.","Show": true,"Value": false},
+			"Warning": "Diese Einstellungen können nicht geändert werden, sobald dieses Konto erstellt werden."
+		},
+		"loc_signInButton": "Anmelden",
+		"loc_Donate": "Hilfe Support Entwicklung",
+		"loc_Toggles": {
+			"DisplayYes": "Ja",
+			"DisplayNo": "Nein"
+		}
+	}
+]

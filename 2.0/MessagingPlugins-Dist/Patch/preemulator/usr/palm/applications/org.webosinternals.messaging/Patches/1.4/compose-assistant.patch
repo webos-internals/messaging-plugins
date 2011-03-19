@@ -1,0 +1,14 @@
+--- compose-assistant.js	Tue Feb  9 14:02:15 2010
++++ compose-assistant.new	Fri Jul  2 22:29:38 2010
+@@ -230,6 +230,11 @@
+ 						});
+ 						return;
+ 					}
++					//If SIPE remove sip: from the username as it breaks the messaging service (jar file)
++					if ((recipient.serviceName == "sipe") && (recipient.value.indexOf("sip:") > -1))
++					{
++						recipient.value = recipient.value.replace("sip:","");
++					}
+ 					imRecipients.push(recipient);
+ 				} else {
+ 					phoneRecipients.push(recipient);

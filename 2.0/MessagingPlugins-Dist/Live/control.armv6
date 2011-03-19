@@ -1,0 +1,10 @@
+Package: org.webosinternals.messaginglive
+Version: 2.0.1
+Architecture: armv6
+Maintainer: Greg Roll
+Description: Messaging Plugins Live Messenger
+Section: Services and Plugins
+Priority: optional
+Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
+Depends: org.webosinternals.messagingpatch
+Source: {"Type":"Plugin"}

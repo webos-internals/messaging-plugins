@@ -1,0 +1,57 @@
+183a184,195
+> 
+> 		const char *acceptbadcert;
+> 		acceptbadcert = purple_prefs_get_string("/purple/acceptbadcert");
+> 
+> 		if (acceptbadcert != NULL)
+> 		{
+> 			purple_debug_warning("certificate", "Certificate Error. Accepting as requested!\n");
+> 			purple_prefs_remove("/purple/acceptbadcert");
+> 
+> 			//Dodgy Cert Acceptance
+> 			st = PURPLE_CERTIFICATE_VALID;
+> 		}
+1326c1338,1339
+< 	gchar *primary;
+---
+> 	const char *acceptbadcert;
+> 	acceptbadcert = purple_prefs_get_string("/purple/acceptbadcert");
+1328,1330c1341,1344
+< 	/* Make messages */
+< 	primary = g_strdup_printf(_("Accept certificate for %s?"),
+< 				  vrq->subject_name);
+---
+> 	if (acceptbadcert != NULL)
+> 	{
+> 		purple_debug_warning("certificate/x509/tls_cached", "Certificate Error. Accepting as requested!\n");
+> 		purple_prefs_remove("/purple/acceptbadcert");
+1332,1346c1346,1351
+< 	/* Make a semi-pretty display */
+< 	purple_request_action(
+< 		vrq->cb_data, /* TODO: Find what the handle ought to be */
+< 		_("SSL Certificate Verification"),
+< 		primary,
+< 		reason,
+< 		0,            /* Accept by default */
+< 		NULL,         /* No account */
+< 		NULL,         /* No other user */
+< 		NULL,         /* No associated conversation */
+< 		x509_tls_cached_ua_ctx_new(vrq, reason),
+< 		3,            /* Number of actions */
+< 		_("Accept"), x509_tls_cached_user_auth_accept_cb,
+< 		_("Reject"),  x509_tls_cached_user_auth_reject_cb,
+< 		_("_View Certificate..."), x509_tls_cached_show_cert);
+---
+> 		//Dodgy Cert Acceptance
+> 		x509_tls_cached_user_auth_accept_cb(x509_tls_cached_ua_ctx_new(vrq, reason),2);
+> 	}
+> 	else
+> 	{
+> 		purple_debug_warning("certificate/x509/tls_cached", "Certificate Error. Rejecting as requested!\n");
+1348,1349c1353,1355
+< 	/* Cleanup */
+< 	g_free(primary);
+---
+> 		//Reject Bad Certificate
+> 		x509_tls_cached_user_auth_reject_cb(x509_tls_cached_ua_ctx_new(vrq, reason),1);
+> 	}

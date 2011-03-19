@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Live 
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin ICQ 
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin SIPE
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Jabber
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin IRC
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Sametime
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Groupwise
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin QQ
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin XFire
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin facebook
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin gadu
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin myspace
+
+#Copy files to main source
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libnovell.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libnovell.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libnovell.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libnovell.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libirc.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libirc.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libirc.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libirc.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libmsn.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmsn.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libmsn.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmsn.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libsipe.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsipe.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libsipe.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsipe.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libqq.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libqq.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libqq.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libqq.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libsametime.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libsametime.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libxfire.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libxfire.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libxfire.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libfacebook.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libfacebook.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libfacebook.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libfacebook.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libgg.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/ligg.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libgg.la
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libmyspace.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmyspace.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/purple-2/libmyspace.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libmyspace.la
+
+#Create sym links for Jabber
+rm -f /usr/lib/libjabber.so
+rm -f /usr/lib/libjabber.so.0
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libjabber.so.0.0.0 /usr/lib/libjabber.so
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libjabber.so.0.0.0 /usr/lib/libjabber.so.0
+
+#Create sym link for Sametime
+rm -f /usr/lib/libmeanwhile.so.1
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messagingallplugins/usr/lib/libmeanwhile.so.1 /usr/lib/libmeanwhile.so.1
+
+exit 0

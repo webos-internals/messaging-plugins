@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Copy libraries (These can't be symbolic links as the Pre wont boot afterwards)
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libtasn1.so.3.1.4 /usr/lib/libtasn1.so.3
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libgnutls.so.26 /usr/lib/libgnutls.so.26
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsysfiles/usr/lib/libjson-glib-1.0.so.0 /usr/lib/libjson-glib-1.0.so.0
+
+exit 0

@@ -1,0 +1,75 @@
+--- prefsAccountTypeList-assistant.js	Wed Aug 12 13:22:34 2009
++++ prefsAccountTypeList-assistant.new	Mon Mar 15 03:06:27 2010
+@@ -5,6 +5,7 @@
+         this.appController = Mojo.Controller.getAppController();
+         this.Messaging = this.appController.Messaging;      
+         this.params = params || {}
++	 this.ServerParams = {}
+ 		this.handleAccountTypesListTap = this.handleAccountTypesListTap.bindAsEventListener(this);
+     },
+ 	
+@@ -26,6 +27,64 @@
+ 				serviceIcon: targetRow.getAttribute('serviceIcon')				
+ 			};
+ 			Object.extend(newParams,this.params);
++
++			this.ServerParams = {
++                server: '',
++                port: '',
++		        tls: 'false'	
++	        };
++			
++		if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "lcs") {
++		    //Custom server entries for sametime
++	            this.ServerParams = {
++	                server: '',
++	                port: '1533',
++			  tls: 'false'	
++		    };
++		}
++		if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "jabber"){
++			//Custom server entries for jabber
++	              this.ServerParams = {
++        	            server: '',
++              	     port: '5222',
++			     tls: 'false'	
++		        };
++		 }
++		 if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "sipe") {
++		       //Custom server entries for sipe
++               	this.ServerParams = {
++	                    	server: '',
++	                     port: '5061',
++				tls: 'false'	
++		    	};
++		  }
++		  if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "gwim") {
++		        //Custom server entries for groupwise
++                	this.ServerParams = {
++	                    server: '',
++	                    port: '8300',
++			      tls: 'false'	
++		        };
++		  }
++		  if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "myspace") {
++		        //Custom server entries for myspace
++                	this.ServerParams = {
++	                    server: 'im.myspace.akadns.net',
++	                    port: '1863',
++			      tls: 'false'	
++		        };
++		  }
++		  if (this.Messaging.transports.getTransportByName(targetRow.getAttribute('domain')).className == "xfire") {
++		        //Custom server entries for xfire
++                	this.ServerParams = {
++	                    server: 'cs.xfire.com',
++	                    port: '25999',
++	                    version: '127',
++			      tls: 'false'	
++		        };
++		  }
++			
++		  Object.extend(newParams,this.ServerParams);
+ 
+             this.controller.stageController.pushScene('prefsSetupAccount', newParams);            
+           }.bind(this),false);    		

@@ -1,0 +1,11 @@
+[{
+	"type": "db.kind",
+	"object": "org.webosinternals.imlibpurple.account:1",
+	"caller": "*",
+	"operations": {
+			"read": "allow",
+			"create": "allow",
+			"delete": "allow",
+			"update": "allow"
+	}
+}]

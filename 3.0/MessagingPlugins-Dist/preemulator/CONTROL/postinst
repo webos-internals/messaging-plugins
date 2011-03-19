@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Set Application Install Directory
+INSTDIR=/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging
+
+# Make prefs and temp directory
+mkdir -p /var/preferences/org.webosinternals.messaging
+
+#Kill org.webosinternals.imlibpurpletransport if it's running
+killall -HUP grep org.webosinternals.imlibpurpletransport || true
+killall -HUP grep org.webosinternals.imlibpurpletransport || true
+killall -HUP grep org.webosinternals.imlibpurpletransport || true
+
+#Kill org.webosinternals.imaccountvalidator if it's running
+killall -HUP grep org.webosinternals.imaccountvalidator || true
+killall -HUP grep org.webosinternals.imaccountvalidator || true
+killall -HUP grep org.webosinternals.imaccountvalidator || true
+
+# Copy service files
+cp $INSTDIR/var/ / -r
+cp $INSTDIR/etc/ / -r
+
+# Set execute on services
+chmod 755 /var/usr/sbin/org.webosinternals.imaccountvalidator
+chmod 755 /var/usr/sbin/org.webosinternals.imlibpurpletransport
+
+#Copy USB drive contents
+cp $INSTDIR/usb/* /media/internal -r
+
+# Set execute on debug scripts
+chmod 755 /media/internal/DebugMP_Account_Creation.sh
+chmod 755 /media/internal/DebugMP_Login.sh
+
+# Rescan services
+/usr/bin/ls-control scan-services || true
+
+# Rescan Luna (Makes plugins show and work correctly)
+luna-send -n 1 palm://com.palm.applicationManager/rescan {} || true
+
+# We are done
+exit 0

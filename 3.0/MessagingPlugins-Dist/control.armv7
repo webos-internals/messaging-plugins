@@ -1,0 +1,8 @@
+Package: com.palm.webosinternals.messaging
+Version: 3.0.0
+Section: Services and Plugins
+Priority: optional
+Architecture: armv7
+Maintainer: Greg Roll
+Description: Messaging Plugins
+Source: {"Source":"http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary","Homepage":"http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary","MinWebOSVersion":"2.0","Category":"Services and Plugins","LastUpdated":"1300229665","Type":"Plugin","FullDescription":"Add's more messaging account options to WebOS 2.0+. NOTE: Please restart after installation.","Title":"Messaging Plugins","PostInstallFlags":"RestartDevice"}

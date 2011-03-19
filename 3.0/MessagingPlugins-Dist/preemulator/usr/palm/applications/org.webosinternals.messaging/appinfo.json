@@ -1,0 +1,8 @@
+{
+	"title": "Add Account",
+	"type": "web",
+	"main": "index.html",
+	"noWindow": "true",
+	"id": "com.palm.webosinternals.messaging",
+	"visible": false
+}

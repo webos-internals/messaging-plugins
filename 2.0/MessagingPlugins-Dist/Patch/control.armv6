@@ -1,0 +1,10 @@
+Package: org.webosinternals.messagingpatch
+Version: 2.6.1
+Architecture: armv6
+Maintainer: Greg Roll
+Description: Messaging Plugins Patch
+Section: Services and Plugins
+Priority: optional
+Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
+Depends: org.webosinternals.messagingpatchsysfiles
+Source: {"Type":"Plugin"}

@@ -1,0 +1,10 @@
+Package: org.webosinternals.messagingsametime
+Version: 2.0.1
+Architecture: i686
+Maintainer: Greg Roll
+Description: Messaging Plugins Sametime
+Section: Services and Plugins
+Priority: optional
+Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
+Depends: org.webosinternals.messagingpatch
+Source: {"Type":"Plugin"}

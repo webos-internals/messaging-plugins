@@ -1,0 +1,22 @@
+{
+	"role": {
+		"exeName":"/var/usr/sbin/org.webosinternals.imlibpurpletransport",
+		"type":"regular",
+		"allowedNames":["org.webosinternals.imlibpurple"]
+	},
+	"permissions": [{
+		"service":"org.webosinternals.imlibpurple",
+		"inbound": [
+			"*"
+		],
+		"outbound": [
+			"org.webosinternals.imlibpurple",
+			"com.palm.db",
+			"com.palm.tempdb",
+			"com.palm.activitymanager",
+			"com.palm.connectionmanager",
+			"com.palm.display",
+			"com.palm.service.accounts"
+		]
+	}]
+}

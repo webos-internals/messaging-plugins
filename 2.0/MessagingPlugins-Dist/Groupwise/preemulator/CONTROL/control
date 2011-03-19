@@ -1,0 +1,10 @@
+Package: org.webosinternals.messaginggroupwise
+Version: 2.5.1
+Architecture: i686
+Maintainer: Greg Roll
+Description: Messaging Plugins Groupwise
+Section: Services and Plugins
+Priority: optional
+Source: http://git.webos-internals.org/?p=patches/messaging-plugins.git;a=summary
+Depends: org.webosinternals.messagingpatch
+Source: {"Type":"Plugin"}

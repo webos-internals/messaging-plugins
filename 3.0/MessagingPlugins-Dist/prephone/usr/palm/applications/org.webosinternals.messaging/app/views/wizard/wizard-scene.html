@@ -1,0 +1,137 @@
+<div id="LoginForm">
+	<div class="palm-page-header multi-line">
+		<div class="palm-page-header-wrapper" style="height:62px">
+			<div class="icon" id="title-icon" style="padding-top:5px;margin-left:5px;"></div>
+			<div class="title" id="header" style="padding-top:4px;margin-top:4px;position:absolute;margin-left:5px;"></div>
+			<div class="title sub" id="loc_subheader" style="font-size:14px;padding-top:16px;margin-top:16px;position:absolute;margin-left:5px;"></div>
+		</div>
+	</div>
+	<div class='palm-group'>
+		<div id="loc_usernameLabel" class="palm-group-title" x-mojo-loc=''></div>
+		<div class="palm-list">
+			<div class='palm-row single'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">
+						<div id="username" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div id="loc_usernameExampleLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;"></div>
+			</div>
+		</div>
+	</div>
+	<div class='palm-group'>
+		<div id="loc_passwordLabel" class="palm-group-title" x-mojo-loc=''></div>
+		<div class="palm-list">
+			<div class='palm-row single'>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">
+						<div id="password" x-mojo-element="PasswordField"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="palm-group">
+		<div id="loc_ServerSetup" class="palm-group-title" x-mojo-loc=''></div>
+		<div class="palm-list">
+			<div class="palm-row single">
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">
+						<div id="loc_servernameLabel" class="label" x-mojo-loc=''>Server</div>
+						<div id="server-name" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">
+						<div id="loc_serverportLabel" class="label" x-mojo-loc=''>Port</div>
+						<div id="server-port" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div class="palm-row-wrapper">
+					<div id="edit-login-timeout" x-mojo-element="ListSelector"></div>
+				</div>
+				<div class="palm-row-wrapper">
+					<div id="edit-buddylist-timeout" x-mojo-element="ListSelector"></div>
+				</div>
+				<div class="palm-row-wrapper">
+					<div id="loc_servertlsLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">TLS</div>
+					<div id="server-tls" x-mojo-element="ToggleButton"></div>
+					<div id="loc_servertlsExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;">TLS</div>
+				</div>
+				<div id="loc_ServerSetupWarning" class="palm-body note" style="color:red;clear:both;padding-bottom:10px;padding-left:20px;padding-right:10px;font-size: 14px;"></div>
+			</div>    
+		</div>
+	</div>
+	<div id="loc_AccountSetupGroup" class="palm-group" style="display:none;">
+		<div id="loc_AccountSetup" class="palm-group-title" x-mojo-loc=''>Account Setup</div>
+		<div class="palm-list">
+			<div class="palm-row single">
+				<div id="jabberoption" class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true" style="display:none;">
+					<div class="title">
+						<div id="loc_jabberresourceLabel" class="label" x-mojo-loc=''>Resource</div>
+						<div id="jabber-resource" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div id="loc_jabberresourceExampleLabel" class="palm-body-text note" style="clear:both;padding-bottom:10px;padding-left:5px;padding-right:10px;font-size:14px;"></div>
+				<div id="xfireoption" class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true" style="display:none;">
+					<div class="title">
+						<div id="loc_xfireversionLabel" class="label" x-mojo-loc=''>Version</div>
+						<div id="xfire-version" x-mojo-element="TextField"></div
+					</div>
+				</div>
+				<div id="loc_xfireversionExampleLabel" class="palm-body-text note" style="clear:both;padding-bottom:10px;padding-left:5px;padding-right:10px;font-size:14px;"></div>
+				<div id="sipeoption1" class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true" style="display:none;">
+					<div class="title">
+						<div id="loc_sipeloginLabel" class="label" x-mojo-loc=''>Login</div>
+						<div id="sipe-login" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div id="loc_sipeloginExampleLabel" class="palm-body-text note" style="clear:both;padding-bottom:10px;padding-left:5px;padding-right:10px;font-size:14px;"></div>
+				<div id="sipeoption2" class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true" style="display:none;">
+					<div class="title">
+						<div id="loc_sipeuseragentLabel" class="label" x-mojo-loc=''>User Agent</div>
+						<div id="sipe-useragent" x-mojo-element="TextField"></div>
+					</div>
+				</div>
+				<div id="loc_sipeuseragentExampleLabel" class="palm-body-text note" style="clear:both;padding-bottom:10px;padding-left:5px;padding-right:10px;font-size:14px;"></div>
+				<div id="sipeoption3" class="palm-row-wrapper" style="display:none;">
+					<div id="loc_sipeproxyLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">PROXY</div>
+					<div id="sipe-proxy" x-mojo-element="ToggleButton"></div>
+					<div id="loc_sipeproxyExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;">PROXY</div>
+				</div>	
+				<div id="sametimeoption" class="palm-row-wrapper" style="display:none;">
+					<div id="loc_sametimehideidLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">CLIENT ID</div>
+					<div id="sametime-hideid" x-mojo-element="ToggleButton"></div>
+					<div id="loc_sametimehideidExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;">CLIENT ID</div>
+				</div>	
+				<div id="loc_AccountSetupWarning" class="palm-body note" style="color:red;clear:both;padding-bottom:10px;padding-left:20px;padding-right:10px;font-size: 14px;"></div>
+			</div>    
+		</div>
+	</div>
+	<div class="palm-group" id="AccountOptions">
+		<div id="loc_AccountOptions" class="palm-group-title" x-mojo-loc=''></div>
+		<div class="palm-list">
+			<div class="palm-row single">
+				<div id="Avatar" class="palm-row-wrapper">
+					<div id="loc_avatarLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">Avatar</div>
+					<div id="AvatarToggle" x-mojo-element="ToggleButton"></div>
+					<div id="loc_avatarExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;"></div>
+				</div>
+				<div id="Alias" class="palm-row-wrapper">
+					<div id="loc_aliasLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">Alias</div>
+					<div id="AliasToggle" x-mojo-element="ToggleButton"></div>
+					<div id="loc_aliasExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;"></div>
+				</div>
+				<div id="BadCert" class="palm-row-wrapper">
+					<div id="loc_badcertLabel" class="label left" style="padding-left: 6px;-webkit-palm-mouse-target: ignore;">Cert</div>
+					<div id="BadCertToggle" x-mojo-element="ToggleButton"></div>
+					<div id="loc_badcertExplainLabel" class="palm-body-text note" style="clear:both;padding-left:5px;font-size: 14px;"></div>
+				</div>
+				<div id="loc_AccountOptionsWarning" class="palm-body note" style="color:red;clear:both;padding-bottom:10px;padding-left:20px;padding-right:10px;font-size:14px;"></div>
+			</div>
+		</div>
+	</div>
+	<div x-mojo-element="Button" id="create-account-button"></div>
+	<div id="loc_Donate" class="label left" style="color:black;clear:both;padding-top:6px;ppadding-bottom:15px;padding-left:20px;padding-right:15px;font-size:14px;position:static;float:left;font-weight:bold;"></div>
+	<div id="DonateButton" style="background-image: url('images/donate.png');padding-left:15px;padding-right:5px;height:34px;width:92px;position:static;float:right;background-repeat:no-repeat;"> </div>
+</div>

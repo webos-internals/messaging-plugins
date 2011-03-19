@@ -1,0 +1,109 @@
+GFIRE_DIR = ..
+# All personal changes usually go into this file
+include ../mingw.mak
+
+SUBDIRS = sdk
+
+LIBPURPLE_CFLAGS = -I${WIN32_PIDGIN_DIR}/libpurple -I${WIN32_PIDGIN_DIR}/libpurple/win32 -DPURPLE_PLUGINS -DNO_ZLIB
+WIN32_CFLAGS = \
+	-DPSAPI_VERSION=1 \
+	-I${WIN32_GTK_DIR}/include/glib-2.0 \
+	-I${WIN32_PIDGIN_DIR}/libpurple/win32 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/glib-2.0 \
+	-I${WIN32_GTK_DIR}/lib/glib-2.0/include \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/gtk-2.0 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/pango-1.0 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/libpng13 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/fontconfig \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/freetype2 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/lib/gtk-2.0/include \
+	-I${WIN32_DEV_DIR}/gtk_2_0/lib/glib-2.0/include \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/atk-1.0 \
+	-I${WIN32_DEV_DIR}/gtk_2_0/include/cairo
+WIN32_LIBS = -L${WIN32_GTK_DIR}/lib -L${WIN32_PIDGIN_DIR}/libpurple -lgobject-2.0 -lglib-2.0 -lgthread-2.0 -lws2_32 -lintl -lgdk-win32-2.0 -lgtk-win32-2.0 -lpurple -lpsapi
+GFIRE_SRC_DIR = .
+
+CFLAGS = -O2 -pipe -mno-cygwin -Wall -I. -I${GFIRE_DIR} -I${GFIRE_SRC_DIR} ${WIN32_CFLAGS} ${LIBPURPLE_CFLAGS} ${USER_CFLAGS}
+LDFLAGS = -mno-cygwin -shared -Wl,--dll,--strip-debug ${USER_LDFLAGS}
+
+GFIRE_SOURCES = \
+	${GFIRE_SRC_DIR}/gfire.c \
+	${GFIRE_SRC_DIR}/gf_chat.c \
+	${GFIRE_SRC_DIR}/gf_chat_proto.c \
+	${GFIRE_SRC_DIR}/gf_games.c \
+	${GFIRE_SRC_DIR}/gf_buddies.c \
+	${GFIRE_SRC_DIR}/gf_buddies_proto.c \
+	${GFIRE_SRC_DIR}/gf_friend_search.c \
+	${GFIRE_SRC_DIR}/gf_friend_search_proto.c \
+	${GFIRE_SRC_DIR}/gf_menus.c \
+	${GFIRE_SRC_DIR}/gf_protocol.c \
+	${GFIRE_SRC_DIR}/gf_purple.c \
+	${GFIRE_SRC_DIR}/gf_server_browser.c \
+	${GFIRE_SRC_DIR}/gf_server_browser_proto.c \
+	${GFIRE_SRC_DIR}/gf_server_query.c \
+	${GFIRE_SRC_DIR}/gf_server_query_quake.c \
+	${GFIRE_SRC_DIR}/gf_server_query_source.c \
+	${GFIRE_SRC_DIR}/gf_server_query_gamespy.c \
+	${GFIRE_SRC_DIR}/gf_server_query_gamespy2.c \
+	${GFIRE_SRC_DIR}/gf_server_query_ase.c \
+	${GFIRE_SRC_DIR}/gf_server_query_savage.c \
+	${GFIRE_SRC_DIR}/gf_server_detection.c \
+	${GFIRE_SRC_DIR}/gf_server_detection_win.c \
+	${GFIRE_SRC_DIR}/gf_util.c \
+	${GFIRE_SRC_DIR}/gfire_proto.c \
+	${GFIRE_SRC_DIR}/gf_network.c \
+	${GFIRE_SRC_DIR}/gf_game_detection.c \
+	${GFIRE_SRC_DIR}/gf_game_detection_win.c \
+	${GFIRE_SRC_DIR}/gf_ipc_server.c \
+	${GFIRE_SRC_DIR}/gf_ipc_proto.c \
+	${GFIRE_SRC_DIR}/gf_p2p.c \
+	${GFIRE_SRC_DIR}/gf_p2p_natcheck.c \
+	${GFIRE_SRC_DIR}/gf_p2p_session.c \
+	${GFIRE_SRC_DIR}/gf_p2p_dl_handler.c \
+	${GFIRE_SRC_DIR}/gf_p2p_im_handler.c \
+	${GFIRE_SRC_DIR}/gf_p2p_dl_proto.c \
+	${GFIRE_SRC_DIR}/gf_filetransfer.c \
+	${GFIRE_SRC_DIR}/gf_file_chunk.c \
+	${GFIRE_SRC_DIR}/gf_groups.c \
+	${GFIRE_SRC_DIR}/gf_groups_proto.c \
+	${GFIRE_SRC_DIR}/gf_preferences.c \
+	${GFIRE_SRC_DIR}/gf_preferences_proto.c
+
+GFIRE_RESOURCES = \
+	${GFIRE_SRC_DIR}/gfirerc.rc
+
+GFIRE_OBJECTS = ${GFIRE_SOURCES:%.c=%.o} ${GFIRE_RESOURCES:%.rc=%.o}
+
+
+# Standard stuff here
+.PHONY:	all clean
+.SUFFIXES: .rc
+
+all: libxfire.dll
+	@list='${SUBDIRS}'; for subdir in $$list; do \
+		(cd $$subdir && $(MAKE) -f Makefile.mingw all) || exit 1; \
+	done;
+
+clean:
+	rm -f libxfire.dll
+	rm -f ${GFIRE_OBJECTS}
+	@list='${SUBDIRS}'; for subdir in $$list; do \
+		(cd $$subdir && $(MAKE) -f Makefile.mingw clean) || exit 1; \
+	done;
+
+install: all
+	mkdir -p ${WIN32_INSTALL_DIR}/plugins
+	cp libxfire.dll ${WIN32_INSTALL_DIR}/plugins
+	@list='${SUBDIRS}'; for subdir in $$list; do \
+		(cd $$subdir && $(MAKE) -f Makefile.mingw install) || exit 1; \
+	done;
+
+.c.o:
+	@echo "  CC       " $@;${WIN32_COMPILER} ${CFLAGS} -o $@ -c $^
+
+.rc.o:
+	@echo "  WINDRES  " $@;${WIN32_WINDRES} -i $^ -o $@
+
+libxfire.dll: ${GFIRE_OBJECTS}
+	@echo "  CCLD     " $@;${WIN32_COMPILER} $^ ${WIN32_LIBS} ${LDFLAGS} -o libxfire.dll

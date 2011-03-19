@@ -1,0 +1,43 @@
+Programming
+-----------
+Wolf Beat <asraniel@fryx.ch>
+Keith Geffert <keith@penguingurus.com>
+Laurent De Marez <laurentdemarez@gmail.com>
+Warren Dumortier <nwarrenfl@gmail.com>
+Oliver Ney <oliver@dryder.de>
+
+Artwork
+-------
+Jakub Szypulka - Xfire protocol icons (http://cubestuff.wordpress.com/2008/06/26/xfire-goes-tango-2/)
+León Asad Castillejos - Recolouring of the small protocol icons
+
+
+Special thanks
+--------------
+The folks in #pidgin (previously #gaim), especially rlaager, Paco-Paco and grim
+	for their help with libpurple
+
+keamos
+	for his numerous xfire packet dumps
+
+
+Brian "TLM" Davenport
+	for his help with the initial win32 releases and some bugs :-)
+
+
+to all the guys who helped testing the beta of 0.8.0!
+
+COD?GOD
+	for his the patch for the buddies who don't appear online. (0.8.X series)
+
+
+Gamma and GODJonez
+	for their helpw ith the packet system.
+
+Chewit
+	who is also in the teams and keeps the project running :)
+
+
+Not listed?
+-----------
+If you think that we have missed you in this file, tell us!

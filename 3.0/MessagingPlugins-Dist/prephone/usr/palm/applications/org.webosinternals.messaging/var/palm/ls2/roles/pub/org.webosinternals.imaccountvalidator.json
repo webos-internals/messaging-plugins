@@ -1,0 +1,12 @@
+{
+	"role": {
+		"exeName":"/var/usr/sbin/org.webosinternals.imaccountvalidator",
+		"type":"regular",
+		"allowedNames":["org.webosinternals.imaccountvalidator"]
+	},
+	"permissions": [{
+		"service":"org.webosinternals.imaccountvalidator",
+		"inbound": ["*"],
+		"outbound": ["*"]
+	}]
+}

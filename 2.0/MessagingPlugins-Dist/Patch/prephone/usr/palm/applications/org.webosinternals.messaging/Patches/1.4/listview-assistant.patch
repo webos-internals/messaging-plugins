@@ -1,0 +1,71 @@
+--- listview-assistant.js	Thu Jan  7 14:45:51 2010
++++ listview-assistant.new	Fri Jul  2 22:29:38 2010
+@@ -35,6 +35,7 @@
+ 	
+ 		this.COMMAND_MENU = {
+     		loadComposeView: {command:'cmdLoadComposeView',target: this.loadComposeView.bind(this)},
++			refreshBuddyList: {command:'cmdrefreshBuddyList',target: this.refreshBuddyList.bind(this)},
+ 	    	loadPreferencesView: {command:Mojo.Menu.prefsCmd,target: this.loadPreferencesView.bind(this)},
+     		loadHistoryView: {command:'cmdLoadHistoryView',target: this.loadHistoryView.bind(this)},
+     		loadBuddyView: {command: 'cmdLoadBuddyView',target: this.loadBuddyView.bind(this)},
+@@ -57,7 +58,8 @@
+ 		];
+ 		
+ 		this.commandMenuModel = [
+-			{label:$L('Compose new message'), icon:'newchat', command:this.COMMAND_MENU.loadComposeView.command}
++			{label:$L('Compose new message'), icon:'newchat', command:this.COMMAND_MENU.loadComposeView.command},
++			{label:$L('Compose new message'), icon:'refresh', command:this.COMMAND_MENU.refreshBuddyList.command}
+ 		];
+ 
+ 		this.availabilities = [
+@@ -426,7 +428,7 @@
+ 		// if we are in the history view and the screen is on, do not display a banner + dashboard, just play a notification sound
+ 		if (this.isScreenOn) {
+ 			if (data.notificationType == this.Messaging.notificationTypes.newMessage && this.currentListView == this.Messaging.Views.HISTORY) {
+-				data = {playSoundOnly:true};
++				Object.extend(data, {playSoundOnly:true});
+ 			}
+ 		}
+ 		return data;
+@@ -1299,6 +1301,28 @@
+ 		}
+ 	},
+ 	
++	LoadBuddyList: function(data){
++			var that = this;   
++      		data.list.each(function(item){
++			if (item.availability != "4") {
++				//Load the buddy list
++				MessagingMojoService.refreshBuddyList(that.controller,item.domain,item.username);
++				that.buddyListThrottler.forceUpdate();
++			}
++		});        
++	},
++
++	refreshBuddyList: function() {
++		//Clear the buddy list
++		this.buddyListWidget.mojo.setLength(0);
++		
++		//Make service call to load the buddy list. This causes the list to update
++		MessagingMojoService.getIMAccounts({
++	  		sceneController: this.controller,
++			onSuccess: this.LoadBuddyList.bind(this)
++		});
++	},
++	
+ 	loadComposeView: function(params) {
+ 		this.controller.stageController.pushScene('compose', params);
+ 	},
+@@ -1387,6 +1411,12 @@
+ 		} else {
+ 			this.setAvailabilityIndicator(selectedValue);
+ 		}
++		
++		if (selectedValue ==	this.currentAvailability != this.Messaging.Availability.AVAILABLE)
++		{
++			//Refresh Buddy List
++			this.refreshBuddyList();
++ 		}
+ 		
+ 		MessagingMojoService.setPresence(this.controller, selectedValue, this.handleSetPresenceFailure.bind(this));
+ 	},

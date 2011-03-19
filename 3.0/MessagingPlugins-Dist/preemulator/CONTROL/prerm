@@ -1,0 +1,75 @@
+#!/bin/sh
+
+#Kill org.webosinternals.imlibpurpletransport if it's running
+killall -HUP org.webosinternals.imlibpurpletransport || true
+killall -HUP org.webosinternals.imlibpurpletransport || true
+killall -HUP org.webosinternals.imlibpurpletransport || true
+
+#Kill org.webosinternals.imaccountvalidator if it's running
+killall -HUP org.webosinternals.imaccountvalidator || true
+killall -HUP org.webosinternals.imaccountvalidator || true
+killall -HUP org.webosinternals.imaccountvalidator || true
+
+# Cleanup roles
+rm -f /var/palm/ls2/roles/prv/org.webosinternals.imaccountvalidator.json
+rm -f /var/palm/ls2/roles/prv/org.webosinternals.imlibpurple.json
+
+rm -f /var/palm/ls2/roles/pub/org.webosinternals.imaccountvalidator.json
+rm -f /var/palm/ls2/roles/pub/org.webosinternals.imlibpurple.json
+
+# Cleanup System Services
+rm -f /var/palm/system-services/org.webosinternals.imaccountvalidator.service
+rm -f /var/palm/system-services/org.webosinternals.imlibpurple.service
+rm -f /var/usr/sbin/org.webosinternals.imaccountvalidator
+rm -f /var/usr/sbin/org.webosinternals.imlibpurpletransport
+
+# Cleanup DB files
+rm -f -r /etc/palm/activities/org.webosinternals.imlibpurple/
+rm -f /etc/palm/tempdb/kinds/org.webosinternals.imbuddystatus.libpurple
+rm -f /etc/palm/db/kinds/org.webosinternals.contact.libpurple
+rm -f /etc/palm/db/kinds/org.webosinternals.imcommand.libpurple
+rm -f /etc/palm/db/kinds/org.webosinternals.imgroupchat
+rm -f /etc/palm/db/kinds/org.webosinternals.imlibpurple.account
+rm -f /etc/palm/db/kinds/org.webosinternals.imloginstate.libpurple
+rm -f /etc/palm/db/kinds/org.webosinternals.immessage.libpurple
+rm -f /etc/palm/db/kinds/org.webosinternals.messaging.prefs
+rm -f /etc/palm/db/permissions/org.webosinternals.imcommand
+rm -f /etc/palm/db/permissions/org.webosinternals.imcommand.libpurple
+rm -f /etc/palm/db/permissions/org.webosinternals.imgroupchat
+rm -f /etc/palm/db/permissions/org.webosinternals.imgroupchat.libpurple
+rm -f /etc/palm/db/permissions/org.webosinternals.imloginstate
+rm -f /etc/palm/db/permissions/org.webosinternals.imloginstate.libpurple
+rm -f /etc/palm/db/permissions/org.webosinternals.immessage
+rm -f /etc/palm/db/permissions/org.webosinternals.immessage.libpurple
+rm -f /etc/palm/db/permissions/org.webosinternals.libpurple.account
+rm -f /etc/palm/db/permissions/org.webosinternals.messaging.prefs
+
+# Cleanup temp
+rm -f -r /var/preferences/org.webosinternals.messaging
+
+# Cleanup USB
+rm -f -r /media/internal/Messaging_Certificates
+rm -f /media/internal/DebugMP_Account_Creation.sh
+rm -f /media/internal/DebugMP_Login.sh
+
+# Cleanup Accounts
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.aol.aim
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.facebook
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.gadu
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.google.talk
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.groupwise
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.icq
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.jabber
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.live
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.myspace
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.qq
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.sametime
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.sipe
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.xfire
+rm -f -r /media/cryptofs/apps/usr/palm/accounts/org.webosinternals.messaging.yahoo
+
+# Cleanup Application
+rm -f -r /media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging
+
+# We are done
+exit 0

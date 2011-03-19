@@ -1,0 +1,22 @@
+--- prefsAccountSummary-scene.html	Wed Oct  7 14:04:03 2009
++++ prefsAccountSummary-scene.new	Fri Jul  2 23:31:14 2010
+@@ -16,6 +16,12 @@
+ 					<div id="notificationToggle" x-mojo-element="ToggleButton"></div>
+ 					<div class="title capitalize" x-mojo-loc=''>
+ 						Show notifications
++					</div> 
++				</div>      
++				<div class="palm-row-wrapper">                    
++					<div id="BadCertToggle" x-mojo-element="ToggleButton"></div>
++					<div class="title capitalize" x-mojo-loc=''>
++						Accept Bad Cert
+ 					</div>                                                               
+ 				</div> 
+ 			</div>                
+@@ -120,4 +126,4 @@
+ 		<div id="savePrefs" class="palm-button" x-mojo-loc=''>Save preferences</div>
+ 	</div>
+ 	-->
+-</div>
+\ No newline at end of file
++</div>

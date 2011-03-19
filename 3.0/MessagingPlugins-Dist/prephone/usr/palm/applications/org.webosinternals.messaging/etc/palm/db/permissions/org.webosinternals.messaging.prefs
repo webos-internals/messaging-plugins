@@ -1,0 +1,13 @@
+[
+    {
+        "type": "db.kind",
+        "object": "org.webosinternals.messaging.prefs:1",
+        "caller": "*",
+        "operations": {
+        	"create": "allow",
+            "delete": "allow",
+            "read": "allow",
+            "update": "allow"
+        }
+    }
+]

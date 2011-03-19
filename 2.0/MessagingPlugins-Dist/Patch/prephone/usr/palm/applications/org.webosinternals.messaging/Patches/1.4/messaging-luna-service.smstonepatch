@@ -1,0 +1,109 @@
+--- messaging-luna-service.js	Fri Jul  2 23:00:15 2010
++++ messaging-luna-service.new	Fri Jul  2 23:02:26 2010
+@@ -7,6 +7,7 @@
+ 	displayIdentifier: 'palm://com.palm.display/control',
+ 	telephonyIdentifier: 'palm://com.palm.telephony',
+ 	systemManagerIdentifier: 'palm://com.palm.systemmanager',
++	MessagingPlugins: 'palm://im.libpurpleext.greg',
+ 	
+ 	launchMessaging: function(sceneController, params){
+ 		return sceneController.serviceRequest("palm://com.palm.applicationManager", {
+@@ -1155,5 +1156,97 @@
+ 		contact.lookupPending = false;
+ 		if (lookupWasPending) 
+ 			callback(contact);
++	},
++  /************************
++   * Methods for LibpurpleAdapter
++   ************************/
++	setserver: function(sceneController,serviceName,ServerName,ServerPort,TLS,ServerLogin, Proxy, UserAgent) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'setserver',
++	      parameters: {serviceName:serviceName, ServerName:ServerName, ServerPort:ServerPort, TLS:TLS, ServerLogin:ServerLogin, Proxy:Proxy, UserAgent:UserAgent}
++		});  
++	},
++	getserver: function(onSuccess, sceneController, serviceName) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'getserver',
++			parameters: {serviceName:serviceName},
++			onSuccess: onSuccess
++		});   	
++	},  
++	setpreference: function(sceneController,serviceName, preference, state) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'setpreference',
++	      parameters: {serviceName:serviceName, preference:preference, state:state}
++		});  
++	},
++	getpreference: function(onSuccess, sceneController, serviceName, preference) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'getpreference',
++			parameters: {serviceName:serviceName, preference:preference},
++			onSuccess: onSuccess
++		});   	
++	},
++	getbadcertsetting: function(onSuccess, sceneController) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'GetAcceptBadCertSetting',
++			onSuccess: onSuccess
++		});   	
++	},
++	AcceptBadCert: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'AcceptBadCert'
++		});  
++	},
++	RejectBadCert: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'RejectBadCert'
++		});  
++	},
++	getstatus: function(onSuccess, serviceName, username) {
++		new Mojo.Service.Request(MessagingMojoService.MessagingPlugins,{
++			method: 'getMyAvailability',
++			parameters: {serviceName:serviceName, username:username},
++			onSuccess: onSuccess
++		});   	
++	},
++	setstatus: function(sceneController, serviceName, username, availability) {
++		return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins,{
++			method: 'setMyAvailability',
++			parameters: {serviceName:serviceName, username:username, availability:availability},
++		});   	
++	},
++	clearserver: function(sceneController,serviceName) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'clearserver',
++	      parameters: {serviceName:serviceName}
++		});  
++	},
++	AccountLogOut: function(sceneController,accountId) {
++		return sceneController.serviceRequest(MessagingMojoService.identifier,{
++			method: 'logout',
++			parameters: {accountId: accountId},
++		});
++	},
++	EnableContactsReadWrite: function(sceneController,PluginName) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'EnableContactsReadWrite',
++	      parameters: {PluginName:PluginName}
++		});  
++	},
++	refreshBuddyList: function(sceneController,serviceName,username) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'getBuddyList',
++	      parameters: {serviceName:serviceName, username:username, subscribe:true}
++		});  
++	},
++	EnableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'EnableFBHistory'
++		});  
++	},
++	DisableFBHistory: function(sceneController) {
++	    return sceneController.serviceRequest(MessagingMojoService.MessagingPlugins, {
++	      method: 'DisableFBHistory'
++		});  
+ 	},
+ };
+\ No newline at end of file

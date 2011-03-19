@@ -1,0 +1,302 @@
+Ubuntu Setup
+=================
+Download Ubuntu 10.10. from http://www.ubuntu.com/desktop/get-ubuntu/download
+Install all updates
+
+Cross Compiler Setup
+====================
+apt-get install cvs
+apt-get install automake1.9
+apt-get install build-essential
+apt-get install subversion
+
+svn co http://svn.nslu2-linux.org/svnroot/optware/trunk optware
+cd optware; make cs08q1armel-target
+cd cs08q1armel; make directories ipkg-utils toolchain
+
+apt-get install bison
+apt-get install flex
+apt-get install texinfo
+apt-get install automake
+apt-get install libtool
+apt-get install gawk
+
+cd ../; make i686g25-target
+
+IMPORTANT:
+==========
+Edit /root/optware/i686g25/toolchain/build/targets/src/linux-2.6.28/scripts/unifdef.c
+Replace getline() with getline2()
+==========
+
+cd i686g25; make directories ipkg-utils toolchain (This will take approx 30 minutes)
+
+Install Pidgin Prerequisites
+============================
+apt-get install pidgin-dev
+apt-get install intltool
+apt-get install libxml2-dev
+apt-get install libmeanwhile-dev
+apt-get install network-manager-dev
+apt-get install libgnutls-dev
+
+Perform the following for each environment i686g25 and cs08q1armel. (E.G ensure you are in the i686g25 or cs08q1armel directory)
+
+IF STARTING WITH A NEW VERSION OF PIDGIN NOT FROM GIT
+=====================================================
+Apply the patches in "Compiler Source Files\Patches" to the new pidgin source
+
+cp builds/pidgin-2.7.7/libpurple/purple.pc staging/opt/lib/pkgconfig/
+cp builds/pidgin-2.7.7/libpurple/.libs/libpurple.so staging/opt/lib/
+export PKG_CONFIG_PATH=/root/optware/cs08q1armel/staging/opt/lib/pkgconfig/
+
+Copy over certificate.c to libpurple/
+
+Edit pidgin-2.7.7/libpurple/blist.c
+
+edit blist.c in (void purple_blist_alias_contact(PurpleContact *contact, const char *alias)) comment out last line (gfree...)
+edit blist.c //comment out line 1182 (fix for SIPE)
+edit blist.c //comment out line 1140 (fix for facebook)
+
+edit libpurple/protocols/jabber/roster.c
+
+FIND:
+if(!jid)
+	
+continue;
+
+
+
+ADD BELOW:
+if((strchr(jid, '@')) == NULL)
+
+	continue;
+
+edit staging/opt/lib/pkgconfig/purple.pc
+REPLACE:
+libdir=/root/optware/cs08q1armel/staging/opt
+includedir=/root/optware/cs08q1armel/builds/pidgin-2.7.7
+
+=====================================================
+
+IF STARTING WITH A NEW VERSION OF LIBMEANWHILE
+=====================================================
+add --disable-doxygen to make .mk file
+=====================================================
+
+Copy the following folders to the cross compiler directory
+==========================================================
+cp pidgin-2.7.7 builds/pidgin-2.7.7 -r
+cp pidgin-facebookchat-1.6.9 builds/pidgin-facebookchat-1.6.9 -r
+cp libmeanwhile-1.0.2 builds/libmeanwhile-1.0.2 -r
+cp pidgin-sipe-1.11.2 builds/pidgin-sipe-1.11.2 -r
+cp pidgin-gfire-0.9.2 builds/pidgin-gfire-0.9.2 -r
+
+Copy the following files to the cross compiler directory
+==========================================================
+cp pidgin.mk make/pidgin.mk
+cp pidgin-facebookchat.mk make/pidgin-facebookchat.mk
+cp libmeanwhile.mk make/libmeanwhile.mk
+cp pidgin-sipe.mk make/pidgin-sipe.mk
+cp pidgin-gfire.mk make/pidgin-gfire.mk
+
+Create crosscompile.cache in /root/optware and add the following lines...
+glib_cv_stack_grows=no
+glib_cv_uscore=no
+ac_cv_func_posix_getgrgid_r=yes
+ac_cv_func_posix_getpwuid_r=yes
+ac_cv_have_iconv_detect_h=yes
+
+Build Pidgin
+=================
+Edit make/libtasn1.mk
+Find:
+LIBTASN1_LDFLAGS=
+Replace with:
+LIBTASN1_LDFLAGS= -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+Edit make/gnutls.mk
+Find:
+GNUTLS_LDFLAGS=
+Replace with:
+GNUTLS_LDFLAGS= -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+Edit make/libgpg-error.mk
+Find:
+LIBGPG-ERROR_LDFLAGS=
+Replace with:
+LIBGPG-ERROR_LDFLAGS= -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+Edit make/libgpg-error.mk
+Find:
+GLIB_LDFLAGS=
+Replace with:
+GLIB_LDFLAGS= -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+Edit make/libgcrypt.mk
+Find:
+LIBGCRYPT_LDFLAGS=
+Replace with:
+LIBGCRYPT_LDFLAGS= -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+make gnutls-stage (takes some time)
+
+Edit make/glib.mk
+
+Find:
+GLIB_SITE
+GLIB_VERSION
+
+Replace with:
+GLIB_SITE=http://ftp.gnome.org/pub/gnome/sources/glib/2.27
+GLIB_VERSION=2.27.2
+
+cp builds/glib/glib/glibconfig.h builds/glib/
+make glib-stage (this will fail but build libglib.so which is what we need)
+
+Edit libpurple/Makefile.in
+Find:
+LDFLAGS = @LDFLAGS@
+
+Replace with:
+LDFLAGS = @LDFLAGS@ -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+cd builds/pidgin-2.7.7/libpurple/protocols/novell
+gedit Makefile.in
+
+FIND:
+CFLAGS = @CFLAGS@
+
+REPLACE WITH:
+CFLAGS = @CFLAGS@ -fsigned-char
+
+cd builds/pidgin-2.7.7/libpurple/protocols/gg
+Edit Makefile.in
+Find:
+LDFLAGS = @LDFLAGS@
+
+Replace with:
+LDFLAGS = @LDFLAGS@ -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
+
+DOESN't WORK USE NEXT BIT INSTEAD
+=================
+Edit /buids/pidgin-2.7.7/libpurple/Makefile.in
+Find:
+SSL_CERTIFICATES_DIR = @SSL_CERTIFICATES_DIR@
+Replace with:
+SSL_CERTIFICATES_DIR = /media/internal/Messaging_Certificates
+=================
+Edit /buids/pidgin-2.7.7/libpurple/certifcates.c
+Find:
+g_build_filename(DATADIR, "purple", "ca-certs", NULL));
+Replace with:
+g_build_filename("/media/internal", "Messaging_Certificates", NULL));
+==================
+
+make libxml2-stage
+make libmeanwhile
+cp builds/libmeanwhile-1.0.2/src/.libs/libmeanwhile.so staging/opt/lib
+
+--------------------
+SNAPSHOT ENVIRONMENT
+--------------------
+
+make pidgin (ignor error failing on nullclient
+
+Build Facebook Chat
+===================
+Edit builds/pidgin-facebookchat-1.6.9/MakeFile
+
+Find:
+#LINUX_ARM_COMPILER = 
+Replace with:
+LINUX_ARM_COMPILER = /root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-gcc
+
+Find:
+LINUX32_COMPILER = 
+Replace with:
+LINUX32_COMPILER = /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/bin/i686-unknown-linux-gnu-gcc
+
+Find:
+LIBPURPLE_CFLAGS = 
+Replace with:
+LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB -DUSE_JSONC
+
+Find:
+GLIB_CFLAGS = 
+Replace with:
+GLIB_CFLAGS = -L../pidgin-facebookchat-1.6.9/arm -L../pidgin-facebookchat-1.6.9/i686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -Ijson -lcjson -lz
+
+ARM:
+====
+Find:
+$(MAKE) libfacebook.so -C $(@D)
+
+Replace with:
+$(MAKE) libfacebookarm.so -C $(@D)
+
+Emulator:
+=========
+Find:
+$(MAKE) libfacebookarm.so -C $(@D)
+
+Replace with:
+$(MAKE) libfacebook.so -C $(@D)
+
+COPY IN i686 and ARM folders to builds/pidgin-facebookchat-1.6.9/
+Copy json.c and json.h to builds/pidgin-facebookchat-1.6.9/json
+
+BOTH:
+=====
+make pidgin-facebookchat
+
+Build GFire
+===========
+make pidgin-gfire
+
+Build Office Communicator (SIPE)
+================================
+UNABLE TO COMPILE SIPE 1.11.2 FOR ARM (WORKING ON THIS)
+
+EMULATOR ONLY:
+==============
+cp builds/pidgin-2.7.7/libpurple/.libs/libpurple.so staging/opt/lib/
+cd builds/pidgin-sipe-1.11.2
+make distclean
+cd ../..
+make pidgin-sipe
+
+ARM ONLY:
+=========
+export PKG_CONFIG_PATH=/root/optware/cs08q1armel/staging/opt/lib/pkgconfig/
+cp builds/pidgin-2.7.7/libpurple/purple.pc staging/opt/lib/pkgconfig/
+cp builds/pidgin-2.7.7/libpurple/.libs/libpurple.so staging/opt/lib/
+make pidgin-sipe
+
+PIDGIN
+================
+edit sametime makefile.in set ldflags
+
+IMLibpurpleService
+==================
+Find any copies of "libstdc++.so.6.0.9" and rename them to "libstdc++.so.6.0.9.old"
+
+Edit Makefile.inc
+
+ADD:
+CXX := /root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-g++
+
+Edit MakeFile
+Replace:
+LOCAL_CFLAGS := $(CFLAGS) -Wall -Werror -DMOJ_LINUX -DBOOST_NO_TYPEID $(LOCAL_INCLUDES) $(shell pkg-config --cflags glib-2.0 purple) -march=armv7-a
+
+IMAccountValidator
+==================
+Edit Makefile.inc
+
+ADD:
+CXX := /root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-g++
+
+Edit MakeFile
+Replace:
+LOCAL_CFLAGS := $(CFLAGS) -Wall -Werror -DMOJ_LINUX -DBOOST_NO_TYPEID $(LOCAL_INCLUDES) $(shell pkg-config --cflags glib-2.0 purple) -march=armv7-a

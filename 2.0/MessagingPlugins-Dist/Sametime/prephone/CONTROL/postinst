@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Get Application Install Directory
+if (cat /etc/palm/luna.conf | grep -i "/media/cryptofs/apps") ; then
+	INSTDIR=/media/cryptofs/apps
+else
+	INSTDIR=/var
+fi
+
+#Update Database (call Java)
+sh $INSTDIR/usr/palm/applications/org.webosinternals.messaging/MessagingPlugins.sh $INSTDIR InstallPlugin Sametime
+
+#Copy files to main source
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsametime/usr/lib/purple-2/libsametime.so $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.so
+cp -f $INSTDIR/usr/palm/applications/org.webosinternals.messagingsametime/usr/lib/purple-2/libsametime.la $INSTDIR/usr/palm/applications/org.webosinternals.messaging/usr/lib/purple-2/libsametime.la
+
+#Create sym link for Sametime
+rm -f /usr/lib/libmeanwhile.so.1
+ln -s $INSTDIR/usr/palm/applications/org.webosinternals.messagingsametime/usr/lib/libmeanwhile.so.1 /usr/lib/libmeanwhile.so.1
+
+exit 0

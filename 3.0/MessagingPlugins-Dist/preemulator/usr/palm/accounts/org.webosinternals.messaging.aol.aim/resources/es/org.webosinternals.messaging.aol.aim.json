@@ -1,0 +1,73 @@
+[
+	{
+		"capabilityProviders": [
+		{
+			"capability": "MESSAGING",
+			"capabilitySubtype": "IM",
+			"dbkinds": {
+				"imcommand": "org.webosinternals.imcommand.libpurple:1",
+				"immessage": "org.webosinternals.immessage.libpurple:1"
+			},
+			"icon": {
+				"splitter": "images/aim-32x32.png"
+			},
+			"id": "org.webosinternals.messaging.aol.aim",
+			"implementation": "palm://org.webosinternals.imlibpurple/",
+			"loc_shortName": "AIM",
+			"onEnabled": "palm://org.webosinternals.imlibpurple/onEnabled",
+			"readOnlyData": true,
+			"serviceName": "type_aim"
+		}
+		],
+		"hidden": false,
+		"icon": {
+			"loc_32x32": "images/aim-32x32.png",
+			"loc_48x48": "images/aim-48x48.png"
+		},
+		"loc_name": "AOL Messenger",
+		"loc_subheader": "Configuración de la cuenta",
+		"templateId": "org.webosinternals.messaging.aol.aim",
+		"validator": {
+			"address": "palm://org.webosinternals.imaccountvalidator/checkCredentials",
+			"customUI": {
+				"appId": "com.palm.webosinternals.messaging",
+				"name": "wizard"
+			}
+		},
+		"loc_usernameLabel": "Dirección de correo electrónico",
+		"loc_explainLabel": "username@aim.com",
+		"loc_passwordLabel": "Contraseña",
+		"loc_ServerSetup": {
+			"Display": "De configuración del servidor",
+			"ServerName":{
+				"Display": "Nombre del servidor",
+				"Value": "slogin.oscar.aol.com"
+			},
+			"ServerPort":{
+				"Display": "Puerto del servidor",
+				"Value": "5190"
+			},
+			"ServerTLS":{
+				"Display":"Habilitar TLS del servidor",
+				"Explain": "Activar o desactivar el protocolo TLS para este servidor. Consulte con el administrador del servidor para obtener más ayuda.",
+				"Value":false
+			},
+			"ServerTimeout": "Servidor de tiempo de espera (en segundos)",
+			"ServerBuddyList": "segundos de espera para la lista de amigos",
+			"Warning": "Estos ajustes no se puede cambiar una vez que esta cuenta se crea."
+		},
+		"loc_AccountOptions": {
+			"Display": "Opciones de la cuenta",
+			"Alias": {"Display": "Mostrar alias amigo","Explain": "Seleccione 'Sí' para mostrar su alias de amigos en lugar de su nombre de usuario / dirección de correo electrónico.","Show": false,"Value": false},
+			"Avatar": {"Display": "Mostrar avatares amigo","Explain": "Seleccione 'Sí' para mostrar avatares (imágenes para mostrar) de sus amigos.","Show": true,"Value": true},
+			"BadCert": {"Display": "Acepte Cert válido","Explain": "Seleccione 'Sí' a la confianza no válido, caducado o no es de confianza certificados de servidor.","Show": true,"Value": false},
+			"Warning": "Estos ajustes no se puede cambiar una vez que esta cuenta se crea."
+		},
+		"loc_signInButton": "Iniciar sesión",
+		"loc_Donate": "Ayuda de Apoyo al Desarrollo",
+		"loc_Toggles": {
+			"DisplayYes": "Sí",
+			"DisplayNo": "N"
+		}
+	}
+]
