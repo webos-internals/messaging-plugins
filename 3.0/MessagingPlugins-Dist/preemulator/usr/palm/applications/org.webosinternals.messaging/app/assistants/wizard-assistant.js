@@ -265,7 +265,7 @@ WizardAssistant.createAccount = function(event) {
 		return;
 	}
 	//Check a server name was entered
-	if (this.servernameModel.original === '')
+	if ((this.servernameModel.original === '') && (this.params.initialTemplate.templateId != "org.webosinternals.messaging.sipe"))
 	{
 		this.ShowLoginError ("Validation", "Please enter a valid server name");
 		return;

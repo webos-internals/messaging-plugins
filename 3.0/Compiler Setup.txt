@@ -220,12 +220,12 @@ LINUX32_COMPILER = /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/bin/i6
 Find:
 LIBPURPLE_CFLAGS = 
 Replace with:
-LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB -DUSE_JSONC
+LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB
 
 Find:
 GLIB_CFLAGS = 
 Replace with:
-GLIB_CFLAGS = -L../pidgin-facebookchat-1.6.9/arm -L../pidgin-facebookchat-1.6.9/i686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -Ijson -lcjson -lz
+GLIB_CFLAGS = -Larm -Li686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -I/usr/include/json-glib-1.0 -ljson-glib-1.0 -lcjson -lz
 
 ARM:
 ====
@@ -277,8 +277,8 @@ PIDGIN
 ================
 edit sametime makefile.in set ldflags
 
-IMLibpurpleService
-==================
+IMLibpurpleService ARM ONLY
+===========================
 Find any copies of "libstdc++.so.6.0.9" and rename them to "libstdc++.so.6.0.9.old"
 
 Edit Makefile.inc
@@ -290,8 +290,10 @@ Edit MakeFile
 Replace:
 LOCAL_CFLAGS := $(CFLAGS) -Wall -Werror -DMOJ_LINUX -DBOOST_NO_TYPEID $(LOCAL_INCLUDES) $(shell pkg-config --cflags glib-2.0 purple) -march=armv7-a
 
-IMAccountValidator
-==================
+IMAccountValidator ARM ONLY
+===========================
+export PKG_CONFIG_PATH=/root/optware/cs08q1armel/staging/opt/lib/pkgconfig/
+
 Edit Makefile.inc
 
 ADD:

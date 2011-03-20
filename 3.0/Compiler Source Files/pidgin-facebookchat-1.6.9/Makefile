@@ -4,13 +4,14 @@ LINUX64_COMPILER = x86_64-pc-linux-gnu-gcc
 WIN32_COMPILER = /usr/bin/i586-mingw32-gcc
 WIN32_WINDRES = i586-mingw32-windres
 WIN32_OBJCOPY = i586-mingw32-objcopy
+#LINUX_ARM_COMPILER = arm-pc-linux-gnu-gcc
 LINUX_ARM_COMPILER = /root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-gcc
 LINUX_PPC_COMPILER = powerpc-unknown-linux-gnu-gcc
 FREEBSD60_COMPILER = i686-pc-freebsd6.0-gcc
 MACPORT_COMPILER = i686-apple-darwin10-gcc-4.0.1
 
-LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB -DUSE_JSONC
-GLIB_CFLAGS = -L../pidgin-facebookchat-1.6.9/arm -L../pidgin-facebookchat-1.6.9/i686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -Ijson -lcjson -lz
+LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB
+GLIB_CFLAGS = -Larm -Li686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -I/usr/include/json-glib-1.0 -ljson-glib-1.0
 WIN32_DEV_DIR = /root/pidgin/win32-dev
 WIN32_PIDGIN_DIR = /root/pidgin/pidgin-2.3.0_win32
 WIN32_CFLAGS = -I${WIN32_DEV_DIR}/gtk_2_0/include/glib-2.0 -I${WIN32_PIDGIN_DIR}/libpurple/win32 -I${WIN32_DEV_DIR}/gtk_2_0/include -I${WIN32_DEV_DIR}/gtk_2_0/include/glib-2.0 -I${WIN32_DEV_DIR}/gtk_2_0/lib/glib-2.0/include -I/usr/include/json-glib-1.0 -Wno-format

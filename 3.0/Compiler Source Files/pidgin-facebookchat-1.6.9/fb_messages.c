@@ -332,7 +332,7 @@ gboolean fb_get_new_messages(FacebookAccount *fba)
 
 	purple_debug_info("facebook", "getting new messages\n");
 
-	fetch_server = g_strdup_printf("%d.%s.facebook.com", 0, channel_number);
+	fetch_server = g_strdup_printf("%d-%s.facebook.com", 0, channel_number);
 	/* use the current time in the url to get past any transparent proxy caches */
 	fetch_url = g_strdup_printf("/x/%lu/%s/p_%" G_GINT64_FORMAT "=%d", (gulong)time(NULL), (fba->is_idle?"false":"true"), fba->uid, fba->message_fetch_sequence);
 
@@ -398,9 +398,10 @@ static gboolean fb_send_im_fom(FacebookOutgoingMessage *msg)
 	jstime = g_strdup_printf("%ld%ld", msg->time.tv_sec, (msg->time.tv_usec/1000));
 
 	encoded_message = g_strdup(purple_url_encode(msg->message));
-	postdata = g_strdup_printf("msg_text=%s&msg_id=%d&to=%s&client_time=%s&post_form_id=%s",
+	postdata = g_strdup_printf("msg_text=%s&msg_id=%d&to=%s&client_time=%s&post_form_id=%s&fb_dtsg=%s",
 			encoded_message, msg->msg_id, msg->who, jstime,
-			msg->fba->post_form_id ? msg->fba->post_form_id : "0");
+			msg->fba->post_form_id ? msg->fba->post_form_id : "0",
+			msg->fba->dtsg ? msg->fba->dtsg : "(null)");
 	g_free(encoded_message);
 	g_free(jstime);
 

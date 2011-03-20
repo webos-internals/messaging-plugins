@@ -30,13 +30,9 @@ then
 	
 	#Cleanup
 	rm -f prephone/CONTROL/control
-	
-	mv com.palm.webosinternals.messaging_3.0.0_armv6.ipk org.webosinternals.messaging_3.0.0_armv6.ipk
-	mv com.palm.webosinternals.messaging_3.0.0_armv7.ipk org.webosinternals.messaging_3.0.0_armv7.ipk
 }
 else
 {
 	sh /root/optware/i686g25/staging/bin/ipkg-build $BuildType
-	mv com.palm.webosinternals.messaging_3.0.0_i686.ipk org.webosinternals.messaging_3.0.0_i686.ipk
 }
 fi

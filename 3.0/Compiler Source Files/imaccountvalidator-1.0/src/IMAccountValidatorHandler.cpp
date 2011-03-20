@@ -87,10 +87,6 @@ MojErr IMAccountValidatorHandler::setpreferences(MojServiceMessage* serviceMsg, 
 	}
 	//Get server port
 	err = payload.get(_T("ServerPort"), ServerPort, found);
-	if (!found) {
-		errorText.assign(_T("Missing ServerPort in payload."));
-		result = false;
-	}
 	//Accept Bad Cert?
 	found = payload.get(_T("BadCert"), BadCert);
 	if (!found) {

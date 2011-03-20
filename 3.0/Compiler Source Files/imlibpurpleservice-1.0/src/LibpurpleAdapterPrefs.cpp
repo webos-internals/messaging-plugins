@@ -691,10 +691,10 @@ void LibpurpleAdapterPrefs::setaccountprefs(MojString templateId, PurpleAccount*
 	char* username = getMojoFriendlyUsername(account->username, serviceName);
 	GetServerPreferences((const char*)templateId.data(), (const char*)username, ServerName, ServerPort, ServerTLS, BadCert);
 	
-	//If no server quit
+	//If no server blank
 	if (strcmp(ServerName, "") == 0)
 	{
-		return;
+		ServerName = (char*)"";
 	}
 	//If no port quit
 	if (strcmp(ServerPort, "") == 0)
