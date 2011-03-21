@@ -54,14 +54,14 @@
 			},
 			"ServerTimeout": "Server-Timeout (in Sekunden)",
 			"ServerBuddyList": "Wartezeit auf die Kontaktliste (in Sekunden)",
-			"Warning": "Diese Einstellungen k&ouml;nnen nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
+			"Warning": "Diese Einstellungen können nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
 		},
 		"loc_AccountOptions": {
 			"Display": "Konto-Optionen",
 			"Alias": {"Display": "Zeige Alias","Explain": "W&auml;hlen Sie 'Ja', zur Darstellung des Alias statt des Logins/der E-Mail Adresse.","Show": true,"Value": true},
 			"Avatar": {"Display": "Zeige Avatare","Explain": "W&auml;hlen Sie 'Ja', zur Darstellung von Avataren (Bildern) Ihrer Kontakte.","Show": true,"Value": true},
 			"BadCert": {"Display": "Akzeptiere ung&uuml;ltige Zertifikate","Explain": "W&auml;hlen Sie 'Ja', um dennoch ung&uuml;ltigen, abgelaufenen oder nicht vertrauensw&uuml;rdigen Server-Zertifikaten zu vertrauen.","Show": true,"Value": false},
-			"Warning": "Diese Einstellungen k&ouml;nnen nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
+			"Warning": "Diese Einstellungen können nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
 		},
 		"loc_signInButton": "Anmelden",
 		"loc_Donate": "Unterst&uuml;tze die Entwicklung",

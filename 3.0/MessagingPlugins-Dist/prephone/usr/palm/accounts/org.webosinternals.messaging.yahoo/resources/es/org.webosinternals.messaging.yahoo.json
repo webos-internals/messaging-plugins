@@ -25,7 +25,7 @@
 			"loc_48x48": "images/yahoo-48x48.png"
 		},
 		"loc_name": "Yahoo Messenger",
-		"loc_subheader": "Configuraci&oacute;n de la cuenta",
+		"loc_subheader": "Configuración de la cuenta",
 		"templateId": "org.webosinternals.messaging.yahoo",
 		"validator": {
 			"address": "palm://org.webosinternals.imaccountvalidator/checkCredentials",
@@ -34,11 +34,11 @@
 				"name": "wizard"
 			}
 		},
-		"loc_usernameLabel": "Direcci&oacute;n de correo electrónico",
+		"loc_usernameLabel": "Dirección de correo electrÃ³nico",
 		"loc_explainLabel": "username@yahoo.com",
-		"loc_passwordLabel": "Contrase&ntilde;a",
+		"loc_passwordLabel": "Contraseña",
 		"loc_ServerSetup": {
-			"Display": "De configuraci&oacute;n del servidor",
+			"Display": "De configuración del servidor",
 			"ServerName":{
 				"Display": "Nombre del servidor",
 				"Value": "mcs.msg.yahoo.com"
@@ -49,7 +49,7 @@
 			},
 			"ServerTLS":{
 				"Display":"Habilitar TLS del servidor",
-				"Explain": "Activar o desactivar el protocolo TLS para este servidor. Consulte con el administrador del servidor para obtener m&aacute;s ayuda.",
+				"Explain": "Activar o desactivar el protocolo TLS para este servidor. Consulte con el administrador del servidor para obtener más ayuda.",
 				"Value":false
 			},
 			"ServerTimeout": "Servidor de tiempo de espera (en segundos)",
@@ -58,15 +58,15 @@
 		},
 		"loc_AccountOptions": {
 			"Display": "Opciones de la cuenta",
-			"Alias": {"Display": "Mostrar alias amigo","Explain": "Seleccione 'S&iacute;' para mostrar su alias de amigos en lugar de su nombre de usuario / direcci&oacute;n de correo electrónico.","Show": false,"Value": false},
-			"Avatar": {"Display": "Mostrar avatares amigo","Explain": "Seleccione 'S&iacute;' para mostrar avatares (im&aacute;genes para mostrar) de sus amigos.","Show": true,"Value": true},
-			"BadCert": {"Display": "Acepte Cert v&aacute;lido","Explain": "Seleccione 'S&iacute;' a la confianza no válido, caducado o no es de confianza certificados de servidor.","Show": true,"Value": false},
+			"Alias": {"Display": "Mostrar alias amigo","Explain": "Seleccione 'Sí' para mostrar su alias de amigos en lugar de su nombre de usuario / dirección de correo electrÃ³nico.","Show": false,"Value": false},
+			"Avatar": {"Display": "Mostrar avatares amigo","Explain": "Seleccione 'Sí' para mostrar avatares (imágenes para mostrar) de sus amigos.","Show": true,"Value": true},
+			"BadCert": {"Display": "Acepte Cert válido","Explain": "Seleccione 'Sí' a la confianza no vÃ¡lido, caducado o no es de confianza certificados de servidor.","Show": true,"Value": false},
 			"Warning": "Estos ajustes no se puede cambiar una vez que esta cuenta se crea."
 		},
-		"loc_signInButton": "Iniciar sesi&oacute;n",
+		"loc_signInButton": "Iniciar sesión",
 		"loc_Donate": "Ayuda de Apoyo al Desarrollo",
 		"loc_Toggles": {
-			"DisplayYes": "S&iacute;",
+			"DisplayYes": "Sí",
 			"DisplayNo": "N"
 		}
 	}

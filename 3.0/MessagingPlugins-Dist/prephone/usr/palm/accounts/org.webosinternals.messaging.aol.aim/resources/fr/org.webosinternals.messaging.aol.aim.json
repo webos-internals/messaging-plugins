@@ -25,7 +25,7 @@
 			"loc_48x48": "images/aim-48x48.png"
 		},
 		"loc_name": "AOL Messenger",
-		"loc_subheader": "Paramètres du compte",
+		"loc_subheader": "ParamÃ¨tres du compte",
 		"templateId": "org.webosinternals.messaging.aol.aim",
 		"validator": {
 			"address": "palm://org.webosinternals.imaccountvalidator/checkCredentials",
@@ -49,22 +49,22 @@
 			},
 			"ServerTLS":{
 				"Display":"Activer le serveur TLS",
-				"Explain": "Activer ou désactiver TLS pour ce serveur. Vérifiez auprès de l'administrateur du serveur pour plus d'aide.",
+				"Explain": "Activer ou dÃ©sactiver TLS pour ce serveur. VÃ©rifiez auprÃ¨s de l'administrateur du serveur pour plus d'aide.",
 				"Value":false
 			},
 			"ServerTimeout": "Server Timeout (en secondes)",
 			"ServerBuddyList": "secondes d'attente pour la liste d'amis",
-			"Warning": "Ces paramètres ne peuvent pas être modifiés une fois que ce compte est créé."
+			"Warning": "Ces paramÃ¨tres ne peuvent pas Ãªtre modifiÃ©s une fois que ce compte est crÃ©Ã©."
 		},
 		"loc_AccountOptions": {
 			"Display": "Options pour les comptes",
-			"Alias": {"Display": "Alias Buddy Show","Explain": "Sélectionnez 'Oui' pour voir votre alias copains au lieu de leur login / adresse e-mail.","Show": false,"Value": false},
-			"Avatar": {"Display": "Afficher avatars copain","Explain": "Sélectionnez 'Oui' pour voir (affichage des photos) Avatars de vos amis.","Show": true,"Value": true},
-			"BadCert": {"Display": "Accepter Cert Blancs","Explain": "Sélectionnez «Oui» à la confiance valide, expiré ou non fiables certificats de serveur.","Show": true,"Value": false},
-			"Warning": "Ces paramètres ne peuvent pas être modifiés une fois que ce compte est créé."
+			"Alias": {"Display": "Alias Buddy Show","Explain": "SÃ©lectionnez 'Oui' pour voir votre alias copains au lieu de leur login / adresse e-mail.","Show": false,"Value": false},
+			"Avatar": {"Display": "Afficher avatars copain","Explain": "SÃ©lectionnez 'Oui' pour voir (affichage des photos) Avatars de vos amis.","Show": true,"Value": true},
+			"BadCert": {"Display": "Accepter Cert Blancs","Explain": "SÃ©lectionnez Â«OuiÂ» Ã  la confiance valide, expirÃ© ou non fiables certificats de serveur.","Show": true,"Value": false},
+			"Warning": "Ces paramÃ¨tres ne peuvent pas Ãªtre modifiÃ©s une fois que ce compte est crÃ©Ã©."
 		},
 		"loc_signInButton": "Identifiez-vous",
-		"loc_Donate": "Aide d'appui au développement",
+		"loc_Donate": "Aide d'appui au dÃ©veloppement",
 		"loc_Toggles": {
 			"DisplayYes": "Oui",
 			"DisplayNo": "N"
