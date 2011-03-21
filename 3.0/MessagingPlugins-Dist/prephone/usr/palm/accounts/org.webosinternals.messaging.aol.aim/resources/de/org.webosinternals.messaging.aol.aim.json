@@ -48,23 +48,23 @@
 				"Value": "5190"
 			},
 			"ServerTLS":{
-				"Display":"Aktivieren Server TLS",
-				"Explain": "Aktivieren oder Deaktivieren von TLS für diesen Server. Erkundigen Sie sich bei der Server-Administrator für weitere Hilfe.",
+				"Display": "Aktiviere Server TLS",
+				"Explain": "Aktiviere oder deaktiviere TLS (Verschl&uuml;sselung) f&uuml;r diesen Server. F&uuml;r weitere Unterst&uuml;tzung erkundigen Sie sich beim Administrator des Servers.",
 				"Value":false
 			},
 			"ServerTimeout": "Server-Timeout (in Sekunden)",
-			"ServerBuddyList": "Sekunden warten Buddy-Liste",
-			"Warning": "Diese Einstellungen können nicht geändert werden, sobald dieses Konto erstellt werden."
+			"ServerBuddyList": "Wartezeit auf die Kontaktliste (in Sekunden)",
+			"Warning": "Diese Einstellungen k&ouml;nnen nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
 		},
 		"loc_AccountOptions": {
 			"Display": "Konto-Optionen",
-			"Alias": {"Display": "Show Kumpel Aliase","Explain": "Wählen Sie 'Ja' zu deinen Freunden Alias anstelle der Login / E-Mail Adresse zu zeigen.","Show": false,"Value": false},
-			"Avatar": {"Display": "Show Kumpel Avatare","Explain": "Wählen Sie 'Ja' für Avatare (Anzeige Bildern) von Ihren Freunden.","Show": true,"Value": true},
-			"BadCert": {"Display": "Akzeptieren Ungültige Cert","Explain": "Wählen Sie 'Ja' zu vertrauen ungültig, abgelaufen oder nicht vertrauenswürdigen Server-Zertifikate.","Show": true,"Value": false},
-			"Warning": "Diese Einstellungen können nicht geändert werden, sobald dieses Konto erstellt werden."
+			"Alias": {"Display": "Zeige Alias","Explain": "W&auml;hlen Sie 'Ja', zur Darstellung des Alias statt des Logins/der E-Mail Adresse.","Show": false,"Value": false},
+			"Avatar": {"Display": "Zeige Avatare","Explain": "W&auml;hlen Sie 'Ja', zur Darstellung von Avataren (Bildern) Ihrer Kontakte.","Show": true,"Value": true},
+			"BadCert": {"Display": "Akzeptiere ung&uuml;ltige Zertifikate","Explain": "W&auml;hlen Sie 'Ja', um dennoch ung&uuml;ltigen, abgelaufenen oder nicht vertrauensw&uuml;rdigen Server-Zertifikaten zu vertrauen.","Show": true,"Value": false},
+			"Warning": "Diese Einstellungen k&ouml;nnen nicht ge&auml;ndert werden, nachdem das Konto erstellt wurde."
 		},
 		"loc_signInButton": "Anmelden",
-		"loc_Donate": "Hilfe Support Entwicklung",
+		"loc_Donate": "Unterst&uuml;tze die Entwicklung",
 		"loc_Toggles": {
 			"DisplayYes": "Ja",
 			"DisplayNo": "Nein"
