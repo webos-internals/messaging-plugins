@@ -59,7 +59,7 @@ WizardAssistant.prototype.setup = function() {
 	//Server Port
 	this.controller.get('loc_serverportLabel').innerHTML = this.params.initialTemplate.loc_ServerSetup.ServerPort.Display;
 	this.params.serverport = this.params.initialTemplate.loc_ServerSetup.ServerPort.Value;
-	var serverportAttributes = {textFieldName: "loc_serverportLabel",hintText: '',modelProperty: 'original',multiline: false,focus: false,textReplacement: false,textCase: Mojo.Widget.steModeLowerCase,modifierState: Mojo.Widget.numLock, charsAllow: this.TextBoxNumbers.bind(this)}
+	var serverportAttributes = {textFieldName: "loc_serverportLabel",hintText: '',modelProperty: 'original',multiline: false,focus: false,textReplacement: false,textCase: Mojo.Widget.steModeLowerCase,modifierState: Mojo.Widget.numLock, charsAllow: this.TextBoxNumbers.bind(this)};
 	this.serverportModel = {original: this.params.serverport || '',disabled: false};
 	this.controller.setupWidget('server-port', serverportAttributes , this.serverportModel);
 	//Server TLS
