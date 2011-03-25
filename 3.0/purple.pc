@@ -1,7 +1,7 @@
 prefix=/usr
 exec_prefix=${prefix}
-libdir=/root/optware/cs08q1armel/staging/opt
-includedir=/root/optware/cs08q1armel/builds/pidgin-2.7.7
+libdir=/home/cnegrete/Palm/workspace/optware/cs08q1armel/staging/opt
+includedir=/home/cnegrete/Palm/workspace/optware/cs08q1armel/builds/pidgin-2.7.7
 datarootdir=${prefix}/share
 datadir=${datarootdir}
 sysconfdir=${prefix}/etc
