@@ -1,0 +1,1657 @@
+== Release 0.1.1 ==
+
+2010-08-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* dc: trivial cleanup
+	* win32: tag 0.1.1
+
+2010-08-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* oim: fix crash on bad auth
+
+2010-07-18	Felipe Contreras <felipe.contreras@gmail.com>
+	* plugin: add official set_alias()
+
+2010-05-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* tests: add tests for DST date parsing
+	* Fix date parsing for DST
+	* oim: trivial cleanups and reorganization
+
+== Release 0.1.0 ==
+
+2010-02-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* get-version: remove initial 'v'
+	* peer-msg: add check for wrong smileys
+	* peer-msg: check for proper smiley location
+	* Update to-do list
+	* build: improve install rules a bit
+	* Update README
+	* Fix exec flags
+	* Update translations
+
+2009-07-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* win32: version bump
+
+2010-02-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* nexus: add bit of code to test reconnection
+	* nexus: reset parser state appropriately
+	* nexus: improve reconnection
+	* io/ssl: fix close call
+	* parser: add reset()
+
+2010-02-11	Octavio Alvarez <alvarezp@alvarezp.ods.org>
+	* cvr/pn_direct_conn: ->status data type to enum
+
+== Release 0.1.0-rc4 ==
+
+2010-02-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* io/http: avoid code when connection is closed
+	* Revert "sb: unref in case of error"
+
+2010-02-04	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add emoticons in the correct conversation
+
+2010-02-01	Devid Antonio Filoni <devidfil@gmail.com>
+	* Move adium/Makefile.am to clients/adium
+
+2010-02-02	Devid Antonio Filoni <devidfil@gmail.com>
+	* README: remove translators as we do not update them often
+	* add support for setting (animated) GIFs as a buddy icon
+	* oim: fix receiving support
+
+2010-02-09	Devid Antonio Filoni <devidfil@gmail.com>
+	* adium: run g_main_context_iteration each second
+	* adium: update Makefile.am
+
+2010-02-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* io/http: add a few extra checks
+	* io/http: trivial cleanups
+
+2010-02-08	Felipe Contreras <felipe.contreras@gmail.com>
+	* io/http: add support for delayed flush
+	* io/http: make sure data is written
+	* io/http: reorganize some code
+	* io/http: improve http headers
+	* io/http: stop timer after writing
+	* timer: add stop()
+	* io/http: check for AGAIN while reading content
+	* io/http: fix read reset
+	* directconn: always check last flush status
+
+2010-02-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* nexus: fix memory leaks
+	* nexus: reorganize a bit
+	* nexus: don't close the node manually
+	* peer-link: improve handling of oversized msgs
+	* peer-link: checks for lingering stuff
+	* peer-link: remove unused ref
+	* peer-link: add warning on msg_ack()
+	* peer-link: immediately unref msgs
+	* peer-link: clear messages after being parsed
+	* cvr: improve display of bogus messages
+	* peer-msg: make pn_sip_recv() return bool
+	* peer-msg: check if dc is enabled before starting
+	* peer-msg: trivial reorg into got_transreq()
+	* sb: prevent leak in ans_usr_error()
+	* sb: fix call_error_helper()
+	* peer-link: be more verbose with unprocessed msgs
+	* msg: improve show_readable()
+	* log: make PECAN_LOG_LEVEL public
+	* Plug a few mem leaks
+	* dc: fix a big mem leak
+	* peer-call: remove extra link ref
+
+2010-02-06	Felipe Contreras <felipe.contreras@gmail.com>
+	* nexus: connect after setting up
+	* peer: remove internal msg
+	* peer-msg: remove unused field
+	* sb: unref in case of error
+	* timer: add check for missing id source
+	* Remove extra code for pending sbs
+	* msn: don't immediately close switchboards
+	* io/node: always close
+	* io: improve 'not connected' errors
+	* io: add checks for 'closed' status
+	* io: properly set 'connecting' status
+	* io: properly set 'open' status
+	* Add new status field to 'node'
+	* io: move dispose() code to finalize()
+	* io/ssl: remove unused code
+	* io/ssl: remove extra dispose code
+	* io/ssl: remove unused field
+	* io: trivial parent class cleanups
+	* io: trivial cleaups for g_object_unref
+	* Trivial cleanups
+	* ns: accept NULL in _destroy()
+	* build: reorganize CFLAGS
+	* util: fix parse_date()
+	* build: translation fixes
+
+2010-01-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* peer-msg: remove leaked pn_test
+
+== Release 0.1.0-rc3 ==
+
+2009-12-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* win32: trivial improvements
+	* oim: fix trivial warning
+
+2010-01-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* win32: use files from win32 target
+	* build: add win32_install target
+	* build: add update_locales target
+	* build: trivial locale cleanup
+	* build: improve install_locales target
+	* win32: fix locale stuff
+	* build: generate locales separately
+	* win32: use newer mui
+	* win32: use better icons
+	* win32: reorganize to allow manual dir selection
+	* win32: remove pidgindir
+	* win32: add to uninstall registry
+	* win32: improve uninstaller
+	* win32: add uninstaller
+	* win32: simplify dll name
+	* win32: cleanup installer
+
+2010-01-26	Felipe Contreras <felipe.contreras@gmail.com>
+	* session: check for pending swboards
+
+2010-01-25	Felipe Contreras <felipe.contreras@gmail.com>
+	* directconn: keep trying all addrs
+	* peer-msg: use new dc API
+	* directconn: new start()
+	* directconn: new add_addr()
+	* directconn: add new addrs queue
+	* peer-msg: parse also external addresses
+	* peer-msg: separate address parsing
+	* peer-msg: reorganize 'listening' check
+	* peer-msg: refactor got_transresp()
+	* peer-msg: reorganize got_transresp()
+	* directconn: avoid extra steps in send_msg()
+	* directconn: keep nonce until got_nonce()
+	* Cleanup dc initial call stuff
+	* directconn: issue msg ack
+	* directconn: support delayed writes
+	* directconn: add async_write() skeleton
+	* peer-link: fix dc sending
+	* peer-link: reorganize a bit dc initial call
+	* peer-link: remove unused code
+
+2010-01-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* io/dc: improve write_impl()
+	* io/dc: override channel_setup
+	* node: make channel setup overridable
+	* io/dc: trivial reorganization
+	* directconn: check for connection errors
+	* peer-msg: improve dc invite
+	* parser: properly mark end of string
+	* Trivial cleanups
+	* http: check for correct proxy type
+	* contactlist: add todo item
+	* contaclist: add a bit more debugging for group move
+	* ns: fix defered group move
+	* Fix defered group move
+	* nexus: trivial disconnect check
+	* build: simplify pretty print
+
+2010-01-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* contact: avoid extra dp updates
+	* msnobj: add new equal() function
+	* Reorganize set_object stuff
+	* contact: a bit more debug logging
+	* dp-manager: trivial cleanup
+	* Reorganize contact dp update
+
+2010-01-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* plugin: follow set_alias() recommendation
+	* build: fix static build
+	* build: trivial reorganization for static extension
+	* contact: set contact's personal message correctly
+
+2009-12-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* peer-link: fix directconn reutilization
+
+2009-12-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* io/dc: add parse_impl
+	* directconn: add new process_chunk()
+	* directconn: fix for !GIO
+	* directconn: remove old implementation
+	* io/dc: add read_impl
+	* io/dc: add write_impl
+	* directconn: generic cleanups
+	* node: remove unused stuff
+	* peer-call: remove unused stuff
+
+2009-12-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* directconn: use new implementation
+	* Add initial dc_conn io object
+	* Trivial conn->session cleanups
+	* ns: remove CVR0
+	* peer-msg: fix typo
+
+== Release 0.1.0-rc2 ==
+
+2009-12-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Makefile: fix version in tarball
+	* Makefile: trivial cleanup
+	* Makefile: prettify windres
+	* Makefile: prettify msgfmt
+	* Makefile: improve clean target
+	* Makefile: nicer pretty print
+	* Makefile: fix static build
+
+2009-12-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: check for switchboards being chats
+	* ns: fix invitation to second switchboard
+	* Enable directconn by default
+	* Update translations
+
+2009-12-23	Alexandre André <sgc.alex@gmail.com>
+	* Add new Esperanto translation
+
+2009-12-22	Devid Antonio Filoni <devidfil@gmail.com>
+	* Store the friendly name in purple account
+
+2009-12-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Reorganize public alias stiff a bit
+	* Remove silly libpurple workarounds
+	* Remove unnecessary usage of fix_purple.h
+	* Bump glib requirement to 2.16
+	* fix_purple: remove unused stuff
+	* Replace G_GSIZE_FORMAT with %zu
+	* Remove fix_purple_win32
+	* win32: improve README
+	* Makefile: improve win32 build
+
+2009-12-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update get-version stuff
+
+2009-12-15	Devid Antonio Filoni <devidfil@gmail.com>
+	* dp: prioritize contacts without pictures
+	* dp: trivial reorganization
+
+2009-12-14	Devid Antonio Filoni <devidfil@gmail.com>
+	* oim: decrease count whem messages fail
+
+2009-12-15	Víctor Manuel Jáquez Leal <vjaquez@igalia.com>
+	* directconn: silence the compiler
+
+2009-08-02	Devid Antonio Filoni <devidfil@gmail.com>
+	* oim: authenticate SSO if it expires
+	* Adium: add a musical note in status text
+
+2009-12-13	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* pidgin: fix local simleys in chats
+	* pidgin: send proper emoticon messages in chats
+	* util: fix crash with all font effects
+
+2009-08-07	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* pidgin: strip personal message
+
+2009-12-14	Felipe Contreras <felipe.contreras@gmail.com>
+	* util: reorganize pn_parse_date()
+	* util: cleanup pn_parse_date()
+
+2009-12-13	Devid Antonio Filoni <devidfil@gmail.com>
+	* util: parse_date() fix an issue releated to dst
+	* sb: fix handwritten messages receiving in Pidgin
+
+2009-12-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* test: add check for parse_date
+	* Create new pn_parse_date()
+	* node: add optional gio support
+	* Makefile: add USE_GIO
+	* nexus: add connection error handling
+	* sslconn: add connection error handling
+	* ns: trivial cleanup
+	* nexus: add error handling
+	* nexus: reorganize error handling a bit
+	* nexus: reorganize a bit
+	* nexus: trivial cleanups
+	* nexus: remove unused cookie stuff
+	* nexus: code-style cleanups
+
+2009-08-03	Devid Antonio Filoni <devidfil@gmail.com>
+	* pn_oim.c: parse received OIM date
+
+2009-07-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* http: add optional gio support
+	* nexus: rewrite to use ssl_conn
+
+2009-07-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use gio instead of gobject
+	* Remove pn_socket
+
+2009-12-13	Simone Contini <s.contini@oltrelinux.com>
+	* oim: handle malformed data in process_body_receive
+
+2009-12-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* test: add check for pn_friendly_name_encode()
+	* sb: remove timer on chats
+	* pidgin: reorganize chat stuff a bit
+	* sb: remove unnecessary ANS handling
+	* Fix chat handling
+	* sb: fix chat refcount
+	* session: synchronize contacts
+	* contact: add new _is_in_group()
+	* pidgin: make offline and invisible status saveable
+	* session: fix login with big passwords
+	* directconn: fix a build warning
+	* directconn: another build fix
+
+2009-08-03	Felipe Contreras <felipe.contreras@gmail.com>
+	* Don't url_encode friendly name
+
+2009-12-08	Octavio Alvarez <alvarezp@alvarezp.ods.org>
+	* directconn: generic bug fixes
+	* directconn: build fixes
+
+2009-11-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* peer-link: cancel call if we ran out of memory
+
+2009-09-05	John Bailey <rekkanoryo@pidgin.im>
+	* Fix security vulnerability
+
+2009-08-27	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix a crash when a multichat window is opened
+
+2009-08-10	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix build with libpurple < 2.5.0
+	* Adium: don't build winks receiving support
+	* Adium: remove useless ifdefs
+
+2009-09-05	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* Properly quote the imgstore ID for ink messages
+
+2009-09-07	Devid Antonio Filoni <devidfil@gmail.com>
+	* Adium: do not show "I'm listening" field in get_info
+
+2009-10-25	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix clang warnings from previous commit
+
+2009-10-25	Víctor Manuel Jáquez Leal <vjaquez@igalia.com>
+	* Silence the compiler in 64 bit architectures.
+
+2009-09-14	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: trivial cleanups
+
+2009-09-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* oim: remove lingering pn_test's
+
+2009-07-31	Devid Antonio Filoni <devidfil@gmail.com>
+	* oim: implement msnp15 SSO authentication
+
+== Release 0.1.0-rc1 ==
+
+2009-07-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* mspack: fix trivial warning
+	* Build fixes for Maemo
+	* Random updates
+	* Localization improvements
+
+2009-07-19	Devid Antonio Filoni <devidfil@gmail.com>
+	* show a better message when someone tries to initiate a video call
+	* session: add PURPLE_MESSAGE_NOTIFY flag to purple_conversation_write
+
+2009-07-18	Devid Antonio Filoni <devidfil@gmail.com>
+	* contactlist: remove useless stuff
+	* swboard: cleanup
+	* ink receiving: use fwrite instead of PurpleStoredImage
+	* Adium: adjust voice clips and Plus! sounds messages
+	* Fix Adium build
+
+2009-07-18	Felipe Contreras <felipe.contreras@gmail.com>
+	* Makefile: improve cross-compilation
+	* log: add printf warnings
+	* util: fix warning on win32
+	* sb: cleanup error handling
+	* node: make pn_node_set_id() reusable
+	* Reorganize peer_msg
+	* Random cleanups
+	* http-server: check if the node is alive
+	* node: skip unnecessary steps
+	* node: add 'open' field
+	* peer-link: trivial cleanups
+	* peer-link: fix timeout removal
+	* http-server: fix previous commit
+	* http-server: reset timer on read
+	* Remove name param from pn_cmd_server_new()
+	* sb: fix potential memleak
+	* peer-call: remove 'progress' flag
+	* peer-call: fix timer id
+	* log: random improvements
+	* http-server: trivial leak fix
+	* msn: improve current media stuff
+	* contact: set media status correctly
+	* timer: fix a silly memleak
+	* sb: unref messages appropriately
+
+2009-07-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: fix regression in 935613
+	* Completely remove msg timeout stuff
+
+2009-07-17	Devid Antonio Filoni <devidfil@gmail.com>
+	* dp_manager: don't try to receive failed dps after 5 attempts
+
+2009-07-14	Devid Antonio Filoni <devidfil@gmail.com>
+	* session: add PnPermission type
+
+2009-07-14	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: a few cleanups and extra checks
+	* msn: trivial cleanups
+	* msn: trivial cleanup and possible leak fix
+
+2009-07-13	Andrea Piccinelli <frasten@gmail.com>
+	* Show the wink preview on a new line
+
+2009-07-12	Devid Antonio Filoni <devidfil@gmail.com>
+	* pn_oim: fix some issues on sending
+	* ns: fix OIMs receiving when logged as invisible
+	* pn_oim.c: improve process_body_send
+
+2009-07-12	Andrea Piccinelli <frasten@gmail.com>
+	* Wink support improvements
+	* Add libmspack and swfobject
+
+2009-07-12	Chris Stafford <gaimsubs@notak.co.uk>
+	* Implement wink receiving
+
+2009-07-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: close on inactivity
+	* Remove msg->ack_ref stuff
+	* transaction: remove timeout stuff
+	* Improve ping functionality
+	* New pn_timer helper
+	* sb: don't clear conv
+	* ns: also set node id when invited to a sb
+	* oim: finalize parsing
+	* oim: improve the soap parser
+	* parser: add pn_parser_read function
+	* log: new pn_test macro
+	* Improve cmd logging stuff
+	* cmdproc: add comment regarding cmdproc->multiparts
+
+2009-07-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* Move 'lib' to 'ext'
+
+2009-07-11	Devid Antonio Filoni <devidfil@gmail.com>
+	* pn_oim: delete received oims from the server
+	* Implement OIMs sending support.
+	* pn_util: add product_key to pn_handle_challenge
+	* Move rand_guid to pn_util.c.
+
+2009-07-11	Andrea Piccinelli <frasten@gmail.com>
+	* Add support for audio:// links in pidgin >= 2.6.0
+
+2009-07-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* peer-link: set peer_msg->msg, again
+	* msn: fix potential invalid mem usage
+	* peer-link: avoid re-using peer_msg->msg
+
+2009-07-08	Devid Antonio Filoni <devidfil@gmail.com>
+	* Don't display OIMs of blocked contacts.
+	* pn_oim.c: fix issue 117
+
+2009-07-08	Felipe Contreras <felipe.contreras@gmail.com>
+	* Rename po's so that launchpad is happy
+	* http-server: fix auth while polling
+	* Improve logging stuff
+	* tests: more printf checks
+	* sb: remove unnecessary checks
+	* dp-manager: more logging improvements
+	* peer-call: increase timeout
+	* peer-msg: show sip messages in the log
+	* dp-manager: improve fail log message
+	* peer-link: fix ack msg issue
+	* Avoid some warnings
+	* pn-log: avoid debugging when it's disabled
+	* pn-log: cleanups
+	* Fix klib's printf pointer format
+	* Make printf test work again
+	* Fix tests' build
+
+2009-07-08	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* New support for receiving handwritten implementation.
+	* Re-combine large (multi-part) messages on MSN.
+
+2009-07-08	Mike Ruprecht <maiku@soc.pidgin.im>
+	* Notify the user if a contact invites him to a voice call.
+	* Inform the user when someone tries to initiate a video call.
+
+2009-07-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* pn-printf: better implementation from klibc
+	* peer-link: minor cleanup/optimization
+	* Split peer-msg into _priv.h
+	* Cleanup peer_msg stuff
+	* Move sip stuff to peer_msg
+	* Build fixes
+	* sip: whitespace cleanups
+	* peer-call: split into _priv.h
+	* Remove peer_link_priv.h
+	* Move pn_buffer away from io subdir
+	* Reorganize headers for pn_buffer
+	* Rename PnBuffer to 'struct pn_buffer'
+	* ab: reorganize headers
+	* Rename PnContactListFunc to 'pn_contact_list_func_t'
+	* Rename PnContactList to 'struct pn_contact_list'
+	* Rename PnContact to 'struct pn_contact'
+	* Rename PnGroup to 'struct pn_group'
+	* pn-msnobj: cleanup type field
+	* cvr: some header reorganization
+	* Rename PnMsnObj to 'struct pn_msnobj'
+	* Rename PnDirectConn to 'struct pn_direct_conn'
+	* Rename PnPeerMsg 'struct pn_peer_msg'
+	* peer-call: remove type field
+	* Rename PnPeerCall to 'struct pn_peer_call'
+	* Rename PnPeerLink to 'struct pn_peer_link'
+	* Cleanup peer-link, split into _priv.h
+	* Trivial cleanups
+	* Reorganize peer code for tracking sbs better
+	* peer-link: fix peer-msg refcount
+	* peer-msg: add ref-count
+	* Rename pn_direct_conn
+	* Rename pn_peer_msg
+
+2009-07-06	Felipe Contreras <felipe.contreras@gmail.com>
+	* Rename pn_sip
+	* Cleanup slp.c
+	* Make xfer specific to libpurple
+	* peer-call: rename destroy() to free()
+	* peer-call: make timeout function internal
+	* General peer-call cleanups
+	* peer-call: add ref-count
+	* Rename pn_peer_call
+	* General cleanups
+	* sb: plug a leak when re-using messages
+	* Cleanup message_destroy stuff
+	* sb: avoid double freeing on error
+	* Convert peer_link list to hash table
+	* peer-link: rename destroy() to free()
+	* Remove sb flag
+	* Improve switchboard refcounting
+	* Remove unnecessary and wrong slp checks
+	* Add some extra peer_link ref handling
+	* Add refcount to peer_link
+	* Rename pn_peer_link
+	* dp-manager: improve message for empty queue
+	* session: lookg up for chats in the right table
+	* dp-manager: stop when logging off
+	* slplink: general cleanups
+	* Trivial cleanups
+	* Fix transaction recounting
+	* session: reorder free sequence
+	* sb: more proper usage of P4-Context
+	* msnobj: fix regression in 03b9a37
+
+2009-07-06	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix adium build
+
+2009-07-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Plug a leak introduced by 00cedc
+	* Warn instead of erroring out on non fatal errors
+	* Allow slightly wrong msnobjs
+	* Add p2p-design document
+	* Remove history
+	* slplink: reorganize destroy()
+	* msn: add error message when sb is not ready
+	* parser: codestyle cleanup
+	* Use PECAN_ prefix for defines
+	* Makefile: fix PECAN_LOG -> PN_LOG rename
+	* cmd-server: plug a leak
+	* dp_manager: minor cleanups
+	* Rename pn_global
+	* Rename pn_locale
+	* Rename pn_util
+	* Rename pn_error
+	* Rename pn_printf
+	* Rename pn_log
+
+2009-07-01	David Geary <bianca.uranus@gmail.com>
+	* Proxy Authorization
+
+2009-06-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Rename pn_contactlist
+	* Rename pn_contact
+	* Rename pn_group
+	* Rename pn_cmd_server
+	* Rename pn_http_server
+	* Rename pn_parser
+	* Rename pn_ssl_conn
+	* Rename pn_node
+	* Rename pn_socket
+	* Rename pn_buffer
+	* Rename pn_stream
+	* Rename pn_msnobj
+	* Rename pn_siren7
+	* Rename pn_status
+	* Rename pn_dp_manager
+	* Rename pn_oim
+	* Cleanup addressbook stuff
+	* Cleanup pecan_group
+	* Reorganize file transfer struff
+	* Cleanup cvr
+	* Remove slpsession
+	* Cleanup pecan_http_server
+	* Cleanup pecan_cmd_server
+	* Reorganize pecan_cmd_server a bit
+	* Cleanup pecan_parser
+	* Cleanup pecan_ssl_conn
+	* Cleanup pecan_socket
+	* Cleanup pecan_buffer
+	* Cleanup msnobj
+	* Fix copyrights
+	* dp-manager: cleanup
+	* Rename pecan_ud to pecan_dp_manager
+	* pecan_oim: cleanup
+	* Improve package name handling
+	* Add simple doxygen configuration
+
+2009-07-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* contact: fix previous commit
+	* contact: cleanup set_current_media()
+	* tests: add unit test for pecan_html_unescape()
+	* util: new pecan_html_unescape()
+	* Make ARRAY_SIZE part of util
+	* util: random improvements
+	* tests: add util test
+	* tests/Makefile: trivial improvements
+	* status: plug a leak
+	* cmdproc: initialize trans ref count correctly
+	* Improve debug log level configuration
+	* slpcall: remove from slplink at the right time
+	* dp_manager: fix wrong loop break
+	* dp_manager: add sb window todo
+	* dp_manager: remove unnecessary checks
+
+2009-07-02	Devid Antonio Filoni <devidfil@gmail.com>
+	* dp_manager: add again contact to queue after an error.
+	* dp_manager: retrieve 8 display pictures per minute in order to avoid error 800.
+	* dp_manager: remove all PECAN_DP_MANAGER_TIMED stuff.
+
+2009-07-01	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* When receiving an MSN custom smiley, look at the switchboard for the PurpleConversation, instead of searching for it.
+
+2009-06-30	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* Properly send MSN nudges in a chat to the right window, and not open a new conversation for the person who sent the nudge.
+
+2009-06-30	Devid Antonio Filoni <devidfil@gmail.com>
+	* switchboard: don't show a nudge in the conversation window if an unknown datacast is received.
+	* pecan_ud_manager: call queue method only if the object is a display picture.
+
+2009-07-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* dp-manager: fix possible crash
+	* ns: fix display picture retrieval when a user logs in
+
+2009-06-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Avoid setting wrong display picture
+	* cvr/slp: avoid crash when object is invalid
+
+2009-06-23	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix adium build
+
+2009-06-22	Andrea Piccinelli <frasten@gmail.com>
+	* Added missing "fr" translation to Makefile.
+	* Added uninstall target to Makefile.
+
+2009-06-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix regressions in 502fc5, and cleanups
+
+2009-06-21	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix regression in 2ca3085
+	* Don't leave the old current media if there isn't a new one.
+
+2009-06-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* msn: cleanup and fix regression in f93474d
+	* Move msn.h to pecan_global
+	* Fix package handling
+
+2009-06-16	Devid Antonio Filoni <devidfil@gmail.com>
+	* Enable voice clips and Messenger Plus! sounds supports also using Adium.
+	* Don't show status name using Adium.
+	* Fix build on Mac OS X.
+
+2009-06-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanup client id stuff
+	* notification: improve system message
+	* parser: no need for MSN_BUFF_LEN
+	* Trivial cleanups
+	* Whitespace cleanups
+	* Avoid pecan_strdup_printf
+	* Improve win32 build (and other platforms)
+
+2009-06-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* printf: allow %x
+
+2008-07-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: remove CAL timeouts
+
+2009-06-18	Felipe Contreras <felipe.contreras@gmail.com>
+	* Trivial cleanup
+	* Fix win32 build
+
+== Release 0.0.19 ==
+
+2009-06-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Bump version to 0.0.19
+	* po: general translation updates
+
+2009-06-16	Wei Hsiang Hung <weihsiang.hung@gmail.com>
+	* po: update Traditional Chinese translation
+
+2009-06-16	Albert Cervin <albert@cavalince.com>
+	* po: update Swedish translation
+
+2009-06-16	Luís Neto <luisneto3@clix.pt>
+	* po: update Portuguese translation
+
+2009-06-16	Devid Antonio Filoni <devidfil@gmail.com>
+	* po: update Italian translation
+
+2009-06-16	Elias Julkunen <elias.julkunen@gmail.com>
+	* po: update Finnish translation
+
+2009-06-15	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix SLP DATA message creation
+	* Optimize GType retrieval
+	* Fix wrong memory access
+
+2009-06-15	Devid Antonio Filoni <devidfil@gmail.com>
+	* slp: destroy object at the right time
+
+2009-05-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* sb: set error properly
+	* transaction: fix initial ref_count
+	* Properly ref/unref transactions
+	* transaction: add ref/unref
+	* transaction: trivial cleanup
+
+2009-05-30	Devid Antonio Filoni <devidfil@gmail.com>
+	* ab/pecan_contact.c: cleanup.
+	* Set the passport also to session->user.
+
+2009-05-24	Devid Antonio Filoni <devidfil@gmail.com>
+	* Show "You are not in A's contact list" message opening a conv window if needed.
+
+2008-06-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Make sure the switchboard is not freed when it's still used by slplink.
+
+2008-06-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* Close the http node when not needed.
+
+2008-06-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Reorganize switchboard handling.
+
+2009-03-26	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add "Has Space" to get_info.
+	* Update MsnClientCaps in msn.h.
+	* Add PURPLE_STATUS_TUNE support and parse contacts's CurrentMedia.
+	* Update COPYRIGHT.
+	* Move utils/msgplustags.{c,h} to pecan_util.{c,h}.
+
+2009-05-27	Geoffrey Antos <geoffrey.antos@gmail.com>
+	* slplink: fix buffer overflow vulnerability
+
+2009-03-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* fix_purple: rename purple_buddy_set functions
+	* fix_purple: trivial cleanups
+	* contact: enable workaround for server aliases
+	* command: general cleanups
+	* command: remove unused refcount
+	* command: trivial cleanups
+	* Update copyright notices
+
+2009-03-21	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix use server alias option
+
+2009-03-15	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use pidgin mobile status only when offline
+	* contact: use "invisible" for the HIDDEN status
+	* status: trivial cleanup
+	* Get user displays when returning from 'hidden' state
+	* contaclist: add function foreach_contact
+	* notification: store user state
+	* Reorganize how bad statuses are handled
+	* contact: store pecan status instead of pidgin one
+	* session: destroy ud manager after freeing slplinks
+	* Makefile: add debugging symbols by default
+	* Log general server notifications
+	* userdisplay: report failure
+	* Trivial cleanups
+	* status: improve "available" state mapping
+	* status: trivial cleanups
+	* slpcall: avoid extra error cb call
+	* cmdproc: trivial cleanup
+
+2009-02-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Remove bad Russian translation.
+
+2009-02-17	Devid Antonio Filoni <devidfil@gmail.com>
+	* Translate msn-pecan also using Adium.
+	* Change PACKAGE to GETTEXT_PACKAGE.
+	* Fix use_userdisplay option using Adium.
+
+2009-02-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* session: Random cleanups.
+	* Cleanup configuration stuff.
+	* Trivial cleanups.
+	* session: Cleanups.
+
+2009-02-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Show up 'connecting' state.
+	* Cleanup login steps.
+
+== Release 0.0.18 ==
+
+2009-02-16	Thiago Silva <defcola@gmail.com>
+	* po: Update Portuguese (Brazil) translation.
+
+2009-02-15	Felipe Contreras <felipe.contreras@gmail.com>
+	* win32: Show proper "README".
+	* session: Workaround to set http_method early on.
+	* session: Properly normalize the username.
+	* Bump version to 0.0.18.
+	* Build fixes for win32.
+	* Update translations catalog.
+	* po: Update Spanish translation.
+	* po: General update.
+	* Enable MSN plus sounds by default.
+
+2009-02-15	Luís Neto <luisneto3@clix.pt>
+	* po: Update Portuguese translation.
+
+2009-02-15	Devid Antonio Filoni <devidfil@gmail.com>
+	* po: Update Italian translation.
+
+2009-02-15	Elias Julkunen <elias.julkunen@gmail.com>
+	* po: Update Finnish translation.
+
+2009-02-08	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix typo in Makefile.
+
+2009-02-05	Eion Robb <eion@robbmob.com>
+	* Add win32 dll version.
+
+2009-02-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Build libsiren by default.
+	* Use proper libdir (might be lib64).
+	* Plug some memleaks and cleanups on voiceclips.
+
+2008-12-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* session: Massive cleanups.
+	* session: Cleanups.
+	* sync: Cleanup.
+	* Remove logging step.
+
+2009-02-05	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add support for receiving Plus! sounds. Patch for this by Thiago Silva and me.
+	* Add an option to hide Messenger Plus! Live tags from buddies nicknames and personal messages.
+	* Choice to don't use PSM (and to use a normal personal message) during build.
+
+2009-01-21	Elliott Sales de Andrade <qulogic@pidgin.im>
+	* Report a debug warning if a SLP MSG is not processed because it has unknown flags.
+
+2009-01-21	Thomas Gibson-Robinson <thomas.gibsonrobinson@gmail.com>
+	* Fix user displays for WLM 2009.
+
+2009-01-17	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix a crash receiving voice clips and make voice clips messages translable.
+
+2009-01-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanup libsiren Makefile stuff.
+	* libsiren cleanups.
+	* Reorganize libsiren.
+	* Make libsiren optional.
+
+2009-01-03	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add support for receiving voice clips. Thanks to Chris Stafford and Youness Alaoui for this.
+	* Update adium/Makefile.am.
+	* Use pecan_info instead of purple_debug_*.
+
+2009-01-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix personal status message option.
+
+2009-01-12	Thiago Silva <defcola@gmail.com>
+	* Use P4-context.
+
+2009-01-08	Devid Antonio Filoni <devidfil@gmail.com>
+	* Fix a bug that sets the mobile status to non-mobile buddies.
+	* Enable friendly name storage and fix it.
+
+2009-01-08	Thiago Silva <defcola@gmail.com>
+	* Update pt_BR translation.
+
+2008-12-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix previous commit.
+
+2008-12-05	Devid Antonio Filoni <devidfil@gmail.com>
+	* Cleanups.
+	* Update readme.
+	* Show msn-pecan instead of msn in debug window.
+
+2008-12-29	Devid Antonio Filoni <devidfil@gmail.com>
+	* Update to 'Use personal status messages'.
+
+== Release 0.0.17 ==
+
+2008-11-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Move win32 stuff to a separate directory.
+	* Minor Makefile cleanups.
+	* win32: Fix build.
+
+2008-11-29	Ying-Shiuan Pan <unknown>
+	* Update Traditional Chinese translation.
+
+2008-11-29	Tao Wei <unknown>
+	* Update Simplified Chinese translation.
+
+2008-11-29	Erik Fredriksen <tapiren86@gmail.com>
+	* Update Swedish translation.
+
+2008-11-29	Sergei Zivukov <unknown>
+	* Update Russian translation.
+
+2008-11-29	Marco de Moulin <marco@point.nl>
+	* Update Dutch translation.
+
+2008-11-29	Gulars <unknown>
+	* Update Norwegian Bokmal translation
+
+2008-11-29	drummingdemon <drummingdemon@citromail.hu>
+	* Update Hungarian translation.
+
+2008-11-29	Alexandre André <sgc.alex@gmail.com>
+	* Update French translation.
+
+2008-11-29	Jisakiel <jisakiel@yahoo.es>
+	* Update Spanish translation.
+
+2008-11-29	ZyroBlue <ferahgo.de@gmail.com>
+	* Update German translation.
+
+2008-11-29	Peter Skov <unknown>
+	* Update Danish translation.
+
+2008-11-21	Devid Antonio Filoni <devidfil@gmail.com>
+	* Really enable indepedent psms by default.
+
+2008-11-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add comment regarding initial account settings for psms.
+
+2008-11-09	Felipe Contreras <felipe.contreras@gmail.com>
+	* Turn on independent personal message by default.
+
+2008-11-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanups and fixes for independent pm option.
+	* Fix compilation issues in the previous commit.
+
+2008-11-02	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add new option for custom personal message.
+
+2008-10-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* Don't unref emoticon data.
+
+2008-10-19	Devid Antonio Filoni <devidfil@gmail.com>
+	* Inform user if a particular datacast message is received.
+
+2008-10-19	Ka-Hing Cheung <khc@hxbc.us>
+	* Don't show error for autoresponse messages.
+
+2008-10-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* Remove LIBPURPLE_NEW_API
+	* Use pecan_buffer instead of purple_img_store for emoticons.
+	* Reorganize p2p emoticon fetching code.
+	* Pecanize custom emoticon sending.
+	* Cleanup the custom emoticon sending stuff.
+
+2008-09-25	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add custom emoticons sending support.
+
+2008-09-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add proper sourcecode dependencies.
+	* Makefile optimizations.
+	* Trivial Makefile cleanups.
+	* Makefile cleanups.
+
+2008-09-15	Víctor Manuel Jáquez Leal <vjaquez@igalia.com>
+	* Fix compilation warnings for 64bit platforms.
+
+== Release 0.0.16 ==
+
+2008-09-14	Eion Robb <eion@robbmob.com>
+	* Add win32 installer.
+
+2008-09-14	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add yet more silly compatibility stuff for libpurple.
+	* Don't compile socket stuff by default.
+
+2008-09-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use the new API by default for libpurple 2.5.x.
+	* Add option to disable userdisplays.
+	* Make directconn an option.
+
+2008-09-13	Devid Antonio Filoni <devidfil@gmail.com>
+	* Cleanup handwritten messages stuff.
+	* Update README and AUTHORS.
+
+2008-09-10	Devid Antonio Filoni <devidfil@gmail.com>
+	* Add support for handwritten messages.
+
+2008-09-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* Conditionally compile dump_file; usually not used.
+	* Add cvr debugging stuff.
+
+2008-09-08	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update directconn.
+
+2008-09-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add compilation flag to avoid the timer.
+	* Send the whole userdisplay window at once.
+	* Move debugging flags to the Makefile.
+	* Fix whitespaces in udm.
+	* Increase udm window size.
+	* Improve udm logging.
+	* Only queue userdisplays when messages can actually be sent.
+	* Add contact_can_receive function.
+	* Update the contact status before other things.
+	* Don't free http childs.
+
+2008-09-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add new userdisplay manager.
+	* Some slp cleanups.
+
+2008-09-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add experimental pecan_socket.
+
+2008-09-03	Felipe Contreras <felipe.contreras@gmail.com>
+	* Enable CVR by default.
+	* Fix initial login (new account).
+	* Disable nickname storage.
+
+2008-08-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Rename pecan_error.
+	* Rename pecan_locale.
+	* Remove silly libpurple internal stuff.
+	* Fix win32 build.
+
+2008-06-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Disable CVR (SLP, P2P) support.
+
+2008-09-02	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix some warnings.
+	* Fix possible buffer overflow.
+	* Cleanup Makefile, fix some packaging issues.
+	* Fix nls package name.
+
+== Release 0.0.15 ==
+
+2008-08-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add parser test.
+	* Don't display read oims.
+	* Add oim requests.
+
+2008-08-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add date parsing.
+	* Fix oim parsing.
+	* Fix warnings in oim.
+	* Random cleanups.
+	* Send Display Picture properly.
+
+2008-07-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Mark oims as read.
+	* Use g_strdup_printf for key operations.
+	* Be extra safe with g_strdup_printf.
+	* Further cleanup error notification stuff.
+	* Cleanup error stuff.
+	* Avoid double error notification.
+	* Propagate connection error from libpurple.
+	* Fix memleaks.
+
+2008-07-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix memleaks and remove signal handlers.
+	* Avoid multiple g_io_channel_write.
+
+2008-07-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* Finish oim implementation.
+	* Add generic parser.
+	* Move stuff to pecan_config.h.
+	* Cleanup cmd_server.
+	* Improve logging stuff.
+	* Update tests; use libcheck.
+
+2008-07-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* Parse passport cookie information.
+	* Add read_cb option to ssl_conn.
+	* Add oim request processing.
+	* Add oim session support.
+	* Add email enabled field.
+	* Add .d files to gitignore.
+	* Make sure the http pending connections are closed.
+
+2008-07-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* Initial SSL connection abstraction.
+	* Cleanup pecan_node.
+
+2008-06-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* Parse the initial email data.
+
+2008-08-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add AUTHORS file.
+	* Enable translations.
+
+2008-08-29	Erik Fredriksen <tapiren86@gmail.com>
+	* Update Swedish translation.
+
+2008-08-29	Edgardo Fredz <medeshago@gmail.com>
+	* Update Spanish translation.
+
+2008-08-29	Jovan Turanjanin <jovan_turanjanin@yahoo.com>
+	* Update Serbian translation.
+
+2008-08-29	Devid Antonio Filoni <devidfil@gmail.com>
+	* Update Italian translation.
+
+2008-08-29	Alexandre André <sgc.alex@gmail.com>
+	* Update French translation.
+
+2008-08-29	Simo Mattila <simo.h.mattila@gmail.com>
+	* Update Finnish translation.
+
+2008-08-29	Marco de Moulin <marco@point.nl>
+	* Update Dutch translation.
+
+2008-08-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add client_id field.
+
+2008-08-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Tune debugging level.
+	* Workaround for http double receive issue.
+	* Store the friendly name on the server when server alias is disabled.
+	* Use pecan_url_decode instead of pidgin's one.
+	* Server alias updates.
+
+2008-07-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Disconnect IO handlers immediately.
+	* Make sure the switchboard is immediately dereferenced.
+
+2008-07-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Minor cleanup.
+	* Fix add contact bug.
+	* Fix last commit.
+
+2008-07-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix for binary messages on http.
+
+2008-07-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use GLib's timeouts for 'transaction'.
+	* Cleanup 'transaction'.
+	* Improve email notification handling.
+	* Add warnings about unofficial messages.
+	* More history handling cleanups.
+	* Cleanup 'msn_history'.
+
+2008-07-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* Make sure closed switchboards are not used again.
+
+2008-07-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Reset http timer after each write.
+	* Make sure email is enabled.
+
+2008-07-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Always close the switchboard's node.
+	* Maintain the flags of the message in a chat.
+	* Fix http method over http proxy.
+	* Allow empty public alias (nickname).
+
+2008-07-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Possible crash fix when disconnecting and there's a network error.
+	* Don't link public and privte aliases for the account.
+	* Properly normalize everything.
+
+2008-06-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Always unref the http connection childs.
+
+2008-07-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add personal public alias shortcut for Adium.
+	* Add files useful for adium.
+	* Make the plugin name changeable.
+	* Improve the switchboard participant invitation process.
+	* Random cleanups in switchboard.
+	* Fix contact removal bug.
+	* Random cleanups in notification.
+	* Random cleanups in cmd_server.
+	* Check if session exists on can_receive_file.
+	* Add debugging information to the cmdproc.
+	* Flush cmdproc when closing a connection to the server.
+
+2008-07-08	Felipe Contreras <felipe.contreras@gmail.com>
+	* Revert bad commit.
+	* Cleanup cvr object stuff.
+
+2008-07-01	Evan Schoenberg <evan.s@dreskin.net>
+	* Make get_info functional.
+
+2008-06-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* Don't popup unread email notifications if the option is disabled.
+	* Include the version in the tarball.
+	* Fix for proper version in distribution.
+	* Use real git version.
+
+2008-06-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* Send mobile messages only when the contact is offline.
+
+2008-06-26	Evan Schoenberg <evan.s@dreskin.net>
+	* Fixes for Adium.
+
+2008-06-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Always close the 'next' node.
+	* Cleanups in 'node'.
+	* Clean up http connection stuff in 'notification'.
+	* Cleanup http connection stuff in switchboard.
+	* Don't warn when trying to free a null buffer.
+
+2008-06-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add test to introduce random errors on IO.
+	* Don't call node_error inside node_write.
+
+2008-06-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add proper refs to handle node_error situations.
+	* Remove unused code in cvr/slp.
+	* Skip request when the object is changed in the middle of the request.
+	* Skip request when the object is changed in the middle of the request.
+	* Use NULL instead of "offline" for the user status.
+	* Make request_user_display static.
+	* Cleanup 'node'.
+	* Log when server connections are destroyed.
+
+2008-06-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Properly disconnect when using HTTP method.
+	* Update to-do list.
+	* Add po template generation rule.
+
+2008-06-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Log when "nodes" are destroyed.
+
+2008-06-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix some double "begin" logs.
+	* Error handlers might destroy the connection.
+	* Improve debugging messages in switchboard.
+	* Fix logging to a file, and cleanups.
+
+== Release 0.0.14 ==
+
+2008-06-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix a crash when adding a contact in a specific situation.
+	* Remove unused structs.
+	* Add simple user information.
+	* Add full GPLv2 license.
+	* Update FSF address for proper debianization.
+
+2008-06-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix for static compilation.
+	* Update README.
+	* Peek the first element in a hash-table in a cleaner way.
+	* Fix stupid parsing bug.
+
+2008-06-15	Felipe Contreras <felipe.contreras@gmail.com>
+	* Properly logout.
+	* Make the alias reset hack dependant of server_alias.
+	* Specify contact behavior as libpurple-specific.
+
+2008-06-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fail if there are undefined symbols while linking.
+	* Add support for glib < 2.6.
+
+2008-06-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add suport for static compilation.
+
+== Release 0.0.13 ==
+
+2008-06-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanup makefiles.
+
+2008-05-25	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix more warnings.
+	* Improve the building process.
+
+2008-05-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix compilation warnings.
+	* Fix possible bug.
+	* Improve build system.
+	* Remove unneeded inbox url update from qng replies.
+	* Don't ask for initial mail url.
+	* Make PecanContact constructor more generic.
+	* Cleanup session stuff.
+	* Use a constant for message length.
+	* Cleanup chat stuff in msn.c.
+	* These should not happen, alert when they do.
+	* Rename msn-config.h.
+	* More cleanups in msn.c.
+	* Reorganize contactlist stuff.
+	* Cleanup msn.c; contactlist and permissions.
+	* Make server-side aliases a configuration option.
+	* Always use static inline.
+
+2008-05-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update session.c for the past patches.
+	* Cleanup codestyle for pecan_util.c.
+	* Properly renew the mail credentials.
+	* Cleanup the mail check stuff.
+	* Always set the right transaction.
+
+2008-05-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* Rename object.*.
+	* Fix segfault on certain connection error.
+	* Cleanup status stuff.
+	* Cleanup the buddy icon stuff.
+	* Remove uri-handling.
+	* Remove profile support.
+
+2008-05-06	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanup msn.c.
+	* Whitespace beautification for msn.c.
+
+2008-05-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Properly use environmental CFLAGS and LDFLAGS.
+	* Fix initial unread mails notification.
+
+2008-05-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Keep procesing the incoming mail.
+
+2008-05-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix the dist target.
+	* Going back to development.
+
+== Release 0.0.12 ==
+
+2008-05-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Bump to 0.0.12.
+	* Add dist target.
+	* Enable libpurple's logging by default.
+	* Add more annoying files to gitignore.
+	* Go back to use gcc for linking.
+	* Properly escape xml on personal messages. Fixes issue #16.
+
+2008-04-29	Christiano Farina Haesbaert <christiano.fh@gmail.com>
+	* Fix for static module build.
+
+2008-04-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update to-do text file.
+
+2008-04-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix possible issue with uri handling.
+
+2008-04-21	Christiano Farina Haesbaert <christiano.fh@gmail.com>
+	* Fix for issue #19.
+
+2008-04-24	Christiano Farina Haesbaert <christiano.fh@gmail.com>
+	* Fix for issue #17.
+
+2008-04-08	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fixes for win32 printf.
+	* Use pecan printf functions.
+	* Fix printf functions.
+	* New pecan_printf function.
+	* Use ld instead of gcc for linking.
+
+2008-04-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Include right header file.
+	* Move to development.
+
+== Release 0.0.11 ==
+
+2008-03-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* Bump version to 0.0.11.
+	* New custom printf.
+
+2008-03-11	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix for FreeBSD.
+	* Properly propagate error while writing. Fixes issue #11.
+
+2008-03-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix issue when adding a new contact.
+	* Fix issue when moving contacts.
+	* Link to GObject libraries. Might fix issue #17.
+
+2008-03-02	Felipe Contreras <felipe.contreras@gmail.com>
+	* Bump version to 0.0.10.
+
+== Release 0.0.10 ==
+
+2008-03-02	Felipe Contreras <felipe.contreras@gmail.com>
+	* Remove ChangeLog.
+	* Fix build for x86-64. Solves issue #15.
+	* Fix win32 build.
+	* Improve debug logging.
+
+2008-03-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Support setting personal messages.
+	* Don't use purple's store image directly.
+
+== Release 0.0.9 ==
+
+2008-02-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update ChangeLog.
+	* Tag 0.0.9.
+
+2008-02-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Properly disable directconnection.
+	* Don't display connection errors on switchboards.
+
+2008-02-13	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix issue #12.
+
+2008-02-09	Felipe Contreras <felipe.contreras@gmail.com>
+	* Return status message when personal message isn't set.
+
+2008-02-09	Keir Lawson <keirlawson@gmail.com>
+	* Add check for empty personal message.
+
+== Release 0.0.8 ==
+
+2008-02-06	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update ChangeLog.
+	* Fix SB mess, first try.
+	* Add a lot of extra checks to avoid crashes.
+
+2008-02-05	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix win32 compilation.
+	* Properly display the personal message.
+	* Allow personal message to be unset.
+	* Allow compilation in certain win32 environments.
+	* Use right enum for logging.
+	* Fix stupid contaclist bug.
+
+2008-02-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix segfault when personal message is NULL.
+	* Move to development again.
+
+== Release 0.0.7 ==
+
+2008-02-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Disable debugging.
+	* Tag 0.0.7.
+	* Fix compilation for win32.
+	* Rename debugging stuff, add "pecan" prefix.
+	* Fix HTTP method, improve debugging.
+
+2008-02-03	Felipe Contreras <felipe.contreras@gmail.com>
+	* Wrap GIOChannel inside PecanStream.
+	* Update to MSNP12.
+	* Also show the personal message on the tooltip.
+	* Allow display of personal message.
+	* Add MSNP11 support.
+	* Improve error handling for AB stuff.
+	* Fix non-grouped behavior.
+	* Fix adding a contact to a group, while in no-group.
+	* Rename libpurple fixes.
+
+2008-02-02	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix bug adding/removing buddies.
+	* Fix crash when disabling the displayname.
+	* Bugfix for displayname.
+	* Improve support for displaynames.
+	* Cleanup the display<->friendly thing.
+	* Link display/friendly name when the contact is ourself.
+	* Add simple tests for AB stuff.
+	* Rename AB stuff.
+	* Add PL (Pending List) support, other fixes.
+	* Fixes and cleanups for AB stuff.
+	* Use hashtables in userlist.c.
+	* Use a hashtable in user.c, and bug fixes.
+	* Update TODO.
+	* Don't disconnect when we receive non-fatal errors.
+	* Random cleanups of the AB stuff.
+	* Initial MSNP10 implementation.
+
+2008-02-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix segfault.
+	* Report error on EOS.
+	* Cleanup user.c.
+	* Add buffer test.
+
+2008-01-31	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix compilation for win32.
+	* Add TODO file.
+	* Properly fix ISO C warning.
+	* Fix warnings. Be more ISO C friendly.
+
+2008-01-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix crash when testing.
+	* Random cleanups.
+	* Add simple parsing tests.
+	* Move MSN_DEBUG define to the Makefile.
+	* Fix stupid bug.
+
+2008-01-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Install where libpurple is really installed.
+	* Fix SB destruction.
+
+2008-01-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add option to save debug logs.
+	* Fix warnings, cleanups, and win32 support.
+
+== Release 0.0.6 ==
+
+2008-01-27	Felipe Contreras <felipe.contreras@gmail.com>
+	* Disable debugging.
+	* Prefix io stuff with 'pecan'.
+	* Move slp aka msnp2p stuff to 'cvr' subdir.
+	* Move command processing stuff to 'cmd' subdir.
+	* Move user, userlist and group stuff to 'ab' subir.
+	* Cleanup sync.h.
+	* Remove connection ends, not needed anymore.
+	* Remove uneeded stuff and cleanup profile file generation.
+	* Cleanup session and split into private.
+	* Use an HTTP connection per cmd connection bugfixes.
+	* Split io stuff into base and private.
+	* Improve error reporting and HTTP fixes.
+	* Bugfixes, HTTP and error handling improvements.
+
+2008-01-26	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix segfault.
+	* Fixes, cleanups and disable directconn.
+	* Cleanup object, add private header.
+	* Cleanup group, add private header.
+	* Cleanup user, new private header.
+	* Cleanup userlist, use private header.
+	* More headers clean up, new _private headers.
+	* Remove more header dependencies.
+	* Fix headers, remove purple_debug stuff.
+	* Remove unused stuff and cleanup inclusion mess.
+	* More reorganization, remove unused stuff.
+	* Reorganize connection stuff for HTTP method.
+
+2008-01-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* HTTP connection almost functional.
+
+2008-01-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Partial HTTP connection support.
+
+2008-01-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Remove annoying debugging stuff.
+	* Remove unneded stuff.
+	* Move stuff from conn to conn_end.
+	* Remove uneeded stuff from servconn.
+	* Improve error handling.
+
+== Release 0.0.5 ==
+
+2008-01-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update the README.
+	* Fix debugging issues.
+	* Cleanup warnings and use GObject signals.
+	* Cleanups and remove unneeded stuff.
+	* Whitespace changes for cmdproc and sb.
+	* Cleanup notification stuff.
+	* Improve makedepend.
+
+2008-01-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Cleanups and bufix in connection object.
+	* Cleanups and some fixes.
+	* Move some stuff to command connection.
+	* New command connection object.
+	* First connection gobject try.
+	* Cleanup notification connection.
+
+== Release 0.0.4 ==
+
+2008-01-20	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add GObjectivied connection end-point.
+	* Update copyright.
+	* Update httpconn to use new IO stuff.
+	* New debugging stuff and fixes.
+	* Copy the changes from servconn to directconn.
+	* Fix connection bug.
+	* Improve connection error reporting.
+
+2008-01-19	Felipe Contreras <felipe.contreras@gmail.com>
+	* Random cleanups.
+	* Use GIOChannel.
+	* Whitespace changes for msn-utils.
+	* Whitespace changes for directconn.
+	* Whitespace changes for servconn.
+	* Whitespace changes for httpconn.
+
+2007-12-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix several special warnings.
+
+2007-12-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix for dumb bug with unknown SLP messages.
+
+2007-12-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Whitespace changes.
+	* Fix p2p transfers and cleanups.
+
+2007-12-21	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add partial direct connection support.
+	* Remove SELinux specific stuff.
+
+2007-12-17	Felipe Contreras <felipe.contreras@gmail.com>
+	* Compilation fix and cleanups.
+
+== Release 0.0.3 ==
+
+2007-12-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Improve error and group handling.
+	* Remove unused dialog stuff.
+	* Code formatting.
+
+== Release 0.0.2 ==
+
+2007-11-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add readme.
+	* Update copyright stuff.
+	* Fix to allow aliases with special characters.
+
+== Release 0.0.1 ==
+
+2007-11-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Fix warnings.
+	* Add display name support.
+
+2007-11-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add .gitignore file.
+	* Update info.
+	* Fix compilation.
+	* Stuff required to compile.
+	* Initial import.
+

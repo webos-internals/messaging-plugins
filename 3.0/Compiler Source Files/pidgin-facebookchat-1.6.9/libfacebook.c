@@ -812,12 +812,6 @@ static void plugin_init(PurplePlugin *plugin)
 		"facebook_manage_friends", FALSE);
 	prpl_info->protocol_options = g_list_append(
 		prpl_info->protocol_options, option);
-
-	option = purple_account_option_bool_new(
-		_("Always use HTTPS"),
-		"use-https", FALSE);
-	prpl_info->protocol_options = g_list_append(
-		prpl_info->protocol_options, option);
 }
 
 static PurplePluginProtocolInfo prpl_info = {

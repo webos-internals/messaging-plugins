@@ -1,0 +1,869 @@
+# Serbian translation for msn-pecan
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the msn-pecan package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: msn-pecan\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-02-06 02:03+0200\n"
+"PO-Revision-Date: 2009-07-08 20:23+0000\n"
+"Last-Translator: Jovan Turanjanin <jovan_turanjanin@yahoo.com>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2010-02-27 00:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: msn.c:160
+msgid "Nudge"
+msgstr "Потапшај"
+
+#: msn.c:161
+#, c-format
+msgid "%s has nudged you!"
+msgstr "%s вас је потапшао(ла)!"
+
+#: msn.c:162
+#, c-format
+msgid "Nudging %s..."
+msgstr "Тапшем %s..."
+
+#: msn.c:306
+msgid "Set your friendly name."
+msgstr "Поставите Ваше пријатељско име."
+
+#: msn.c:307
+msgid "This is the name that other MSN buddies will see you as."
+msgstr "Ово је име под којим ће Вас видети Ваши MSN другари."
+
+#: msn.c:310 msn.c:331 msn.c:349 msn.c:366 msn.c:383
+msgid "OK"
+msgstr "OK"
+
+#: msn.c:311 msn.c:332 msn.c:350 msn.c:367 msn.c:384 msn.c:405
+msgid "Cancel"
+msgstr "Одустани"
+
+#: msn.c:326
+msgid "Set your personal message."
+msgstr ""
+
+#: msn.c:327
+msgid "This is the message that other MSN buddies will see under your name."
+msgstr ""
+
+#: msn.c:347
+msgid "Set your home phone number."
+msgstr "Поставите Ваш кућни број телефона."
+
+#: msn.c:364
+msgid "Set your work phone number."
+msgstr "Поставите Ваш број телефона на послу."
+
+#: msn.c:381
+msgid "Set your mobile phone number."
+msgstr "Поставите Ваш број мобилног телефона."
+
+#: msn.c:396
+msgid "Allow MSN Mobile pages?"
+msgstr "Допусти MSN мобилне странице?"
+
+#: msn.c:397
+msgid ""
+"Do you want to allow or disallow people on your buddy list to send you MSN "
+"Mobile pages to your cell phone or other mobile device?"
+msgstr ""
+"Да ли желите да допустите или забраните људима из Вашег списка другара да "
+"Вам шаљу MSN мобилне странице на Ваш мобилни телефон или неки други преносни "
+"уређај?"
+
+#: msn.c:403
+msgid "Allow"
+msgstr "Допусти"
+
+#: msn.c:404
+msgid "Disallow"
+msgstr "Забрани"
+
+#: msn.c:419
+msgid "This account's email is not enabled."
+msgstr ""
+
+#: msn.c:463
+msgid "Send a mobile message."
+msgstr "Пошаљи мобилну поруку."
+
+#: msn.c:465
+msgid "Page"
+msgstr "Страна"
+
+#: msn.c:466
+msgid "Close"
+msgstr "Затвори"
+
+#: msn.c:624
+#, c-format
+msgid "Playing %s"
+msgstr ""
+
+#: msn.c:626
+#, c-format
+msgid "Editing %s"
+msgstr ""
+
+#: msn.c:676
+msgid "Status"
+msgstr "Статус"
+
+#: msn.c:677
+msgid "Idle"
+msgstr "Неактиван(на)"
+
+#: msn.c:687
+msgid "Personal Message"
+msgstr "Лична порука"
+
+#: msn.c:704
+msgid "Now Listening"
+msgstr ""
+
+#: msn.c:710
+msgid "Playing a game"
+msgstr ""
+
+#: msn.c:714
+msgid "Working"
+msgstr ""
+
+#: msn.c:718
+msgid "Has you"
+msgstr "Има вас"
+
+#: msn.c:719 msn.c:723 msn.c:1720
+msgid "Yes"
+msgstr "Да"
+
+#: msn.c:719 msn.c:723 msn.c:1720
+msgid "No"
+msgstr "Не"
+
+#: msn.c:722
+msgid "Blocked"
+msgstr "Блокиран"
+
+#: msn.c:734
+msgid "Message"
+msgstr "Порука"
+
+#: msn.c:749
+msgid "Be Right Back"
+msgstr "Одмах се враћам"
+
+#: msn.c:750
+msgid "Busy"
+msgstr "Заузет(а)"
+
+#: msn.c:751
+msgid "On the Phone"
+msgstr "Телефонирам"
+
+#: msn.c:752
+msgid "Out to Lunch"
+msgstr "Ручам"
+
+#: msn.c:770
+msgid "Song Title"
+msgstr ""
+
+#: msn.c:771
+msgid "Song Artist"
+msgstr ""
+
+#: msn.c:772
+msgid "Song Album"
+msgstr ""
+
+#: msn.c:773
+msgid "Game Name"
+msgstr ""
+
+#: msn.c:774
+msgid "Office App Name"
+msgstr ""
+
+#: msn.c:794
+msgid "Set Friendly Name..."
+msgstr "Постави пријатељско име..."
+
+#: msn.c:799
+msgid "Set Personal Message..."
+msgstr ""
+
+#: msn.c:806
+msgid "Set Home Phone Number..."
+msgstr "Постави број кућног телефона..."
+
+#: msn.c:810
+msgid "Set Work Phone Number..."
+msgstr "Постави број телефона на послу..."
+
+#: msn.c:814
+msgid "Set Mobile Phone Number..."
+msgstr "Постави број мобилног телефона..."
+
+#: msn.c:820
+msgid "Enable/Disable Mobile Devices..."
+msgstr "Омогући/искључи мобилне уређаје..."
+
+#: msn.c:825
+msgid "Allow/Disallow Mobile Pages..."
+msgstr "Дозволи/забрани мобилне странице..."
+
+#: msn.c:835
+msgid "Open Hotmail Inbox"
+msgstr "Отвори доспелу пошту на Хотмејлу"
+
+#. * @todo why is there a special way to do this?
+#: msn.c:865
+msgid "Send to Mobile"
+msgstr "Пошаљи на мобилни"
+
+#: msn.c:873
+msgid "Initiate _Chat"
+msgstr "Покрени _ћаскање"
+
+#: msn.c:899
+msgid ""
+"SSL support is needed for MSN. Please install a supported SSL library."
+msgstr ""
+"За повезивање са MSN потребна је подршка за SSL. Инсталирајте подржану SSL "
+"библиотеку."
+
+#: msn.c:934
+msgid "Connecting"
+msgstr ""
+
+#: msn.c:937
+msgid "Failed to connect to server."
+msgstr "Не могу да се повежем на сервер."
+
+#: msn.c:1685
+msgid "Username"
+msgstr "Корисничко име"
+
+#: msn.c:1695
+msgid "Friendly Name"
+msgstr ""
+
+#: msn.c:1711
+msgid "Home Phone"
+msgstr ""
+
+#: msn.c:1714
+msgid "Mobile Phone"
+msgstr ""
+
+#: msn.c:1717
+msgid "Work Phone"
+msgstr ""
+
+#: msn.c:1719
+msgid "Has Space"
+msgstr ""
+
+#: msn.c:1728
+msgid "Profile URL"
+msgstr "Профил"
+
+#. *< type
+#. *< ui_requirement
+#. *< flags
+#. *< dependencies
+#. *< priority
+#. *< id
+#. *< name
+#. *< version
+#. *< summary
+#: msn.c:1854 msn.c:1855
+msgid "WLM Protocol Plugin"
+msgstr "Додатак за WLM протокол"
+
+#: msn.c:1890
+msgid "Server"
+msgstr "Сервер"
+
+#: msn.c:1893
+msgid "Port"
+msgstr "Порт"
+
+#: msn.c:1896
+msgid "Use HTTP Method"
+msgstr "Користи HTTP режим"
+
+#: msn.c:1899
+msgid "Show custom smileys"
+msgstr "Прикажи произвољне смешке"
+
+#: msn.c:1902
+msgid "Use server-side alias"
+msgstr "Користи алијасе са сервера"
+
+#: msn.c:1906
+msgid "Use direct connections"
+msgstr ""
+
+#: msn.c:1910
+msgid "Use user displays"
+msgstr ""
+
+#: msn.c:1913
+msgid "Don't show Messenger Plus! tags"
+msgstr ""
+
+#: msn.c:1920
+msgid "nudge: nudge a user to get their attention"
+msgstr "nudge: потапшај другара да би привукао његову пажњу"
+
+#: nexus.c:82
+#, c-format
+msgid "error on nexus server: %s"
+msgstr ""
+
+#: nexus.c:86
+msgid "error on nexus server"
+msgstr ""
+
+#: nexus.c:187
+msgid "nexus parse error"
+msgstr ""
+
+#: nexus.c:215 nexus.c:308 nexus.c:342 nexus.c:421
+msgid "nexus stream error"
+msgstr ""
+
+#: notification.c:90 notification.c:135
+#, c-format
+msgid ""
+"Error on notification server:\n"
+"%s"
+msgstr ""
+"Грешка на серверу за обавештавање:\n"
+"%s"
+
+#: notification.c:97
+msgid ""
+"Error on notification server:\n"
+"Unknown"
+msgstr ""
+"Грешка на серверу за обавештавање:\n"
+"непозната"
+
+#: notification.c:249
+#, c-format
+msgid "%s is not a valid group."
+msgstr "%s није дозвољена група."
+
+#: notification.c:254 session.c:427
+msgid "Unknown error."
+msgstr "Непозната грешка."
+
+#: notification.c:257
+#, c-format
+msgid "%s on %s (%s)"
+msgstr "%s на %s (%s)"
+
+#: notification.c:588
+#, c-format
+msgid "Unable to add user on %s (%s)"
+msgstr "Не могу да додам корисника на %s (%s)"
+
+#: notification.c:592
+#, c-format
+msgid "Unable to block user on %s (%s)"
+msgstr "Не могу да одстраним корисника на %s (%s)"
+
+#: notification.c:596
+#, c-format
+msgid "Unable to permit user on %s (%s)"
+msgstr "Не могу да дозволим корисника на %s (%s)"
+
+#: notification.c:982
+msgid "Unable to rename group"
+msgstr "Не могу да преименујем групу"
+
+#: notification.c:1041
+msgid "Unable to delete group"
+msgstr "Не могу да уклоним групу"
+
+#: notification.c:1638
+#, c-format
+msgid ""
+"The MSN server will shut down for maintenance in %d minutes. You will "
+"automatically be signed out at that time.  Please finish any conversations "
+"in progress.\n"
+"\n"
+"After the maintenance has been completed, you will be able to successfully "
+"sign in."
+msgstr ""
+
+#: session.c:64
+#, c-format
+msgid "You are not in %s's contact list."
+msgstr ""
+
+#: session.c:397
+msgid "Our protocol is not supported by the server."
+msgstr "Наш протокол није подржан на серверу."
+
+#: session.c:401
+msgid "Error parsing HTTP."
+msgstr "Грешка при обради HTTP-а."
+
+#: session.c:405
+msgid "You have signed on from another location."
+msgstr "Пријавили сте се са неког другог места."
+
+#: session.c:408
+msgid ""
+"The MSN servers are temporarily unavailable. Please wait and try again."
+msgstr ""
+"MSN сервери су привремено недоступни. Сачекајте мало па покушајте поново."
+
+#: session.c:413
+msgid "The MSN servers are going down temporarily."
+msgstr "Привремено се гасе MSN сервери."
+
+#: session.c:418
+#, c-format
+msgid "Unable to authenticate: %s"
+msgstr "Не могу да идентификујем: %s"
+
+#: session.c:419
+msgid "Unknown error"
+msgstr "Непозната грешка"
+
+#: session.c:422
+msgid ""
+"Your MSN buddy list is temporarily unavailable. Please wait and try again."
+msgstr ""
+"Ваш списак MSN другара је привремено недоступан. Сачекајте мало па покушајте "
+"поново."
+
+#: switchboard.c:547
+msgid "Message could not be sent, not allowed while invisible:"
+msgstr "Порука се не може послати пошто то није могуће док сте невидљиви:"
+
+#: switchboard.c:551
+msgid "Message could not be sent because the user is offline:"
+msgstr "Порука се не може послати пошто је корисник неповезан:"
+
+#: switchboard.c:555
+msgid "Message could not be sent because a connection error occurred:"
+msgstr "Порука се не може послати због грешке у вези:"
+
+#: switchboard.c:559
+msgid "Message could not be sent because we are sending too quickly:"
+msgstr "Порука се не може бити послата пошто је пребрзо шаљемо:"
+
+#: switchboard.c:563
+msgid ""
+"Message could not be sent because we were unable to establish a session with "
+"the server. This is likely a server problem, try again in a few minutes:"
+msgstr ""
+"Порука не може бити послата јер нисмо могли да успоставимо везу са сервером. "
+"Ово је вероватно проблем до сервера, покушајте поново за пар минута:"
+
+#: switchboard.c:570
+msgid ""
+"Message could not be sent because an error with the switchboard occurred:"
+msgstr "Порука се не може послати због грешке са пребацивачем:"
+
+#: switchboard.c:577
+msgid "Message may have not been sent because an unknown error occurred:"
+msgstr "Порука можда није послата зато што је дошло до непознате грешке:"
+
+#: switchboard.c:985
+#, c-format
+msgid ""
+"sent you a Messenger Plus! sound. Click <a href='audio://%s'>here</a> to "
+"play it."
+msgstr ""
+
+#: switchboard.c:987
+#, c-format
+msgid ""
+"sent you a Messenger Plus! sound. Click <a href='file://%s'>here</a> to play "
+"it."
+msgstr ""
+
+#: switchboard.c:990
+#, c-format
+msgid ""
+"sent you a Messenger Plus! sound. Copy the following link in your web "
+"browser to play it: file://%s"
+msgstr ""
+
+#: switchboard.c:1002
+msgid ""
+"sent you a Messenger Plus! sound, but it cannot be played due to an error "
+"happened while storing the file."
+msgstr ""
+
+#: switchboard.c:1189
+msgid "received handwritten message"
+msgstr ""
+
+#: switchboard.c:1202
+msgid ""
+"sent you an handwritten message, but it cannot be displayed due to an error "
+"happened while storing the file."
+msgstr ""
+
+#: switchboard.c:1264
+#, c-format
+msgid "sent you a voice clip. Click <a href='file://%s'>here</a> to play it."
+msgstr ""
+
+#: switchboard.c:1266
+#, c-format
+msgid ""
+"sent you a voice clip. Copy the following link in your web browser to play "
+"it: file://%s"
+msgstr ""
+
+#: switchboard.c:1278
+msgid ""
+"sent you a voice clip, but it cannot be played dueto an error happened while "
+"storing the file."
+msgstr ""
+
+#: switchboard.c:1361 switchboard.c:1368
+#, c-format
+msgid ""
+"<a href=\"file://%s\">Click here to view the wink in your web browser</a>"
+msgstr ""
+
+#: switchboard.c:1399
+#, c-format
+msgid ""
+"sent a wink:\n"
+"%s\n"
+"%s"
+msgstr ""
+
+#: switchboard.c:1401
+#, c-format
+msgid ""
+"sent a wink.\n"
+"%s"
+msgstr ""
+
+#: switchboard.c:1417
+msgid "sent a wink, but it could not be displayed."
+msgstr ""
+
+#: switchboard.c:1638
+msgid " sent you a voice chat invite, which is not yet supported."
+msgstr ""
+
+#: pn_error.c:34
+msgid "Unable to parse message"
+msgstr "Не могу да обрадим поруку."
+
+#: pn_error.c:37
+msgid "Syntax Error (probably a client bug)"
+msgstr "Синтаксна грешка (вероватно грешка у програму)"
+
+#: pn_error.c:40
+msgid "Invalid e-mail address"
+msgstr "Неисправна ел. адреса"
+
+#: pn_error.c:43
+msgid "User does not exist"
+msgstr "Корисник не постоји."
+
+#: pn_error.c:46
+msgid "Fully qualified domain name missing"
+msgstr "Недостаје пун назив домена"
+
+#: pn_error.c:49
+msgid "Already logged in"
+msgstr "Већ сте пријављени"
+
+#: pn_error.c:52
+msgid "Invalid screen name"
+msgstr "Неисправно корисничко име"
+
+#: pn_error.c:55
+msgid "Invalid friendly name"
+msgstr "Неисправно пријатељско име"
+
+#: pn_error.c:58
+msgid "List full"
+msgstr "Списак је пун"
+
+#: pn_error.c:61
+msgid "Already there"
+msgstr "Већ је присутан"
+
+#: pn_error.c:64
+msgid "Not on list"
+msgstr "Није на списку"
+
+#: pn_error.c:67
+msgid "User is offline"
+msgstr "Корисник није на вези"
+
+#: pn_error.c:70
+msgid "Already in the mode"
+msgstr "Већ у том моду"
+
+#: pn_error.c:73
+msgid "Already in opposite list"
+msgstr "Већ у супарничком списку"
+
+#: pn_error.c:76
+msgid "Too many groups"
+msgstr "Превише група"
+
+#: pn_error.c:79
+msgid "Invalid group"
+msgstr "Погрешна група"
+
+#: pn_error.c:82
+msgid "User not in group"
+msgstr "Корисник није у групи"
+
+#: pn_error.c:85
+msgid "Group name too long"
+msgstr "Име групе је предугачко"
+
+#: pn_error.c:88
+msgid "Cannot remove group zero"
+msgstr "Не могу да уклоним групу нула"
+
+#: pn_error.c:91
+msgid "Tried to add a user to a group that doesn't exist"
+msgstr "Покушај додавања корисника у групу која не постоји"
+
+#: pn_error.c:94
+msgid "Switchboard failed"
+msgstr "Неуспешно пребацивање"
+
+#: pn_error.c:97
+msgid "Notify transfer failed"
+msgstr "Неуспешан пренос обавештења"
+
+#: pn_error.c:100
+msgid "Required fields missing"
+msgstr "Недостају обавезна поља"
+
+#: pn_error.c:103
+msgid "Too many hits to a FND"
+msgstr "Превише погодака у FND"
+
+#: pn_error.c:106
+msgid "Not logged in"
+msgstr "Није пријављен"
+
+#: pn_error.c:109
+msgid "Service temporarily unavailable"
+msgstr "Услуге тренутно нису доступне"
+
+#: pn_error.c:112
+msgid "Database server error"
+msgstr "Грешка сервера са базом"
+
+#: pn_error.c:115
+msgid "Command disabled"
+msgstr "Наредба искључена"
+
+#: pn_error.c:118
+msgid "File operation error"
+msgstr "Грешка при раду са датотеком"
+
+#: pn_error.c:121
+msgid "Memory allocation error"
+msgstr "Грешка при обезбеђивању меморије"
+
+#: pn_error.c:124
+msgid "Wrong CHL value sent to server"
+msgstr "Погрешна CHL вредност послата серверу"
+
+#: pn_error.c:127
+msgid "Server busy"
+msgstr "Сервер је заузет"
+
+#: pn_error.c:130 pn_error.c:142 pn_error.c:192
+msgid "Server unavailable"
+msgstr "Сервер је недоступан"
+
+#: pn_error.c:133
+msgid "Peer notification server down"
+msgstr "Сервер за обавештавање другова не ради"
+
+#: pn_error.c:136
+msgid "Database connect error"
+msgstr "Грешка при повезивању са базом"
+
+#: pn_error.c:139
+msgid "Server is going down (abandon ship)"
+msgstr "Сервер се гаси (напуштај брод)"
+
+#: pn_error.c:145
+msgid "Error creating connection"
+msgstr "Грешка при успостављању везе"
+
+#: pn_error.c:148
+msgid "CVR parameters are either unknown or not allowed"
+msgstr "CVR параметри су или непознати или недозвољени"
+
+#: pn_error.c:151
+msgid "Unable to write"
+msgstr "Не могу да пишем"
+
+#: pn_error.c:154
+msgid "Session overload"
+msgstr "Преоптерећење сесије"
+
+#: pn_error.c:157
+msgid "User is too active"
+msgstr "Корисник је преактиван"
+
+#: pn_error.c:160
+msgid "Too many sessions"
+msgstr "Превише сесија"
+
+#: pn_error.c:163
+msgid "Passport not verified"
+msgstr "Паспорт налог још увек није потврђен"
+
+#: pn_error.c:166
+msgid "Bad friend file"
+msgstr "Лоша датотека са пријатељима"
+
+#: pn_error.c:169
+msgid "Not expected"
+msgstr "Неочекивано"
+
+#: pn_error.c:172
+msgid "Friendly name changes too rapidly"
+msgstr "Другарско име се превише брзо мења"
+
+#: pn_error.c:180
+msgid "Server too busy"
+msgstr "Сервер је презаузет"
+
+#: pn_error.c:184
+msgid "Authentication failed"
+msgstr "Неуспешна идентификација"
+
+#: pn_error.c:187
+msgid "Not allowed when hiding"
+msgstr "Није дозвољено приликом скривања"
+
+#: pn_error.c:195
+msgid "Not accepting new users"
+msgstr "Не прихватај нове кориснике"
+
+#: pn_error.c:198
+msgid "Kids Passport without parental consent"
+msgstr "Дечији пасош без сагласности родитеља"
+
+#: pn_error.c:201
+msgid "Passport account not yet verified"
+msgstr "Паспорт налог још увек није потврђен"
+
+#: pn_error.c:204
+msgid "Bad ticket"
+msgstr "Неисправна карта"
+
+#: pn_error.c:207
+#, c-format
+msgid "Unknown Error Code %u"
+msgstr ""
+
+#: pn_oim.c:659
+msgid ""
+"The following message wasn't sent due to an authentication error. Please "
+"logout and login again before sending a new message."
+msgstr ""
+
+#: pn_oim.c:662
+msgid ""
+"The following message wasn't sent because the system is unavailable. This "
+"normally happens when the user is blocked or does not exist."
+msgstr ""
+
+#: pn_oim.c:665
+msgid ""
+"The following message wasn't sent because you've sent messages too quickly. "
+"Please wait about 10 seconds before sending again the message."
+msgstr ""
+
+#: pn_oim.c:668
+msgid "The following message wasn't sent because it's too large."
+msgstr ""
+
+#: ab/pn_contactlist.c:815
+#, c-format
+msgid "Can't add to \"%s\"; it's a virtual group"
+msgstr "Не могу да додам у \"%s\"; то је виртуална група"
+
+#: cvr/pn_peer_msg.c:557
+msgid "requests to view your webcam, but this request is not yet supported."
+msgstr ""
+
+#: cvr/pn_peer_msg.c:562
+msgid "has sent you a webcam invite, which is not yet supported."
+msgstr ""
+
+#~ msgid "Unable to connect"
+#~ msgstr "Не могу да се повежем"
+
+#, c-format
+#~ msgid ""
+#~ "The MSN server will shut down for maintenance in %d minute. You will "
+#~ "automatically be signed out at that time.  Please finish any conversations "
+#~ "in progress.\n"
+#~ "\n"
+#~ "After the maintenance has been completed, you will be able to successfully "
+#~ "sign in."
+#~ msgid_plural ""
+#~ "The MSN server will shut down for maintenance in %d minutes. You will "
+#~ "automatically be signed out at that time.  Please finish any conversations "
+#~ "in progress.\n"
+#~ "\n"
+#~ "After the maintenance has been completed, you will be able to successfully "
+#~ "sign in."
+#~ msgstr[0] ""
+#~ "MSN сервер ће бити угашен ради одржавања за %d минут. Ви ћете бити "
+#~ "аутоматски одјављени. Завршите све разговоре који су у току.\n"
+#~ "\n"
+#~ "Након што се одржавање заврши, моћи ћете се поново пријавити."
+#~ msgstr[1] ""
+#~ "MSN сервер ће бити угашен ради одржавања за %d минута. Ви ћете бити "
+#~ "аутоматски одјављени. Завршите све разговоре који су у току.\n"
+#~ "\n"
+#~ "Након што се одржавање заврши, моћи ћете се поново пријавити."
+#~ msgstr[2] ""
+#~ "MSN сервер ће бити угашен ради одржавања за %d минута. Ви ћете бити "
+#~ "аутоматски одјављени. Завршите све разговоре који су у току.\n"
+#~ "\n"
+#~ "Након што се одржавање заврши, моћи ћете се поново пријавити."
+
+#~ msgid "Message may have not been sent because a timeout occurred:"
+#~ msgstr "Порука можда није послата зато што је истекао рок:"
+
+#, c-format
+#~ msgid "%s has removed you from his or her buddy list."
+#~ msgstr "%s вас је уклонио са његове или њене листе другара."
+
+#, c-format
+#~ msgid "%s has added you to his or her buddy list."
+#~ msgstr "%s вас је додао у свој списак другара."

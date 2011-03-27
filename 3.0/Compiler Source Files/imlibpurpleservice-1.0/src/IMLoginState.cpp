@@ -1413,6 +1413,9 @@ void IMLoginSyncStateHandler::updateSyncStateRecord(const char* serviceName, Moj
 	else if (strcmp(serviceName, SERVICENAME_LIVE) == 0){
 		m_capabilityId.assign(CAPABILITY_LIVE);
 	}
+	else if (strcmp(serviceName, SERVICENAME_WLM) == 0){
+		m_capabilityId.assign(CAPABILITY_WLM);
+	}
 	else if (strcmp(serviceName, SERVICENAME_MYSPACE) == 0){
 		m_capabilityId.assign(CAPABILITY_MYSPACE);
 	}

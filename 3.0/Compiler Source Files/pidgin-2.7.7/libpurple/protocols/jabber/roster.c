@@ -216,6 +216,10 @@ void jabber_roster_parse(JabberStream *js, const char *from,
 		if(!jid)
 			continue;
 
+		if((strchr(jid, '@')) == NULL)
+		        continue;
+
+
 		if(!(jb = jabber_buddy_find(js, jid, TRUE)))
 			continue;
 

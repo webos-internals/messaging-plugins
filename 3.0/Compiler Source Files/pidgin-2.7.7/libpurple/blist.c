@@ -1059,7 +1059,7 @@ void purple_blist_alias_contact(PurpleContact *contact, const char *alias)
 
 	purple_signal_emit(purple_blist_get_handle(), "blist-node-aliased",
 					 contact, old_alias);
-	g_free(old_alias);
+//	g_free(old_alias);
 }
 
 void purple_blist_alias_chat(PurpleChat *chat, const char *alias)
@@ -1137,7 +1137,7 @@ void purple_blist_alias_buddy(PurpleBuddy *buddy, const char *alias)
 
 	purple_signal_emit(purple_blist_get_handle(), "blist-node-aliased",
 					 buddy, old_alias);
-	g_free(old_alias);
+//	g_free(old_alias);
 }
 
 void purple_blist_server_alias_buddy(PurpleBuddy *buddy, const char *alias)
@@ -1179,7 +1179,7 @@ void purple_blist_server_alias_buddy(PurpleBuddy *buddy, const char *alias)
 
 	purple_signal_emit(purple_blist_get_handle(), "blist-node-aliased",
 					 buddy, old_alias);
-	g_free(old_alias);
+//	g_free(old_alias);
 }
 
 /*

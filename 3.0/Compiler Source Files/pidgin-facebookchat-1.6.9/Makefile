@@ -1,23 +1,26 @@
 #Customisable stuff here
-LINUX32_COMPILER = /root/optware/i686g25/toolchain/i686-unknown-linux-gnu/bin/i686-unknown-linux-gnu-gcc
+LINUX32_COMPILER = i686-pc-linux-gnu-gcc
 LINUX64_COMPILER = x86_64-pc-linux-gnu-gcc
 WIN32_COMPILER = /usr/bin/i586-mingw32-gcc
 WIN32_WINDRES = i586-mingw32-windres
 WIN32_OBJCOPY = i586-mingw32-objcopy
 #LINUX_ARM_COMPILER = arm-pc-linux-gnu-gcc
-LINUX_ARM_COMPILER = /root/optware/cs08q1armel/toolchain/arm-2008q1/bin/arm-none-linux-gnueabi-gcc
+LINUX_ARM_COMPILER = gcc
 LINUX_PPC_COMPILER = powerpc-unknown-linux-gnu-gcc
 FREEBSD60_COMPILER = i686-pc-freebsd6.0-gcc
 MACPORT_COMPILER = i686-apple-darwin10-gcc-4.0.1
 
-LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB
-GLIB_CFLAGS = -Larm -Li686 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -I/usr/include/json-glib-1.0 -ljson-glib-1.0
+LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB -DUSE_JSONC
+#LIBPURPLE_CFLAGS = -I/usr/include/libpurple -I/usr/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS 
+GLIB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include -I/usr/local/include/json-glib-1.0 -L/srv/preware/cross-compile/staging/armv7/usr/lib -ljson-glib-1.0 -lglib-2.0 -lz -ljson
 WIN32_DEV_DIR = /root/pidgin/win32-dev
 WIN32_PIDGIN_DIR = /root/pidgin/pidgin-2.3.0_win32
 WIN32_CFLAGS = -I${WIN32_DEV_DIR}/gtk_2_0/include/glib-2.0 -I${WIN32_PIDGIN_DIR}/libpurple/win32 -I${WIN32_DEV_DIR}/gtk_2_0/include -I${WIN32_DEV_DIR}/gtk_2_0/include/glib-2.0 -I${WIN32_DEV_DIR}/gtk_2_0/lib/glib-2.0/include -I/usr/include/json-glib-1.0 -Wno-format
 WIN32_LIBS = -L${WIN32_DEV_DIR}/gtk_2_0/lib -L${WIN32_PIDGIN_DIR}/libpurple -lglib-2.0 -lgobject-2.0 -lintl -lpurple -lws2_32 -L. -ljson-glib-1.0 -lzlib1
 MACPORT_CFLAGS = -I/opt/local/include/libpurple -DPURPLE_PLUGINS -DENABLE_NLS -DHAVE_ZLIB -I/opt/local/include/glib-2.0 -I/opt/local/lib/glib-2.0/include -I/opt/local/include -I/opt/local/include/json-glib-1.0 -arch i386 -arch ppc -dynamiclib -L/opt/local/lib -ljson-glib-1.0 -lpurple -lglib-2.0 -lgobject-2.0 -lintl -lz -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4
-PIDGIN_DIR = /root/pidgin/pidgin-2.7.0
+PIDGIN_DIR = /srv/preware/cross-compile/packages/x/pidgin/build/src/
+
+CC = gcc
 
 DEB_PACKAGE_DIR = ./debdir
 
@@ -54,14 +57,13 @@ FACEBOOK_SOURCES = \
 
 all:	libfacebook.so libfacebook.dll libfacebook64.so libfacebookarm.so libfacebookppc.so installers sourcepackage
 
+linux:	libfacebookarm.so
+
 install:
-	cp libfacebook.so /usr/lib/purple-2/
-	cp libfacebook64.so /usr/lib64/purple-2/
-	cp libfacebookarm.so /usr/lib/pidgin/
-	cp libfacebookppc.so /usr/lib/purple-2/
-	cp facebook16.png /usr/share/pixmaps/pidgin/protocols/16/facebook.png
-	cp facebook22.png /usr/share/pixmaps/pidgin/protocols/22/facebook.png
-	cp facebook48.png /usr/share/pixmaps/pidgin/protocols/48/facebook.png
+	cp libfacebookarm.so /usr/local/lib/purple-2/
+	cp facebook16.png /usr/local/share/pixmaps/pidgin/protocols/16/facebook.png
+	cp facebook22.png /usr/local/share/pixmaps/pidgin/protocols/22/facebook.png
+	cp facebook48.png /usr/local/share/pixmaps/pidgin/protocols/48/facebook.png
 
 installers:	pidgin-facebookchat.exe pidgin-facebookchat.deb pidgin-facebookchat.tar.bz2
 
@@ -73,13 +75,13 @@ libfacebook.macport.so: ${FACEBOOK_SOURCES}
 	${MACPORT_COMPILER} ${MACPORT_CFLAGS} -Wall -I. -g -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebook.macport.so -shared
 
 libfacebook.so:	${FACEBOOK_SOURCES}
-	${LINUX32_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebook.so -shared -fPIC -DPIC
+	${LINUX32_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebook.so -shared -fPIC -DPIC -static
 
 libfacebookxmpp.so:	libfbxmpp.c ${FACEBOOK_SOURCES}
 	${LINUX32_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -O2 -pipe libfbxmpp.c ${FACEBOOK_SOURCES} -o libfacebookxmpp.so -shared -fPIC -DPIC -I$(PIDGIN_DIR)/libpurple/protocols/jabber/ -lxml2 -I/usr/include/libxml2
 
 libfacebookarm.so:	${FACEBOOK_SOURCES}
-	${LINUX_ARM_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebookarm.so -shared -fPIC -DPIC
+	${LINUX_ARM_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebookarm.so -shared -fPIC -DPIC 
 
 libfacebook64.so:	${FACEBOOK_SOURCES}
 	${LINUX64_COMPILER} ${LIBPURPLE_CFLAGS} -Wall ${GLIB_CFLAGS} -I. -g -m64 -O2 -pipe ${FACEBOOK_SOURCES} -o libfacebook64.so -shared -fPIC -DPIC

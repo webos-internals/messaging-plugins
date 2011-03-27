@@ -378,6 +378,9 @@ static char* getMojoFriendlyTemplateID (char* serviceName)
 	else if (strcmp(serviceName, SERVICENAME_LIVE) == 0){
 		return (char*)CAPABILITY_LIVE;
 	}
+	else if (strcmp(serviceName, SERVICENAME_WLM) == 0){
+		return (char*)CAPABILITY_WLM;
+	}
 	else if (strcmp(serviceName, SERVICENAME_MYSPACE) == 0){
 		return (char*)CAPABILITY_MYSPACE;
 	}
@@ -554,7 +557,7 @@ static char* getPrplProtocolIdFromServiceName(const char* serviceName)
 	}
 	GString* prplProtocolId = g_string_new("prpl-");
 
-	if ((strcmp(serviceName, SERVICENAME_GTALK) == 0) || (strcmp(serviceName, SERVICENAME_LIVE) == 0) || (strcmp(serviceName, SERVICENAME_FACEBOOK) == 0) || (strcmp(serviceName, SERVICENAME_SAMETIME) == 0) || (strcmp(serviceName, SERVICENAME_GROUPWISE) == 0) || (strcmp(serviceName, SERVICENAME_GADU) == 0))
+	if ((strcmp(serviceName, SERVICENAME_GTALK) == 0) || (strcmp(serviceName, SERVICENAME_LIVE) == 0) || (strcmp(serviceName, SERVICENAME_FACEBOOK) == 0) || (strcmp(serviceName, SERVICENAME_SAMETIME) == 0) || (strcmp(serviceName, SERVICENAME_GROUPWISE) == 0) || (strcmp(serviceName, SERVICENAME_GADU) == 0) || (strcmp(serviceName, SERVICENAME_WLM) == 0))
 	{
 		if (strcmp(serviceName, SERVICENAME_GTALK) == 0)
 		{
@@ -565,6 +568,11 @@ static char* getPrplProtocolIdFromServiceName(const char* serviceName)
 		{
 			// Special case for live where the mojo serviceName is "type_live" and the prpl protocol_id is "prpl-msn"
 			g_string_append(prplProtocolId, "msn");
+		}
+		if (strcmp(serviceName, SERVICENAME_WLM) == 0)
+		{
+			// Special case for live (pecan) where the mojo serviceName is "type_wlm" and the prpl protocol_id is "prpl-msn-pecan"
+			g_string_append(prplProtocolId, "msn-pecan");
 		}
 		if (strcmp(serviceName, SERVICENAME_FACEBOOK) == 0)
 		{
@@ -647,6 +655,12 @@ static char* getServiceNameFromPrplProtocolId(PurpleAccount *account)
 		g_string_free(serviceName, TRUE);
 		serviceName = g_string_new("live");
 	}
+        if (strcmp(serviceName->str, "msn-pecan") == 0)
+        {
+                // Special case for live where the mojo serviceName is "type_wlm" and the prpl protocol_id is "prpl-msn-pecan"
+                g_string_free(serviceName, TRUE);
+                serviceName = g_string_new("wlm");
+        }
 	if (strcmp(serviceName->str, "bigbrownchunx-facebookim") == 0)
 	{
 		// Special case for facebook where the mojo serviceName is "type_facebook" and the prpl protocol_id is "prpl-bigbrownchunx-facebookim"

@@ -1,0 +1,33 @@
+diff -rupN imaccountvalidator-1.0//inc/IMAccountValidatorHandler.h imaccountvalidator-1.0-new//inc/IMAccountValidatorHandler.h
+--- imaccountvalidator-1.0//inc/IMAccountValidatorHandler.h	2011-03-25 10:35:57.680553000 -0600
++++ imaccountvalidator-1.0-new//inc/IMAccountValidatorHandler.h	2011-03-27 09:08:42.556552999 -0600
+@@ -40,6 +40,7 @@ class IMAccountValidatorApp;
+ #define PURPLE_ICQ "prpl-icq"
+ #define PURPLE_JABBER "prpl-jabber"
+ #define PURPLE_LIVE "prpl-msn"
++#define PURPLE_WLM "prpl-msn-pecan"
+ #define PURPLE_MYSPACE "prpl-myspace"
+ #define PURPLE_QQ "prpl-qq"
+ #define PURPLE_SAMETIME "prpl-meanwhile"
+@@ -55,6 +56,7 @@ class IMAccountValidatorApp;
+ #define TEMPLATE_ICQ "org.webosinternals.messaging.icq"
+ #define TEMPLATE_JABBER "org.webosinternals.messaging.jabber"
+ #define TEMPLATE_LIVE "org.webosinternals.messaging.live"
++#define TEMPLATE_WLM "org.webosinternals.messaging.wlm"
+ #define TEMPLATE_MYSPACE "org.webosinternals.messaging.myspace"
+ #define TEMPLATE_QQ "org.webosinternals.messaging.qq"
+ #define TEMPLATE_SAMETIME "org.webosinternals.messaging.sametime"
+diff -rupN imaccountvalidator-1.0//Makefile imaccountvalidator-1.0-new//Makefile
+--- imaccountvalidator-1.0//Makefile	2011-03-25 10:35:57.808553000 -0600
++++ imaccountvalidator-1.0-new//Makefile	2011-03-27 09:08:42.560553000 -0600
+@@ -7,7 +7,7 @@ LOCAL_INCLUDES := -I$(QPEDIR)/include/mo
+ 					-I./inc \
+ 					-I$(STAGING_INCDIR) \
+ 					-I.
+-LOCAL_CFLAGS := $(CFLAGS) -Wall -Werror -DMOJ_LINUX -DBOOST_NO_TYPEID $(LOCAL_INCLUDES) $(shell pkg-config --cflags glib-2.0 purple)
++LOCAL_CFLAGS := $(CFLAGS) -Wall -Werror -DMOJ_LINUX -DBOOST_NO_TYPEID $(LOCAL_INCLUDES) $(shell pkg-config --cflags glib-2.0 purple) -march=armv7-a
+ LOCAL_CPPFLAGS := $(CPPFLAGS) -fno-rtti
+ 
+-include Makefile.inc
+\ No newline at end of file
++include Makefile.inc

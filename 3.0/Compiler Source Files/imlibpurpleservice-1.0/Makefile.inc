@@ -1,5 +1,6 @@
+CXX = g++
 LIBS := -llunaservice  -lmojoluna -lmojodb -lmojocore -lpurple -lsanitize
-LOCAL_LDFLAGS := $(LDFLAGS) $(LIBS) -Llib/armv6 -Llib/armv7 -Llib/x86 -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib -Wl,-Rlib/x86 -Wl,-Rlib/armv6 -Wl,-Rlib/armv7
+LOCAL_LDFLAGS := -Wl,-Rlib/armv7 -Llib/armv7 $(LDFLAGS) $(LIBS) -Wl,-R/media/cryptofs/apps/usr/palm/applications/org.webosinternals.messaging/sysfiles/usr/lib
 
 IM_SOURCES := \
 	BuddyListConsolidator.cpp \
@@ -27,7 +28,7 @@ IM_OBJECTS := $(IM_SOURCES:%.cpp=$(OBJDIR)/%.o)
 all: setup $(IM_TARGET)
 		
 $(IM_TARGET): $(IM_OBJECTS) 
-	$(CXX) -o $(IM_TARGET) $(IM_OBJECTS) $(LOCAL_LDFLAGS) 
+	$(CXX) -o $(IM_TARGET) $(IM_OBJECTS) $(LOCAL_LDFLAGS) lib/armv7/libstdc++.so.6
 	
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) -MMD $(INCLUDES) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@

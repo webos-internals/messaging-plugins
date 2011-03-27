@@ -1,0 +1,37 @@
+In order to compile for win32 you will need mingw32, and a build of libpurple
+as well as glib for win32 ready.
+
+The easiest is to cross-compile from Fedora, and use libpurple-mini.
+
+Always make sure the cross-compilation environment is correct:
+
+ % export PKG_CONFIG_LIBDIR=/usr/i686-pc-mingw32/sys-root/mingw/lib/pkgconfig
+ % export CROSS_COMPILE=i686-pc-mingw32-
+
+= libpurple =
+
+Libpurple is the only dependency not available in Fedora:
+
+ % git clone git@github.com:felipec/libpurple-mini.git
+ % cd libpurple-mini
+ % make prefix=/opt/win32 SSL=n install
+
+= msn-pecan =
+
+Fedora includes a mingw32-gettext package that uses libintl-8.dll,
+unfortunately most GTK+ packages use intl.dll. So you'll need to copy
+libintl.dll.a into the win32 subdir.
+
+You can get it from here:
+http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-dev-0.17-1.zip
+
+Then you can build msn-pecan:
+
+ % export PKG_CONFIG_PATH=/opt/win32/lib/pkgconfig
+ % make
+
+That's it! Copy libmsn-pecan.dll to your plugins directory on Pidgin :)
+
+== to-do ==
+
+ * Create builds to ease the process (glib and libpurple)

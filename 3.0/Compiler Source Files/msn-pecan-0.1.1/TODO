@@ -1,0 +1,102 @@
+== General ==
+
+ * Remove sync.c, it only complicates things. Also, there's issues with the
+   initial login (new account).
+ * Make it a standalone library; no dependency on libpurple
+ * Don't rely on GLib's mainloop (Adium and Instantbird would benefit from
+   this). For this we need some kind of wrapper so that we can use GIO and
+   libpurple's IO through the same API.
+ * Properly use and test pn_buffer
+ * Properly use and test pn_parser
+
+== GObjectification ==
+
+The objective is that all of the important structures in msn-pecan are
+developed using GObject.
+
+ * Network I/O
+   * Command server (done)
+   * HTTP server (done)
+   * Notification server
+   * Switchboard server
+   * Direct Connection (done)
+   * Nexus (partially done)
+
+ * AddressBook
+   * Contact
+   * Group
+   * Contact List
+
+ * P2P
+
+== Unit Testing ==
+
+For this better modularization is required so individual modules can tested
+independently. Also, to be able to work without libpurple.
+
+=== Modularization ===
+
+ * Network I/O
+ * AddressBook
+ * P2P
+
+=== Unit Tests ===
+
+ * Utilities
+   * Command parsing
+   * Message parsing
+   * Transaction handling
+ * Network I/O
+ * AddressBook
+ * P2P
+
+== Documentation ==
+
+ * Overview, architecture
+ * Create design diagrams
+ * Use doxygen
+ * Add documentation to: http://imfreedom.org/wiki/index.php/MSN
+ * Examples of communications (client/server, p2p)
+
+== Other ideas ==
+
+ * Use libsoup
+ * Allow cancel in authorization dialog
+ * Allow alias from the add buddy dialog
+
+== Standalone ==
+
+We need to remove libpurple dependencies:
+
+ * Replace purple_account_get_bool
+ * Replace md5 utils
+ * Replace base64 utils
+ * Replace url encode/decode utils
+ * Replace purple_proxy with gnio
+   * Improve gnio proxy support
+ * Replace purple_ssl
+   * Align with wocky
+* Split the libpurple prpl
+
+== Cleanups ==
+
+ * Remove peer-call started, use session-id
+ * Remove peer-call xfer
+ * Fix request_object callbacks
+ * Remove PECAN_DEBUG_SLP
+ * Move msn.c to libpurple/plugin.c
+ * Remove 'cmdproc' from 'transaction'
+ * Fix 'timeout_status'
+ * Create a 'login' signal
+ * Switch to 'struct pn_foo' style instead of PnFoo
+ * Remove all '_private' headers
+ * Remove ab priv.h
+ * Avoid pn_obj_get_foo madness; sometimes it's ok to export fields: see
+   pn_buffer.h
+ * Update code-style similarto linux kernel
+
+=== Use pn_ prefix ===
+
+ * Cleanup 'page'
+ * Cleanup 'msn'
+ * Cleanup 'cmd' parsing

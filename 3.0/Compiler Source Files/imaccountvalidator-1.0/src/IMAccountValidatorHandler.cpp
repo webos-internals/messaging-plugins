@@ -361,6 +361,8 @@ MojErr IMAccountValidatorHandler::validateAccount(MojServiceMessage* serviceMsg,
 					prplProtocolId = strdup(PURPLE_JABBER);
 				else if (0 == templateId.compare(TEMPLATE_LIVE))
 					prplProtocolId = strdup(PURPLE_LIVE);
+				else if (0 == templateId.compare(TEMPLATE_WLM))
+					prplProtocolId = strdup(PURPLE_WLM);
 				else if (0 == templateId.compare(TEMPLATE_MYSPACE))
 					prplProtocolId = strdup(PURPLE_MYSPACE);
 				else if (0 == templateId.compare(TEMPLATE_QQ))

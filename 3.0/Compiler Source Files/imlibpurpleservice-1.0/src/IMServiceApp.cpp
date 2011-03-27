@@ -32,6 +32,7 @@ MojLogger IMServiceApp::s_log(_T("org.webosinternals.imlibpurple.serviceApp"));
 
 int main(int argc, char** argv)
 {
+purple_debug_set_enabled(TRUE);
 	IMServiceApp app;
 	LibpurpleAdapter::init();
 	int mainResult = app.main(argc, argv);

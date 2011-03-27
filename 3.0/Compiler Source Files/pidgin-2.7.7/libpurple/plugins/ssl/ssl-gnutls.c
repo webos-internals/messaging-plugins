@@ -856,7 +856,10 @@ x509_destroy_certificate(PurpleCertificate * crt)
 static gboolean
 x509_certificate_signed_by(PurpleCertificate * crt,
 			   PurpleCertificate * issuer)
+
 {
+// Don't care if cert is signed with MD2 hash
+	gnutls_certificate_set_verify_flags(issuer, GNUTLS_VERIFY_ALLOW_SIGN_RSA_MD2);
 	gnutls_x509_crt crt_dat;
 	gnutls_x509_crt issuer_dat;
 	unsigned int verify; /* used to store result from GnuTLS verifier */

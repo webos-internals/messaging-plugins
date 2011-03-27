@@ -162,6 +162,8 @@ MojErr OnEnabledHandler::getDefaultServiceName(const MojObject& accountResult, M
 			serviceName.assign(SERVICENAME_JABBER);
 		else if (templateId == "org.webosinternals.messaging.live")
 			serviceName.assign(SERVICENAME_LIVE);
+		else if (templateId == "org.webosinternals.messaging.wlm")
+			serviceName.assign(SERVICENAME_WLM);
 		else if (templateId == "org.webosinternals.messaging.myspace")
 			serviceName.assign(SERVICENAME_MYSPACE);
 		else if (templateId == "org.webosinternals.messaging.qq")
@@ -198,6 +200,8 @@ void OnEnabledHandler::getServiceNameFromCapabilityId(MojString& serviceName)
 		serviceName.assign(SERVICENAME_JABBER);
 	else if (m_capabilityProviderId == CAPABILITY_LIVE)
 		serviceName.assign(SERVICENAME_LIVE);
+	else if (m_capabilityProviderId == CAPABILITY_WLM)
+		serviceName.assign(SERVICENAME_WLM);	
 	else if (m_capabilityProviderId == CAPABILITY_MYSPACE)
 		serviceName.assign(SERVICENAME_MYSPACE);
 	else if (m_capabilityProviderId == CAPABILITY_QQ)

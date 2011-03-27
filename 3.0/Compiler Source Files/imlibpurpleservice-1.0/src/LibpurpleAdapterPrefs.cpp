@@ -139,6 +139,9 @@ static char* getMojoFriendlyServiceName (const char* templateId)
 	else if (strcmp(templateId, CAPABILITY_LIVE) == 0){
 		return (char*)SERVICENAME_LIVE;
 	}
+	else if (strcmp(templateId, CAPABILITY_WLM) == 0){
+		return (char*)SERVICENAME_WLM;
+	}
 	else if (strcmp(templateId, CAPABILITY_MYSPACE) == 0){
 		return (char*)SERVICENAME_MYSPACE;
 	}
@@ -627,6 +630,7 @@ static char* getServiceNameFromPrplProtocolId(char* prplProtocolId)
 		MojLogError(IMServiceApp::s_log, _T("getServiceNameFromPrplProtocolId called with empty protocolId"));
 		return strdup("type_default");
 	}
+	MojLogError(IMServiceApp::s_log, _T("getServiceNameFromPrplProtocolId, prplProtocolId = %s"), prplProtocolId);
 	char* stringChopper = prplProtocolId;
 	stringChopper += strlen("prpl-");
 	GString* serviceName = g_string_new(stringChopper);
@@ -642,6 +646,12 @@ static char* getServiceNameFromPrplProtocolId(char* prplProtocolId)
 		// Special case for live where the mojo serviceName is "type_live" and the prpl protocol_id is "prpl-msn"
 		g_string_free(serviceName, true);
 		serviceName = g_string_new("live");
+	}
+	if (strcmp(serviceName->str, "msn-pecan") == 0)
+	{
+		// Special case for wlm where the mojo serviceName is "type_wlm" and the prpl protocol_id is "prpl-msn-pecan"
+		g_string_free(serviceName, true);
+		serviceName = g_string_new("wlm");
 	}
 	if (strcmp(serviceName->str, "bigbrownchunx-facebookim") == 0)
 	{
@@ -667,6 +677,7 @@ static char* getServiceNameFromPrplProtocolId(char* prplProtocolId)
 		g_string_free(serviceName, true);
 		serviceName = g_string_new("gadu");
 	}
+	MojLogError(IMServiceApp::s_log, _T("getServiceNameFromPrplProtocolId, serviceName = %s"),serviceName->str);
 	char* serviceNameToReturn = NULL;
 	// asprintf allocates appropriate-sized buffer
 	asprintf(&serviceNameToReturn, "type_%s", serviceName->str);

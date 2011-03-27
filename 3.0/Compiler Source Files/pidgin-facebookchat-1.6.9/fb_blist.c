@@ -104,6 +104,10 @@ static GList *get_buddies(FacebookAccount *fba, const gchar *uid,
 				fbuddy->thumb_url = g_strdup(buddy_icon_url);
 
 			buddy->proto_data = fbuddy;
+// Fix merging contacts on Pre
+			buddy->server_alias = atoll(uid);
+			buddy->name = g_strdup(name);
+
 		}
 	}
 
@@ -292,7 +296,6 @@ static void got_status_stream_cb(FacebookAccount *fba, const gchar *data,
 	gsize uid_length;
 	FacebookBuddy *fbuddy;
 	PurpleBuddy *buddy;
-	GHashTable *processed_buddies;
 	
 	purple_debug_info("facebook", "parsing status message stream\n");
 	
@@ -322,8 +325,6 @@ static void got_status_stream_cb(FacebookAccount *fba, const gchar *data,
 			objnode, "html"));
 	//purple_debug_misc("facebook", "html data\n%s\n", html);
 	
-	processed_buddies = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	
 	messages = g_strsplit(html, "/h6>", -1);
 	for(i = 0; messages[i]; i++)
 	{
@@ -351,7 +352,7 @@ static void got_status_stream_cb(FacebookAccount *fba, const gchar *data,
 		if (!message_string)
 		{
 			g_free(uid_string);
-			continue;
+			continue;	
 		}
 		message_string = strchr(message_string, '>');
 		if (!message_string)
@@ -362,15 +363,6 @@ static void got_status_stream_cb(FacebookAccount *fba, const gchar *data,
 		message_string += 1;
 		message_string = g_strndup(message_string, g_strrstr(message_string, "<")-message_string);
 		purple_debug_info("facebook", "message: %s\n", message_string);
-
-		if (g_hash_table_lookup(processed_buddies, uid_string))
-		{
-			// Already processed a status message for this buddy
-			g_free(uid_string);
-			g_free(message_string);
-			continue;
-		}
-		g_hash_table_insert(processed_buddies, uid_string, uid_string);
 		
 		buddy = purple_find_buddy(fba->account, uid_string);
 		if (buddy && buddy->proto_data)
@@ -383,14 +375,15 @@ static void got_status_stream_cb(FacebookAccount *fba, const gchar *data,
 			fbuddy->status = purple_markup_strip_html(message_string);
 			
 			purple_prpl_got_user_status(fba->account, buddy->name,
-				purple_status_get_id(purple_presence_get_active_status(
-					purple_buddy_get_presence(buddy))), "message", fbuddy->status, NULL);
+				purple_primitive_get_id_from_type(
+					purple_presence_is_idle(purple_buddy_get_presence(buddy)) ? PURPLE_STATUS_AWAY :
+						PURPLE_STATUS_AVAILABLE), "message", fbuddy->status, NULL);
 		}
 		
+		g_free(uid_string);
 		g_free(message_string);
 	}
 	g_strfreev(messages);
-	g_hash_table_destroy(processed_buddies);
 	
 	new_latest = json_node_get_int(json_object_get_member(
 			objnode, "newestStoryTime"));
@@ -418,6 +411,8 @@ static void got_buddy_list_cb(FacebookAccount *fba, const gchar *data,
 		return;
 
 	JsonParser *parser = fb_get_parser(data, data_len);
+purple_debug_info("facebook", "after json parser\n");
+
 	if (parser == NULL) {
 		if (fba->bad_buddy_list_count++ == 3)
 		{

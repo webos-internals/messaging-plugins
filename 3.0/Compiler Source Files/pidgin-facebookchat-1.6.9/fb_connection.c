@@ -477,12 +477,6 @@ void fb_post_or_get(FacebookAccount *fba, FacebookMethod method,
 	if (host == NULL)
 		host = "www.facebook.com";
 
-	if (fba && fba->account)
-	{
-		if (purple_account_get_bool(fba->account, "use-https", FALSE))
-			method |= FB_METHOD_SSL;
-	}
-
 	if (fba && fba->account && !(method & FB_METHOD_SSL))
 	{
 		proxy_info = purple_proxy_get_setup(fba->account);
@@ -562,6 +556,43 @@ void fb_post_or_get(FacebookAccount *fba, FacebookMethod method,
 
 	g_free(cookies);
 
+	/*
+	 * Do a separate DNS lookup for the given host name and cache it
+	 * for next time.
+	 *
+	 * TODO: It would be better if we did this before we call
+	 *       purple_proxy_connect(), so we could re-use the result.
+	 *       Or even better: Use persistent HTTP connections for servers
+	 *       that we access continually.
+	 *
+	 * TODO: This cache of the hostname<-->IP address does not respect
+	 *       the TTL returned by the DNS server.  We should expire things
+	 *       from the cache after some amount of time.
+	 */
+	if (!is_proxy && !(method & FB_METHOD_SSL) && !g_hostname_is_ip_address(host))
+	{
+		/* Don't do this for proxy connections, since proxies do the DNS lookup */
+		gchar *host_ip;
+
+		host_ip = g_hash_table_lookup(fba->hostname_ip_cache, host);
+		if (host_ip != NULL) {
+			host = host_ip;
+		} else if (fba->account && !fba->account->disconnecting) {
+			GSList *host_lookup_list = NULL;
+			PurpleDnsQueryData *query;
+
+			host_lookup_list = g_slist_prepend(
+					host_lookup_list, g_strdup(host));
+			host_lookup_list = g_slist_prepend(
+					host_lookup_list, fba);
+
+			query = purple_dnsquery_a(host, 80,
+					fb_host_lookup_cb, host_lookup_list);
+			fba->dns_queries = g_slist_prepend(fba->dns_queries, query);
+			host_lookup_list = g_slist_append(host_lookup_list, query);
+		}
+	}
+
 	fbconn = g_new0(FacebookConnection, 1);
 	fbconn->fba = fba;
 	fbconn->url = real_url;
@@ -596,20 +627,7 @@ static void fb_next_connection(FacebookAccount *fba)
 
 static void fb_attempt_connection(FacebookConnection *fbconn)
 {
-	gboolean is_proxy = FALSE;
 	FacebookAccount *fba = fbconn->fba;
-	PurpleProxyInfo *proxy_info = NULL;
-
-	if (fba && fba->account && !(fbconn->method & FB_METHOD_SSL))
-	{
-		proxy_info = purple_proxy_get_setup(fba->account);
-		if (purple_proxy_info_get_type(proxy_info) == PURPLE_PROXY_USE_GLOBAL)
-			proxy_info = purple_global_proxy_get_info();
-		if (purple_proxy_info_get_type(proxy_info) == PURPLE_PROXY_HTTP)
-		{
-			is_proxy = TRUE;
-		}	
-	}
 
 #if 0
 	/* Connection to attempt retries.  This code doesn't work perfectly, but
@@ -632,44 +650,6 @@ static void fb_attempt_connection(FacebookConnection *fbconn)
 #endif
 	
 	fba->conns = g_slist_prepend(fba->conns, fbconn);
-
-	/*
-	 * Do a separate DNS lookup for the given host name and cache it
-	 * for next time.
-	 *
-	 * TODO: It would be better if we did this before we call
-	 *       purple_proxy_connect(), so we could re-use the result.
-	 *       Or even better: Use persistent HTTP connections for servers
-	 *       that we access continually.
-	 *
-	 * TODO: This cache of the hostname<-->IP address does not respect
-	 *       the TTL returned by the DNS server.  We should expire things
-	 *       from the cache after some amount of time.
-	 */
-	if (!is_proxy && !(fbconn->method & FB_METHOD_SSL) && !g_hostname_is_ip_address(fbconn->hostname))
-	{
-		/* Don't do this for proxy connections, since proxies do the DNS lookup */
-		gchar *host_ip;
-
-		host_ip = g_hash_table_lookup(fba->hostname_ip_cache, fbconn->hostname);
-		if (host_ip != NULL) {
-			g_free(fbconn->hostname);
-			fbconn->hostname = g_strdup(host_ip);
-		} else if (fba->account && !fba->account->disconnecting) {
-			GSList *host_lookup_list = NULL;
-			PurpleDnsQueryData *query;
-
-			host_lookup_list = g_slist_prepend(
-					host_lookup_list, g_strdup(fbconn->hostname));
-			host_lookup_list = g_slist_prepend(
-					host_lookup_list, fba);
-
-			query = purple_dnsquery_a(fbconn->hostname, 80,
-					fb_host_lookup_cb, host_lookup_list);
-			fba->dns_queries = g_slist_prepend(fba->dns_queries, query);
-			host_lookup_list = g_slist_append(host_lookup_list, query);
-		}
-	}
 
 	if (fbconn->method & FB_METHOD_SSL) {
 		fbconn->ssl_conn = purple_ssl_connect(fba->account, fbconn->hostname,
