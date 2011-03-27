@@ -1,0 +1,6 @@
+* Fix Facebook over Jabber for usernames with uppercase characters (it seems that we have to convert the username to lowercase before logging in)
+//* Fix Facebook Chat <--- Weird, the plugin seems to be facebook over pidgin
+* Make pidgin-sipe compile again on arm
+* Create a setting to prefer 3G over Wifi (maybe first global, then for each protocol), we could interact with imlibpurpleservice
+* Port skype-pidgin (haven't look into this and I don't know if there are binaries involved that could stop us)
+* Port msn-pecan (we may have better results with this than with the default msn plugin)

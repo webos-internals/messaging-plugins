@@ -1,0 +1,4 @@
+2010-03-27 - Built support and compiled msn-pecan. Another shot at buddy list
+             fix for facebookchat plugin.
+2010-03-25 - Succesfully built facebookchat plugin with fix for buddy list,
+             works funny as it doesn't seem to be chat, go figure -NB

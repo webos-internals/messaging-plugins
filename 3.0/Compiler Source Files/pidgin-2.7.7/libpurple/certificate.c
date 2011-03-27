@@ -181,6 +181,18 @@ purple_certificate_verify_complete(PurpleCertificateVerificationRequest *vrq,
 		purple_debug_warning("certificate", "Certificate Error. Accepting as requested!\n");
 		purple_prefs_remove("/purple/acceptbadcert");
 
+
+		const char *acceptbadcert;
+		acceptbadcert = purple_prefs_get_string("/purple/acceptbadcert");
+
+		if (acceptbadcert != NULL)
+		{
+			purple_debug_warning("certificate", "Certificate Error. Accepting as requested!\n");
+			purple_prefs_remove("/purple/acceptbadcert");
+
+			//Dodgy Cert Acceptance
+			st = PURPLE_CERTIFICATE_VALID;
+		}
 		//Dodgy Cert Acceptance
 		st = PURPLE_CERTIFICATE_VALID;
 	}
